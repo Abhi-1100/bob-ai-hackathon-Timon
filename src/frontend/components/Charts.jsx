@@ -29,8 +29,8 @@ export function AreaTrendChart({ data = [], height = 180 }) {
       <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', overflow: 'visible' }}>
         <defs>
           <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.0" />
+            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#2563EB" stopOpacity="0.0" />
           </linearGradient>
         </defs>
 
@@ -44,7 +44,7 @@ export function AreaTrendChart({ data = [], height = 180 }) {
               y1={y}
               x2={width - padding}
               y2={y}
-              stroke="#1E293B"
+              stroke="var(--card-border, #E2E8F0)"
               strokeDasharray="4 4"
             />
           );
@@ -52,7 +52,7 @@ export function AreaTrendChart({ data = [], height = 180 }) {
 
         {/* Area fill & Path */}
         <path d={areaD} fill="url(#areaGrad)" />
-        <path d={pathD} fill="none" stroke="#06B6D4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={pathD} fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
 
         {/* Data points */}
         {points.map((p, i) => (
@@ -61,8 +61,8 @@ export function AreaTrendChart({ data = [], height = 180 }) {
               cx={p.x}
               cy={p.y}
               r={hoverIndex === i ? 6 : 4}
-              fill="#0A0F1F"
-              stroke="#38BDF8"
+              fill="var(--card, #FFFFFF)"
+              stroke="#2563EB"
               strokeWidth="2.5"
               style={{ cursor: 'pointer', transition: 'r 0.15s' }}
             />
@@ -70,7 +70,7 @@ export function AreaTrendChart({ data = [], height = 180 }) {
             <text
               x={p.x}
               y={height - 8}
-              fill="#64748B"
+              fill="var(--text-muted, #64748B)"
               fontSize="10"
               fontWeight="600"
               textAnchor="middle"
@@ -88,14 +88,14 @@ export function AreaTrendChart({ data = [], height = 180 }) {
           top: 10,
           left: `${(points[hoverIndex].x / width) * 100}%`,
           transform: 'translateX(-50%)',
-          background: '#131A2A',
-          border: '1px solid #06B6D4',
+          background: 'var(--card, #FFFFFF)',
+          border: '1px solid var(--card-border, #E2E8F0)',
           borderRadius: 6,
-          padding: '6px 10px',
-          fontSize: 11,
-          color: '#F8FAFC',
+          padding: '6px 12px',
+          fontSize: 11.5,
+          color: 'var(--text-primary, #0F172A)',
           pointerEvents: 'none',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
           whiteSpace: 'nowrap',
           zIndex: 10
         }}>
@@ -113,26 +113,26 @@ export function AreaTrendChart({ data = [], height = 180 }) {
 export function FrequencyBarChart({ items = [] }) {
   const maxCount = Math.max(...items.map(x => x.count || 1), 1);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {items.map((item, idx) => {
         const pct = Math.round((item.count / maxCount) * 100);
-        let barColor = '#06B6D4';
-        if (item.level === 'Critical' || item.severity === 'critical') barColor = '#EF4444';
-        else if (item.level === 'High' || item.severity === 'high') barColor = '#F97316';
-        else if (item.level === 'Medium' || item.severity === 'medium') barColor = '#EAB308';
+        let barColor = '#2563EB';
+        if (item.level === 'Critical' || item.severity === 'critical') barColor = '#DC2626';
+        else if (item.level === 'High' || item.severity === 'high') barColor = '#EA580C';
+        else if (item.level === 'Medium' || item.severity === 'medium') barColor = '#D97706';
 
         return (
           <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-              <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{item.technique || item.name}</span>
+              <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{item.technique || item.name}</span>
               <span style={{ color: 'var(--text-primary)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{item.count}</span>
             </div>
-            <div style={{ height: 6, background: '#1E293B', borderRadius: 3, overflow: 'hidden' }}>
+            <div style={{ height: 7, background: 'var(--bg-tertiary, #F1F5F9)', borderRadius: 4, overflow: 'hidden', border: '1px solid var(--card-border, #E2E8F0)' }}>
               <div style={{
                 height: '100%',
                 width: `${pct}%`,
                 background: barColor,
-                borderRadius: 3,
+                borderRadius: 4,
                 transition: 'width 0.8s ease'
               }} />
             </div>

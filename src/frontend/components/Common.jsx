@@ -40,7 +40,7 @@ export function RiskScoreGauge({ score = 0, size = 80 }) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#1E293B"
+          stroke="var(--card-border, #E2E8F0)"
           strokeWidth={strokeWidth}
           fill="transparent"
         />
@@ -71,7 +71,7 @@ export function EmptyState({ icon: Icon = Database, title, text, action }) {
     <div style={{
       textAlign: 'center',
       padding: '48px 24px',
-      background: 'rgba(19, 26, 42, 0.4)',
+      background: 'var(--bg-tertiary, #F1F5F9)',
       borderRadius: 'var(--radius-lg)',
       border: '1px dashed var(--card-border)'
     }}>
@@ -79,12 +79,13 @@ export function EmptyState({ icon: Icon = Database, title, text, action }) {
         width: 48,
         height: 48,
         borderRadius: '50%',
-        background: 'rgba(255, 255, 255, 0.03)',
+        background: 'var(--card, #FFFFFF)',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'var(--cyan-bright)',
-        marginBottom: 12
+        color: 'var(--blue, #2563EB)',
+        marginBottom: 12,
+        boxShadow: 'var(--shadow-card)'
       }}>
         <Icon size={24} />
       </div>

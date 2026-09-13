@@ -59,7 +59,7 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate
         </div>
 
         {/* Printable Executive Briefing Document */}
-        <article className="soc-card" style={{ padding: '36px 40px', background: '#0D1527', border: '1px solid #1E293B' }}>
+        <article className="soc-card" style={{ padding: '36px 40px', background: 'var(--card)', border: '1px solid var(--card-border)' }}>
           {/* Top Classified Header */}
           <div style={{
             display: 'flex',
@@ -73,7 +73,7 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate
               <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--critical)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 // TLP:AMBER // STRICT SOC DISSEMINATION
               </span>
-              <h1 style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginTop: 4, letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontSize: 22, fontWeight: 900, color: 'var(--text-primary)', marginTop: 4, letterSpacing: '-0.02em' }}>
                 COMMANDER THREAT BRIEFING (BLUF)
               </h1>
               <span className="mono" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
@@ -90,17 +90,17 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate
 
           {/* Section 1: Bottom Line Up Front */}
           <div style={{ marginBottom: 28 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--cyan-bright)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--blue)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               1.0 BOTTOM LINE UP FRONT (BLUF)
             </span>
             <div style={{
-              background: 'rgba(6, 182, 212, 0.08)',
-              borderLeft: '4px solid var(--cyan)',
+              background: 'var(--bg-tertiary)',
+              borderLeft: '4px solid var(--blue)',
               padding: '16px 20px',
               borderRadius: '0 8px 8px 0',
               marginTop: 8
             }}>
-              <p style={{ color: '#E2E8F0', fontSize: 14.5, lineHeight: 1.6, fontWeight: 500, margin: 0 }}>
+              <p style={{ color: 'var(--text-primary)', fontSize: 14.5, lineHeight: 1.6, fontWeight: 500, margin: 0 }}>
                 {activeReport.executive_summary}
               </p>
             </div>
@@ -108,7 +108,7 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate
 
           {/* Section 2: Attack Progression Overview */}
           <div style={{ marginBottom: 28 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--cyan-bright)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--blue)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               2.0 ATTACK PROGRESSION OVERVIEW
             </span>
             <p style={{ color: 'var(--text-secondary)', fontSize: 13.5, lineHeight: 1.6, marginTop: 8 }}>
@@ -118,7 +118,7 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate
 
           {/* Section 3: Affected Assets & MITRE */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 28 }}>
-            <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: 16, borderRadius: 8, border: '1px solid var(--card-border)' }}>
+            <div style={{ background: 'var(--bg-tertiary)', padding: 16, borderRadius: 8, border: '1px solid var(--card-border)' }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                 Affected Assets & Targets
               </span>
@@ -126,7 +126,7 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate
                 {activeReport.affected_assets || 'Internal network telemetry'}
               </p>
             </div>
-            <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: 16, borderRadius: 8, border: '1px solid var(--card-border)' }}>
+            <div style={{ background: 'var(--bg-tertiary)', padding: 16, borderRadius: 8, border: '1px solid var(--card-border)' }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                 MITRE ATT&CK Matrix Alignment
               </span>
@@ -138,18 +138,18 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate
 
           {/* Section 4: Recommended Commander Actions */}
           <div style={{ marginBottom: 28 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--cyan-bright)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--blue)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               3.0 RECOMMENDED COMMAND ACTIONS
             </span>
-            <div style={{ marginTop: 10, padding: 16, background: 'rgba(239, 68, 68, 0.06)', borderRadius: 8, border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-              <p style={{ color: '#FCA5A5', fontSize: 13.5, lineHeight: 1.5, margin: 0 }}>
+            <div style={{ marginTop: 10, padding: 16, background: 'var(--critical-bg)', borderRadius: 8, border: '1px solid var(--critical-border)' }}>
+              <p style={{ color: 'var(--critical-text)', fontSize: 13.5, lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
                 {activeReport.recommended_actions || 'Isolate compromised hosts and block attacker origin at edge firewalls.'}
               </p>
             </div>
           </div>
 
           {/* Section 5: Conclusion */}
-          <div style={{ borderTop: '1px solid #1E293B', paddingTop: 16 }}>
+          <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: 16 }}>
             <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               4.0 CONCLUSION
             </span>

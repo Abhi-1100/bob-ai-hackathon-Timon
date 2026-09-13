@@ -187,9 +187,9 @@ export function RecommendationsPage({ onOpenChain, navigate }) {
                   padding: '10px 18px',
                   borderRadius: 8,
                   border: '1px solid',
-                  borderColor: activeTab === tab.id ? 'var(--cyan)' : 'var(--card-border)',
-                  background: activeTab === tab.id ? 'rgba(6, 182, 212, 0.12)' : 'var(--card)',
-                  color: activeTab === tab.id ? '#fff' : 'var(--text-secondary)',
+                  borderColor: activeTab === tab.id ? 'var(--blue)' : 'var(--card-border)',
+                  background: activeTab === tab.id ? 'var(--blue)' : 'var(--card)',
+                  color: activeTab === tab.id ? '#FFFFFF' : 'var(--text-secondary)',
                   fontWeight: 700,
                   fontSize: 13,
                   cursor: 'pointer',
@@ -200,7 +200,7 @@ export function RecommendationsPage({ onOpenChain, navigate }) {
                 <span style={{
                   padding: '2px 7px',
                   borderRadius: 10,
-                  background: tab.color,
+                  background: activeTab === tab.id ? 'rgba(255, 255, 255, 0.25)' : tab.color,
                   color: '#fff',
                   fontSize: 11,
                   fontWeight: 800
@@ -215,7 +215,7 @@ export function RecommendationsPage({ onOpenChain, navigate }) {
           <div className="soc-card">
             <div className="card-header">
               <h3 className="card-title">
-                <CheckCircle2 size={18} color="var(--cyan-bright)" />
+                <CheckCircle2 size={18} color="var(--blue)" />
                 <span>Action Checklist ({currentList.length} Tasks)</span>
               </h3>
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
@@ -243,14 +243,14 @@ export function RecommendationsPage({ onOpenChain, navigate }) {
                         gap: 14,
                         padding: '14px 18px',
                         borderRadius: 8,
-                        background: isDone ? 'rgba(34, 197, 94, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+                        background: isDone ? 'var(--low-bg)' : 'var(--bg-tertiary)',
                         border: '1px solid',
-                        borderColor: isDone ? 'rgba(34, 197, 94, 0.3)' : 'var(--card-border)',
+                        borderColor: isDone ? 'var(--low-border)' : 'var(--card-border)',
                         cursor: 'pointer',
                         transition: 'all 0.15s'
                       }}
                     >
-                      <div style={{ marginTop: 2, color: isDone ? '#4ADE80' : 'var(--text-muted)' }}>
+                      <div style={{ marginTop: 2, color: isDone ? 'var(--low)' : 'var(--text-muted)' }}>
                         {isDone ? <CheckSquare size={18} /> : <Square size={18} />}
                       </div>
                       <div style={{ flex: 1 }}>

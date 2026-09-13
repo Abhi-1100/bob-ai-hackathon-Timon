@@ -20,12 +20,12 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
   const navItems = [
     { route: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { route: '/upload', label: 'Upload Alerts', icon: UploadCloud },
-    { route: '/attack-chains', label: 'Attack Chains', icon: Network, badge: '18' },
+    { route: '/attack-chains', label: 'Attack Chains', icon: Network },
     { route: '/mitre', label: 'MITRE Analysis', icon: ShieldAlert },
-    { route: '/risk', label: 'Risk Prioritization', icon: Flame, badge: '4 Crit' },
+    { route: '/risk', label: 'Risk Prioritization', icon: Flame },
     { route: '/recommendations', label: 'Recommendations', icon: Lightbulb },
     { route: '/reports', label: 'Intelligence Reports', icon: FileText },
-    { route: '/chat', label: 'AI Analyst Chat', icon: MessageSquare, badge: 'RAG' },
+    { route: '/chat', label: 'AI Analyst Chat', icon: MessageSquare },
     { route: '/analytics', label: 'Analytics', icon: BarChart3 },
     { route: '/settings', label: 'Settings', icon: Settings },
   ];

@@ -225,7 +225,7 @@ export function UploadPage({ navigate }) {
               <span style={{ fontSize: 11, fontWeight: 700, color: '#4ADE80', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 INGESTION & CORRELATION PIPELINE COMPLETE
               </span>
-              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>
+              <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)' }}>
                 {result.alerts_ingested ?? result.count ?? 0} Alerts Successfully Ingested
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 2 }}>
@@ -241,9 +241,9 @@ export function UploadPage({ navigate }) {
             gap: 12,
             marginBottom: 24,
             padding: 16,
-            background: 'rgba(0, 0, 0, 0.25)',
+            background: 'var(--bg-tertiary)',
             borderRadius: 8,
-            border: '1px solid rgba(255, 255, 255, 0.05)'
+            border: '1px solid var(--card-border)'
           }}>
             <div>
               <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Alerts Ingested</span>
@@ -299,7 +299,7 @@ export function UploadPage({ navigate }) {
               padding: '48px 24px',
               textAlign: 'center',
               cursor: 'pointer',
-              background: file ? 'rgba(6, 182, 212, 0.04)' : 'rgba(19, 26, 42, 0.6)'
+              background: file ? 'rgba(37, 99, 235, 0.05)' : 'var(--bg-tertiary)'
             }}
             onDragOver={e => e.preventDefault()}
             onDrop={e => {
@@ -433,7 +433,7 @@ export function UploadPage({ navigate }) {
             </div>
 
             {/* One-Click Enterprise Dataset Quick Test */}
-            <div className="soc-card" style={{ background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.06), rgba(19, 26, 42, 0.9))' }}>
+            <div className="soc-card">
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                 <Database size={20} color="var(--cyan-bright)" style={{ flexShrink: 0, marginTop: 2 }} />
                 <div>

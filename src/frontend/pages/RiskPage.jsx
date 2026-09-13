@@ -55,13 +55,14 @@ export function RiskPage({ onOpenChain, navigate }) {
                 padding: '6px 14px',
                 borderRadius: 6,
                 border: '1px solid',
-                borderColor: selectedTier === tier ? 'var(--cyan)' : 'var(--card-border)',
-                background: selectedTier === tier ? 'rgba(6, 182, 212, 0.15)' : 'var(--card)',
-                color: selectedTier === tier ? '#fff' : 'var(--text-secondary)',
+                borderColor: selectedTier === tier ? 'var(--blue)' : 'var(--card-border)',
+                background: selectedTier === tier ? 'var(--blue)' : 'var(--card)',
+                color: selectedTier === tier ? '#FFFFFF' : 'var(--text-secondary)',
                 fontSize: 12,
                 fontWeight: 600,
                 textTransform: 'capitalize',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'all 0.15s'
               }}
             >
               {tier}
@@ -139,11 +140,13 @@ export function RiskPage({ onOpenChain, navigate }) {
                   <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
                     {(c.events || []).slice(0, 3).map((ev, i) => (
                       <span key={i} style={{
-                        padding: '2px 6px',
-                        background: 'rgba(255, 255, 255, 0.05)',
+                        padding: '3px 8px',
+                        background: 'var(--bg-tertiary)',
+                        border: '1px solid var(--card-border)',
                         borderRadius: 4,
                         fontSize: 11,
-                        color: 'var(--text-secondary)'
+                        color: 'var(--text-secondary)',
+                        fontWeight: 500
                       }}>
                         {typeof ev === 'object' ? ev.event : ev}
                       </span>

@@ -111,14 +111,14 @@ export function MitrePage({ onOpenChain, navigate }) {
       {selectedTechnique && (
         <div className="soc-card" style={{
           marginBottom: 24,
-          border: '1px solid var(--cyan)',
-          background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.08), rgba(19, 26, 42, 0.95))'
+          border: '1px solid var(--blue)',
+          background: 'var(--card)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <code style={{ fontSize: 16, fontWeight: 800, color: 'var(--cyan-bright)' }}>{selectedTechnique.id}</code>
-                <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>{selectedTechnique.name}</h3>
+                <code style={{ fontSize: 16, fontWeight: 800, color: 'var(--blue)' }}>{selectedTechnique.id}</code>
+                <h3 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{selectedTechnique.name}</h3>
                 <span className="badge-severity high">{selectedTechnique.tactic}</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 8 }}>
@@ -131,7 +131,7 @@ export function MitrePage({ onOpenChain, navigate }) {
           </div>
 
           {selectedTechnique.chains?.length > 0 && (
-            <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--card-border)' }}>
               <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                 Correlated Attack Chains Featuring this Technique:
               </span>

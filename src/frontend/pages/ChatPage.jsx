@@ -137,8 +137,8 @@ export function ChatPage({ onOpenChain }) {
                 padding: '10px 12px',
                 borderRadius: 8,
                 border: '1px solid',
-                borderColor: activeSessionId === s.id ? 'var(--cyan)' : 'transparent',
-                background: activeSessionId === s.id ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
+                borderColor: activeSessionId === s.id ? 'var(--blue)' : 'transparent',
+                background: activeSessionId === s.id ? 'rgba(37, 99, 235, 0.1)' : 'transparent',
                 textAlign: 'left',
                 cursor: 'pointer',
                 transition: 'all 0.15s'
@@ -147,7 +147,7 @@ export function ChatPage({ onOpenChain }) {
               <div style={{
                 fontSize: 12.5,
                 fontWeight: 600,
-                color: activeSessionId === s.id ? '#fff' : 'var(--text-secondary)',
+                color: activeSessionId === s.id ? 'var(--blue)' : 'var(--text-secondary)',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis'
@@ -159,8 +159,8 @@ export function ChatPage({ onOpenChain }) {
           ))}
         </div>
 
-        <div style={{ padding: 16, borderTop: '1px solid var(--card-border)', background: 'rgba(0,0,0,0.2)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, color: 'var(--cyan-bright)' }}>
+        <div style={{ padding: 16, borderTop: '1px solid var(--card-border)', background: 'var(--bg-tertiary)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, color: 'var(--blue)' }}>
             <Sparkles size={14} />
             <span>Grounded RAG via Qdrant</span>
           </div>
@@ -205,7 +205,7 @@ export function ChatPage({ onOpenChain }) {
                     <div style={{
                       marginTop: 12,
                       paddingTop: 10,
-                      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderTop: '1px solid var(--card-border)',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: 6
@@ -220,10 +220,11 @@ export function ChatPage({ onOpenChain }) {
                             style={{
                               fontSize: 10.5,
                               padding: '2px 8px',
-                              background: 'rgba(6, 182, 212, 0.1)',
-                              border: '1px solid rgba(6, 182, 212, 0.25)',
+                              background: 'var(--bg-tertiary)',
+                              border: '1px solid var(--card-border)',
                               borderRadius: 4,
-                              color: 'var(--cyan-bright)'
+                              color: 'var(--blue)',
+                              fontWeight: 600
                             }}
                           >
                             {src}
@@ -239,10 +240,10 @@ export function ChatPage({ onOpenChain }) {
                               key={rIdx}
                               onClick={() => onOpenChain && onOpenChain(ref)}
                               style={{
-                                background: 'rgba(239, 68, 68, 0.15)',
-                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                background: 'var(--critical-bg)',
+                                border: '1px solid var(--critical-border)',
                                 borderRadius: 4,
-                                color: '#FCA5A5',
+                                color: 'var(--critical-text)',
                                 fontSize: 11,
                                 padding: '2px 8px',
                                 fontFamily: 'var(--font-mono)',
@@ -282,8 +283,8 @@ export function ChatPage({ onOpenChain }) {
           display: 'flex',
           gap: 8,
           overflowX: 'auto',
-          borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-          background: 'rgba(19, 26, 42, 0.5)'
+          borderTop: '1px solid var(--card-border)',
+          background: 'var(--bg-secondary)'
         }}>
           {quickQuestions.map((q, idx) => (
             <button
@@ -293,10 +294,11 @@ export function ChatPage({ onOpenChain }) {
               style={{
                 padding: '5px 12px',
                 borderRadius: 9999,
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: 'var(--bg-tertiary)',
                 border: '1px solid var(--card-border)',
                 color: 'var(--text-secondary)',
                 fontSize: 11.5,
+                fontWeight: 500,
                 whiteSpace: 'nowrap',
                 cursor: 'pointer',
                 transition: 'all 0.15s'

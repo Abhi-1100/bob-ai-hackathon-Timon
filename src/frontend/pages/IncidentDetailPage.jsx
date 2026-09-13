@@ -135,7 +135,7 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--cyan-bright)', textTransform: 'uppercase' }}>
               INCIDENT CONTEXT
             </span>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 4 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginTop: 4 }}>
               Multi-Vector Infiltration & Privilege Escalation
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: 13.5, lineHeight: 1.6, marginTop: 8 }}>
@@ -146,19 +146,19 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginTop: 18, paddingTop: 16, borderTop: '1px solid var(--card-border)' }}>
             <div>
               <span style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Source Origin</span>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, color: 'var(--cyan-bright)', marginTop: 2 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, color: 'var(--blue)', marginTop: 2 }}>
                 {chain.source_ip}
               </div>
             </div>
             <div>
               <span style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Impacted Hosts</span>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, color: '#F8FAFC', marginTop: 2 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginTop: 2 }}>
                 {chain.dest_ips?.length || 3} assets
               </div>
             </div>
             <div>
               <span style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Alert Volume</span>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, color: '#F8FAFC', marginTop: 2 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginTop: 2 }}>
                 {chain.alert_count || events.length} alerts
               </div>
             </div>
@@ -172,7 +172,7 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
             <span style={{ fontSize: 11, fontWeight: 700, color: score >= 85 ? 'var(--critical)' : 'var(--high)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               CALIBRATED RISK SCORE
             </span>
-            <h4 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '2px 0 12px' }}>
+            <h4 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', margin: '2px 0 12px' }}>
               {score >= 85 ? 'Critical Priority' : 'High Priority'}
             </h4>
 
@@ -218,7 +218,7 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
                 gridTemplateColumns: '160px 180px 1fr 120px',
                 alignItems: 'center',
                 padding: '12px 16px',
-                background: 'rgba(255, 255, 255, 0.02)',
+                background: 'var(--bg-tertiary)',
                 border: '1px solid var(--card-border)',
                 borderRadius: 8,
                 fontSize: 13
@@ -230,7 +230,7 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
               </div>
 
               <div>
-                <strong style={{ color: '#F8FAFC', display: 'block' }}>{evt.event}</strong>
+                <strong style={{ color: 'var(--text-primary)', display: 'block' }}>{evt.event}</strong>
                 <span className="mono" style={{ fontSize: 11, color: 'var(--cyan-bright)' }}>{evt.protocol || 'TCP'}</span>
               </div>
 
@@ -272,7 +272,7 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
                 <code style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)' }}>{t.technique_id || t.id}</code>
                 <span style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{t.tactic}</span>
               </div>
-              <h5 style={{ fontSize: 14, fontWeight: 600, color: '#F8FAFC' }}>{t.name}</h5>
+              <h5 style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{t.name}</h5>
               <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>
                 Detected {t.count || 2} telemetry triggers matching behavioral signature.
               </p>

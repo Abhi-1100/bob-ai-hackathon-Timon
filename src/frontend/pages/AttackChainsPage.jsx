@@ -69,8 +69,8 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
       <div className="soc-card" style={{ padding: '14px 20px', marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           {/* Search */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#0D1527', border: '1px solid #1E293B', borderRadius: 8, padding: '8px 14px', flex: '1 1 300px' }}>
-            <Search size={16} color="#64748B" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'var(--input-bg)', border: '1px solid var(--input-border)', borderRadius: 8, padding: '8px 14px', flex: '1 1 300px' }}>
+            <Search size={16} color="var(--text-muted)" />
             <input
               type="text"
               placeholder="Search by Chain ID (e.g. AC001), Source IP, or MITRE ID (e.g. T1110)…"
@@ -79,7 +79,7 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#F8FAFC',
+                color: 'var(--input-text)',
                 fontSize: 13,
                 outline: 'none',
                 width: '100%'
@@ -101,9 +101,9 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                   padding: '5px 12px',
                   borderRadius: 6,
                   border: '1px solid',
-                  borderColor: filter === f ? 'var(--cyan)' : 'var(--card-border)',
-                  background: filter === f ? 'rgba(6, 182, 212, 0.15)' : 'rgba(255, 255, 255, 0.02)',
-                  color: filter === f ? '#fff' : 'var(--text-secondary)',
+                  borderColor: filter === f ? 'var(--blue)' : 'var(--card-border)',
+                  background: filter === f ? 'var(--blue)' : 'var(--bg-tertiary)',
+                  color: filter === f ? '#FFFFFF' : 'var(--text-secondary)',
                   fontSize: 12,
                   fontWeight: 600,
                   textTransform: 'capitalize',
@@ -195,8 +195,9 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                           borderRadius: 4,
                           fontSize: 11,
                           fontWeight: 600,
-                          background: c.status === 'Active' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                          color: c.status === 'Active' ? '#FCA5A5' : '#94A3B8'
+                          background: c.status === 'Active' ? 'var(--critical-bg)' : 'var(--bg-tertiary)',
+                          color: c.status === 'Active' ? 'var(--critical-text)' : 'var(--text-secondary)',
+                          border: c.status === 'Active' ? '1px solid var(--critical-border)' : '1px solid var(--card-border)'
                         }}>
                           {c.status || 'Active'}
                         </span>

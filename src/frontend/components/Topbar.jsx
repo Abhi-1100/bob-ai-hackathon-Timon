@@ -6,10 +6,12 @@ import {
   UploadCloud,
   MessageSquare,
   FileText,
-  Radio
+  Radio,
+  Sun,
+  Moon
 } from 'lucide-react';
 
-export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate }) {
+export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, theme, setTheme }) {
   return (
     <header className="topbar">
       <div className="topbar-left">
@@ -27,6 +29,18 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate }
           <span>SYSTEM NOMINAL</span>
         </div>
 
+        {setTheme && (
+          <button
+            className="btn btn-secondary"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} theme`}
+            style={{ padding: '6px 12px' }}
+          >
+            {theme === 'dark' ? <Sun size={15} color="#FBBF24" /> : <Moon size={15} color="#2563EB" />}
+            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+          </button>
+        )}
+
         {onRefresh && (
           <button className="btn-icon" onClick={onRefresh} title="Sync Live Telemetry">
             <RefreshCw size={16} />
@@ -39,7 +53,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate }
         </button>
 
         <button className="btn btn-secondary" onClick={() => navigate('/chat')} style={{ padding: '6px 12px' }}>
-          <MessageSquare size={15} color="#38BDF8" />
+          <MessageSquare size={15} color="var(--blue)" />
           <span>Open Chat</span>
         </button>
 

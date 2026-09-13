@@ -29,6 +29,16 @@ function App() {
   const [selectedChainId, setSelectedChainId] = useState('AC001');
   const [selectedReportId, setSelectedReportId] = useState(null);
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('sentinel_theme') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('sentinel_theme', theme);
+  }, [theme]);
+
   // Sync route on popstate (browser back/forward buttons)
   useEffect(() => {
     const handlePop = () => {
@@ -172,6 +182,8 @@ function App() {
           breadcrumb={breadcrumb}
           onRefresh={() => window.location.reload()}
           navigate={navigate}
+          theme={theme}
+          setTheme={setTheme}
         />
         <main className="content-body">
           {content}

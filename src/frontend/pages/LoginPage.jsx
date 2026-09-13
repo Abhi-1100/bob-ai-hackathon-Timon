@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Radar, Shield, Lock, Mail, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { Shield, Lock, Mail, ArrowRight, CheckCircle2, Eye, EyeOff, ShieldAlert } from 'lucide-react';
 
 export function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('analyst@sentinelforge.mil');
@@ -23,28 +23,28 @@ export function LoginPage({ onLogin }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(circle at center, rgba(6, 182, 212, 0.08) 0%, rgba(10, 15, 31, 1) 70%)',
+      background: 'var(--bg-primary)',
       padding: 20
     }}>
       <div style={{
         width: '100%',
         maxWidth: 440,
-        background: '#131A2A',
-        border: '1px solid #1E293B',
-        borderRadius: 16,
+        background: 'var(--card)',
+        border: '1px solid var(--card-border)',
+        borderRadius: 'var(--radius-xl)',
         padding: '36px 32px',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(56, 189, 248, 0.15)',
+        boxShadow: 'var(--shadow-card)',
         position: 'relative',
         overflow: 'hidden'
       }}>
-        {/* Top Glowing Strip */}
+        {/* Top Executive Stripe */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: 3,
-          background: 'linear-gradient(90deg, #0284C7, #06B6D4, #3B82F6)'
+          height: 4,
+          background: 'linear-gradient(90deg, #1E40AF, #2563EB, #0284C7)'
         }} />
 
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
@@ -52,20 +52,20 @@ export function LoginPage({ onLogin }) {
             width: 48,
             height: 48,
             borderRadius: 12,
-            background: 'linear-gradient(135deg, #0284C7, #06B6D4)',
+            background: 'var(--blue)',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#fff',
-            boxShadow: '0 0 20px rgba(6, 182, 212, 0.4)',
+            color: '#FFFFFF',
+            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
             marginBottom: 14
           }}>
-            <Radar size={28} />
+            <ShieldAlert size={26} />
           </div>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#F8FAFC', letterSpacing: '0.04em' }}>
-            SENTINEL<span style={{ color: '#38BDF8' }}>FORGE</span>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
+            SENTINEL<span style={{ color: 'var(--blue)' }}>FORGE</span>
           </h2>
-          <p style={{ fontSize: 12, color: '#64748B', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 4 }}>
+          <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 4 }}>
             Threat Intelligence Operations Console
           </p>
           <div style={{
@@ -73,25 +73,26 @@ export function LoginPage({ onLogin }) {
             alignItems: 'center',
             gap: 6,
             marginTop: 10,
-            padding: '3px 10px',
-            background: 'rgba(6, 182, 212, 0.08)',
-            border: '1px solid rgba(6, 182, 212, 0.25)',
+            padding: '4px 12px',
+            background: 'rgba(37, 99, 235, 0.08)',
+            border: '1px solid rgba(37, 99, 235, 0.2)',
             borderRadius: 9999,
             fontSize: 11,
-            color: '#38BDF8'
+            fontWeight: 600,
+            color: 'var(--blue)'
           }}>
             <Shield size={12} />
-            <span>Restricted Access — Level 3 Clearance</span>
+            <span>Enterprise Access · Level 3 Clearance</span>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>
               OPERATOR ID / EMAIL
             </label>
             <div style={{ position: 'relative' }}>
-              <Mail size={16} color="#64748B" style={{ position: 'absolute', left: 14, top: 12 }} />
+              <Mail size={16} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: 12 }} />
               <input
                 type="email"
                 required
@@ -99,11 +100,11 @@ export function LoginPage({ onLogin }) {
                 onChange={e => setEmail(e.target.value)}
                 style={{
                   width: '100%',
-                  background: '#0D1527',
-                  border: '1px solid #1E293B',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--input-border)',
                   borderRadius: 8,
                   padding: '10px 14px 10px 40px',
-                  color: '#F8FAFC',
+                  color: 'var(--input-text)',
                   fontSize: 13.5,
                   outline: 'none',
                   fontFamily: 'var(--font-mono)'
@@ -113,11 +114,11 @@ export function LoginPage({ onLogin }) {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>
               AUTHENTICATION TOKEN / PASSWORD
             </label>
             <div style={{ position: 'relative' }}>
-              <Lock size={16} color="#64748B" style={{ position: 'absolute', left: 14, top: 12 }} />
+              <Lock size={16} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: 12 }} />
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
@@ -125,11 +126,11 @@ export function LoginPage({ onLogin }) {
                 onChange={e => setPassword(e.target.value)}
                 style={{
                   width: '100%',
-                  background: '#0D1527',
-                  border: '1px solid #1E293B',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--input-border)',
                   borderRadius: 8,
                   padding: '10px 40px 10px 40px',
-                  color: '#F8FAFC',
+                  color: 'var(--input-text)',
                   fontSize: 13.5,
                   outline: 'none',
                   fontFamily: 'var(--font-mono)'
@@ -138,7 +139,7 @@ export function LoginPage({ onLogin }) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                style={{ position: 'absolute', right: 14, top: 12, background: 'none', border: 'none', color: '#64748B', cursor: 'pointer' }}
+                style={{ position: 'absolute', right: 14, top: 12, background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -146,16 +147,16 @@ export function LoginPage({ onLogin }) {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#94A3B8', cursor: 'pointer' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-secondary)', cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={e => setRememberMe(e.target.checked)}
-                style={{ accentColor: '#06B6D4' }}
+                style={{ accentColor: 'var(--blue)' }}
               />
               <span>Remember station</span>
             </label>
-            <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Station credentials managed by SOC Security Officer.'); }} style={{ color: '#38BDF8' }}>
+            <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Station credentials managed by SOC Security Officer.'); }} style={{ color: 'var(--blue)', fontWeight: 600, textDecoration: 'none' }}>
               Reset credentials?
             </a>
           </div>
@@ -175,14 +176,14 @@ export function LoginPage({ onLogin }) {
           </button>
         </form>
 
-        <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid #1E293B', textAlign: 'center' }}>
+        <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid var(--card-border)', textAlign: 'center' }}>
           <button
             type="button"
             className="btn btn-secondary"
             onClick={onLogin}
             style={{ width: '100%', fontSize: 12.5 }}
           >
-            <CheckCircle2 size={15} color="#22C55E" />
+            <CheckCircle2 size={15} color="var(--low)" />
             <span>Instant Demo Access (Judge / Evaluator)</span>
           </button>
         </div>

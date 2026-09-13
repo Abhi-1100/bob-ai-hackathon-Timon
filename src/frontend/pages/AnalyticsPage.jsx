@@ -196,7 +196,7 @@ export function AnalyticsPage({ navigate }) {
                       justifyContent: 'space-between',
                       padding: '10px 14px',
                       borderRadius: 6,
-                      background: 'rgba(255, 255, 255, 0.02)',
+                      background: 'var(--bg-tertiary)',
                       border: '1px solid var(--card-border)'
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
