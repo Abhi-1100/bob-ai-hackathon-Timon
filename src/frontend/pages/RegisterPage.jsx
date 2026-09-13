@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { User, Mail, ArrowRight, Building2 } from 'lucide-react';
+import { User, Mail, ArrowRight } from 'lucide-react';
 import { AuthLayout } from '../components/auth/AuthLayout';
 import { AuthCard } from '../components/auth/AuthCard';
 import { AuthHeader } from '../components/auth/AuthHeader';
@@ -114,52 +114,6 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
             error={errors.email?.message}
             {...register('email')}
           />
-
-          {/* Company & Role Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <AuthInput
-              label="Company / Team"
-              icon={Building2}
-              placeholder="Acme Corp"
-              error={errors.organization?.message}
-              {...register('organization')}
-            />
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <label
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: 'var(--text-secondary)',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Your Role
-              </label>
-              <select
-                style={{
-                  width: '100%',
-                  background: 'var(--input-bg)',
-                  border: '1px solid var(--input-border)',
-                  borderRadius: 9,
-                  padding: '9.5px 12px',
-                  color: 'var(--input-text)',
-                  fontSize: 13,
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  boxSizing: 'border-box',
-                }}
-                {...register('role')}
-              >
-                <option value="Security Analyst">Security Analyst</option>
-                <option value="Incident Responder">Incident Responder</option>
-                <option value="Security Manager / Lead">Security Manager / Lead</option>
-                <option value="IT Administrator">IT Administrator</option>
-                <option value="Developer / DevOps">Developer / DevOps</option>
-              </select>
-            </div>
-          </div>
 
           {/* Password - Full Width */}
           <PasswordInput
