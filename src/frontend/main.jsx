@@ -4,13 +4,26 @@ import './styles.css';
 import './landing.css';
 import './auth.css';
 
+// Toast System
+import { ToastProvider } from './components/auth/Toast';
+
+// Auth State Store
+import { useAuthStore } from './store/authStore';
+
 // Components
 import { Sidebar } from './components/Sidebar';
 import { Topbar } from './components/Topbar';
 
-// Pages
+// Public & Marketing Pages
 import { LandingPage } from './pages/LandingPage';
-import { AuthPage, LoginPage, SignupPage } from './pages/AuthPage';
+
+// Authentication Pages
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
+
+// Operational SOC Pages
 import { DashboardPage } from './pages/DashboardPage';
 import { UploadPage } from './pages/UploadPage';
 import { AttackChainsPage } from './pages/AttackChainsPage';
@@ -31,12 +44,14 @@ function App() {
   const [selectedChainId, setSelectedChainId] = useState('AC001');
   const [selectedReportId, setSelectedReportId] = useState(null);
 
+  const { isAuthenticated } = useAuthStore();
+
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('sentinel_theme') || 'light';
   });
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
   useEffect(() => {
@@ -81,11 +96,10 @@ function App() {
     );
   }
 
-  // 2. Authentication Pages (Login & Signup) have their own full-screen split layout
+  // 2. Authentication Pages (Public Accessible)
   if (currentRoute === '/login' || currentRoute === '/signin') {
     return (
-      <AuthPage
-        initialMode="login"
+      <LoginPage
         navigate={navigate}
         onLogin={() => navigate('/dashboard')}
         theme={theme}
@@ -94,12 +108,42 @@ function App() {
     );
   }
 
-  if (currentRoute === '/signup' || currentRoute === '/register') {
+  if (currentRoute === '/register' || currentRoute === '/signup') {
     return (
-      <AuthPage
-        initialMode="signup"
+      <RegisterPage
         navigate={navigate}
-        onLogin={() => navigate('/dashboard')}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  if (currentRoute === '/forgot-password') {
+    return (
+      <ForgotPasswordPage
+        navigate={navigate}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  if (currentRoute.startsWith('/reset-password')) {
+    return (
+      <ResetPasswordPage
+        navigate={navigate}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  // 3. Route Guard: All subsequent routes (/dashboard, /upload, /attack-chains, etc.) require authentication
+  if (!isAuthenticated) {
+    return (
+      <LoginPage
+        navigate={navigate}
+        onLogin={() => navigate(currentRoute)}
         theme={theme}
         toggleTheme={toggleTheme}
       />
@@ -231,5 +275,9 @@ function App() {
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
-  createRoot(rootElement).render(<App />);
+  createRoot(rootElement).render(
+    <ToastProvider>
+      <App />
+    </ToastProvider>
+  );
 }

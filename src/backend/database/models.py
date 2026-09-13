@@ -351,3 +351,29 @@ class ChatHistoryDB(Base):
     def __repr__(self) -> str:
         return f"<ChatHistoryDB id={self.id} session_id={self.session_id} role={self.role}>"
 
+
+# ---------------------------------------------------------------------------
+# User (Enterprise Authentication)
+# ---------------------------------------------------------------------------
+class UserDB(Base):
+    """Stores operator and analyst accounts for authentication and role-based access control."""
+    __tablename__ = "users"
+
+    id = UUIDColumn()
+    email = Column(String(255), unique=True, nullable=False, index=True)
+    hashed_password = Column(Text, nullable=False)
+    full_name = Column(String(255), nullable=False)
+    organization = Column(String(255), nullable=True, default="Security Operations Center")
+    role = Column(String(100), nullable=False, default="SOC Analyst")
+    reset_token = Column(String(255), nullable=True)
+    reset_token_expires = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    __table_args__ = (
+        Index("ix_users_role", "role"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<UserDB id={self.id} email={self.email} role={self.role}>"
+
+

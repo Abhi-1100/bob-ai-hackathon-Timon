@@ -1,21 +1,81 @@
-/**
- * Sentinel Forge — Enterprise Dynamic API Service
- * Interacts directly with FastAPI backend. All data is dynamically loaded
- * from PostgreSQL database populated by user-uploaded CSV alerts.
- * Fallbacks are strictly zero-state (0 static mock data).
- */
+import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+// 1. Axios Instance for Enterprise API and Auth Calls
+export const axiosClient = axios.create({
+  baseURL: API_BASE,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 15000,
+});
+
+axiosClient.interceptors.request.use(
+  (config) => {
+    try {
+      const token = localStorage.getItem('d2_access_token');
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (e) {
+      console.warn('[API] Could not attach token', e);
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      const url = error.config?.url || '';
+      if (!url.includes('/api/v1/auth/login') && !url.includes('/api/v1/auth/register')) {
+        console.warn('[API] 401 Unauthorized. Redirecting to login.');
+        try {
+          localStorage.removeItem('d2_access_token');
+          localStorage.removeItem('d2_user_profile');
+        } catch (e) {
+          // ignore
+        }
+        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+          window.location.href = '/login?expired=true';
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+// 2. Dual-mode callable API function for backward-compatibility with existing pages
 export async function api(path, options = {}) {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('d2_access_token') : null;
+    const headers = {
+      ...(options.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+
     const response = await fetch(`${API_BASE}${path}`, {
       ...options,
+      headers,
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
+
+    if (response.status === 401) {
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+        localStorage.removeItem('d2_access_token');
+        localStorage.removeItem('d2_user_profile');
+        window.location.href = '/login?expired=true';
+      }
+      throw new Error('Unauthorized');
+    }
 
     if (!response.ok) {
       const errText = await response.text().catch(() => '');
@@ -28,6 +88,13 @@ export async function api(path, options = {}) {
     return getFallbackData(path, options);
   }
 }
+
+// Attach Axios methods to api object
+api.get = (url, config) => axiosClient.get(url, config);
+api.post = (url, data, config) => axiosClient.post(url, data, config);
+api.put = (url, data, config) => axiosClient.put(url, data, config);
+api.delete = (url, config) => axiosClient.delete(url, config);
+api.interceptors = axiosClient.interceptors;
 
 /**
  * 0-Data Dynamic Fallbacks: strictly empty states (no fake static records)
@@ -127,8 +194,12 @@ api.uploadAndIngest = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
 
+  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('d2_access_token') : null;
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
   const response = await fetch(`${API_BASE}/api/v1/upload/ingest`, {
     method: 'POST',
+    headers,
     body: formData,
   });
 
@@ -156,3 +227,7 @@ export function severity(val) {
   if (s.includes('med')) return 'medium';
   return 'low';
 }
+
+export const getId = (chain) => chain?.chain_id || chain?.id || chain?.chainId;
+
+export default api;
