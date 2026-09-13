@@ -1,6 +1,4 @@
-# 🚀 [Your Project Title Here]
-
-> ⚠️ **Replace everything in `[ ]` brackets with your actual content before submission.**
+# 🚀 TimonTrack
 
 ---
 
@@ -8,16 +6,16 @@
 
 | Field | Value |
 |---|---|
-| **Team Name** | [Your Team Name] |
-| **Track** | [AI / DevOps / Sustainability / Open] |
-| **Team Lead** | [Name] — [email@ibm.com] |
-| **Members** | [Name 1], [Name 2], [Name 3] |
+| **Team Name** | TimonTrack |
+| **Track** | AI |
+| **Team Lead** | Abhi Kakadiya — abhikakadiya1043@gmail.com |
+| **Members** | Jaimin, Digisha, Om |
 
 ---
 
 ## 🎯 Problem Statement
 
-> In 2–3 sentences: What problem does your project solve? Who experiences this problem?
+> See [`docs/problem-statement.md`](docs/problem-statement.md) for the full problem statement.
 
 [Describe the real-world problem your project addresses. Be specific about who the user is and what pain point they face.]
 
@@ -25,7 +23,7 @@
 
 ## 💡 Solution
 
-> In 2–3 sentences: What did you build? How does it solve the problem above?
+> See [`docs/solution-overview.md`](docs/solution-overview.md) for the full solution overview.
 
 [Describe your solution clearly. Explain the core mechanism — what makes it work.]
 
@@ -77,14 +75,14 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/[your-repo].git
-cd [your-repo]
+git clone https://github.com/Abhi-1100/bob-ai-hackathon-Timon.git
+cd bob-ai-hackathon-Timon
 
 # 2. Install dependencies
 [your install command here]
 
 # 3. Configure environment
-cp .env.example .env
+cp src/.env.example src/.env
 # Edit .env with your values
 
 # 4. Run the project
@@ -100,7 +98,7 @@ cp .env.example .env
 | 📹 Demo Video | [See demo/demo-video-link.txt](demo/demo-video-link.txt) |
 | 🌐 Live Demo | [See demo/live-demo-url.txt](demo/live-demo-url.txt) |
 | 🖼️ Screenshots | [See demo/screenshots/](demo/screenshots/) |
-| 📊 Presentation | [See presentation/slides.pdf](presentation/) |
+| 📊 Presentation | [See presentation/](presentation/) |
 
 ---
 
@@ -119,3 +117,7 @@ cp .env.example .env
 [Tell the judges what part of your submission is strongest and worth paying close attention to.]
 
 ---
+
+## 🔗 Repository
+
+[https://github.com/Abhi-1100/bob-ai-hackathon-Timon](https://github.com/Abhi-1100/bob-ai-hackathon-Timon)
