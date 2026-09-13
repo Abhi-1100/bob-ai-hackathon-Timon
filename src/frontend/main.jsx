@@ -76,9 +76,13 @@ function App() {
   // Check if system already has alerts in DB if hasUploaded is false
   useEffect(() => {
     if (isAuthenticated && !hasUploaded) {
-      api.getDashboardStats()
+      const checkStats = typeof api.getDashboardStats === 'function'
+        ? api.getDashboardStats()
+        : api('/api/v1/dashboard/stats');
+
+      Promise.resolve(checkStats)
         .then((stats) => {
-          if (stats && (stats.total_alerts > 0 || stats.chains_count > 0)) {
+          if (stats && (stats.total_alerts > 0 || stats.total_chains > 0 || stats.chains_count > 0)) {
             localStorage.setItem('d2_has_uploaded', 'true');
             setHasUploaded(true);
           }

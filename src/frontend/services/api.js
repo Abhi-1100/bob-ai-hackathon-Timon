@@ -95,6 +95,7 @@ api.post = (url, data, config) => axiosClient.post(url, data, config);
 api.put = (url, data, config) => axiosClient.put(url, data, config);
 api.delete = (url, config) => axiosClient.delete(url, config);
 api.interceptors = axiosClient.interceptors;
+api.getDashboardStats = () => api('/api/v1/dashboard/stats');
 
 /**
  * 0-Data Dynamic Fallbacks: strictly empty states (no fake static records)
