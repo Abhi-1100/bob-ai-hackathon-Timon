@@ -22,7 +22,7 @@ export function ChatPage({ onOpenChain }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      message: 'Sentinel AI Threat Analyst initialized. I am grounded directly in your uploaded CSV logs and correlated attack chains. Ask me about detected adversary techniques, critical incidents, or remediation playbooks.',
+      message: 'Threat Intelligence Correlation & Alert Prioritisation Assistant initialized. Grounded dynamically in your uploaded CSV logs and correlated attack chains. Ask me about detected adversary techniques, critical incidents, or remediation playbooks.',
       sources: ['PostgreSQL Telemetry DB', 'Deterministic Correlation Engine', 'MITRE ATT&CK Matrix']
     }
   ]);
@@ -192,7 +192,7 @@ export function ChatPage({ onOpenChain }) {
                       letterSpacing: '0.04em'
                     }}>
                       <Shield size={12} />
-                      <span>SENTINEL THREAT COPILOT</span>
+                      <span>THREAT INTEL COPILOT</span>
                     </div>
                   )}
 

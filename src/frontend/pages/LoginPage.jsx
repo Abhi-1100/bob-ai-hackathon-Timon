@@ -62,11 +62,11 @@ export function LoginPage({ onLogin }) {
           }}>
             <ShieldAlert size={26} />
           </div>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
-            SENTINEL<span style={{ color: 'var(--blue)' }}>FORGE</span>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.03em' }}>
+            THREAT<span style={{ color: 'var(--blue)' }}>INTEL ASSISTANT</span>
           </h2>
-          <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 4 }}>
-            Threat Intelligence Operations Console
+          <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 4 }}>
+            Threat Intelligence Correlation & Alert Prioritisation
           </p>
           <div style={{
             display: 'inline-flex',

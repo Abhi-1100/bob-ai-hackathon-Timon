@@ -280,12 +280,13 @@ a {
 }
 
 .brand-subtitle {
-  font-size: 9.5px;
+  font-size: 8.5px;
   color: var(--sidebar-text-muted);
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   display: block;
   text-transform: uppercase;
+  margin-top: 1px;
 }
 
 .collapse-btn {

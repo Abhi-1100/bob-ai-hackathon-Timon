@@ -16,7 +16,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
     <header className="topbar">
       <div className="topbar-left">
         <div className="breadcrumbs">
-          <span>SENTINEL FORGE</span>
+          <span>THREAT INTEL ASSISTANT</span>
           <ChevronRight size={12} />
           <span>{breadcrumb}</span>
         </div>
