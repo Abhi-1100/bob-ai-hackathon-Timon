@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Shield, Lock, Mail, ArrowRight, CheckCircle2, Eye, EyeOff, ShieldAlert } from 'lucide-react';
+import { Shield, Lock, Mail, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { BrandLogo } from '../components/BrandLogo';
 
 export function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('analyst@sentinelforge.mil');
@@ -49,18 +50,18 @@ export function LoginPage({ onLogin }) {
 
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <div style={{
-            width: 48,
-            height: 48,
-            borderRadius: 12,
-            background: 'var(--blue)',
+            width: 52,
+            height: 52,
+            borderRadius: 14,
+            background: 'linear-gradient(145deg, #0F172A, #1E293B)',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#FFFFFF',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+            boxShadow: '0 4px 14px rgba(15, 23, 42, 0.15)',
             marginBottom: 14
           }}>
-            <ShieldAlert size={26} />
+            <BrandLogo size={32} />
           </div>
           <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.03em' }}>
             THREAT<span style={{ color: 'var(--blue)' }}>INTEL ASSISTANT</span>

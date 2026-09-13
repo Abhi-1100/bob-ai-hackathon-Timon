@@ -10,11 +10,11 @@ import {
   MessageSquare,
   BarChart3,
   Settings,
-  Radar,
   PanelLeftClose,
   PanelLeftOpen,
   LogOut
 } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 
 export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
   const navItems = [
@@ -35,7 +35,7 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
       <div className="sidebar-header">
         <div className="brand-wrap">
           <div className="brand-icon">
-            <Radar size={22} />
+            <BrandLogo size={24} />
           </div>
           {!collapsed && (
             <div>
