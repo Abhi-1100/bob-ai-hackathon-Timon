@@ -44,17 +44,22 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
     const res = await login(data);
     if (res.success) {
       showToast(`Welcome back, ${res.user.name}`, 'success');
-      if (onLogin) onLogin();
-      else if (navigate) navigate('/dashboard');
+      const hasUploaded = localStorage.getItem('d2_has_uploaded') === 'true';
+      const targetRoute = hasUploaded ? '/dashboard' : '/upload';
+      if (onLogin) onLogin(targetRoute);
+      else if (navigate) navigate(targetRoute);
     } else {
       showToast(res.error, 'error');
     }
   };
 
   const handleEvaluatorBypass = () => {
+    try {
+      localStorage.setItem('d2_has_uploaded', 'true');
+    } catch {}
     const user = loginAsEvaluator();
     showToast(`Logged in as ${user.name}`, 'success');
-    if (onLogin) onLogin();
+    if (onLogin) onLogin('/dashboard');
     else if (navigate) navigate('/dashboard');
   };
 

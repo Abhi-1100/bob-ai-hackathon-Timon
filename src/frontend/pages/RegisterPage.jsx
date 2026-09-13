@@ -60,10 +60,13 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
     clearError();
     const res = await registerUser(data);
     if (res.success) {
-      showToast('Account created successfully! Redirecting to login…', 'success');
+      try {
+        localStorage.setItem('d2_has_uploaded', 'false');
+      } catch {}
+      showToast('Account created! Please upload your alert CSV to initialize the platform.', 'success');
       setTimeout(() => {
-        if (navigate) navigate('/login');
-      }, 700);
+        if (navigate) navigate('/upload');
+      }, 600);
     } else {
       showToast(res.error, 'error');
     }

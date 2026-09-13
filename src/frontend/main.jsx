@@ -5,10 +5,11 @@ import './landing.css';
 import './auth.css';
 
 // Toast System
-import { ToastProvider } from './components/auth/Toast';
+import { ToastProvider, useToast } from './components/auth/Toast';
 
 // Auth State Store
 import { useAuthStore } from './store/authStore';
+import { api } from './services/api';
 
 // Components
 import { Sidebar } from './components/Sidebar';
@@ -45,6 +46,9 @@ function App() {
   const [selectedReportId, setSelectedReportId] = useState(null);
 
   const { isAuthenticated } = useAuthStore();
+  const [hasUploaded, setHasUploaded] = useState(() => {
+    return localStorage.getItem('d2_has_uploaded') === 'true';
+  });
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('sentinel_theme') || 'light';
@@ -68,6 +72,30 @@ function App() {
     window.addEventListener('popstate', handlePop);
     return () => window.removeEventListener('popstate', handlePop);
   }, []);
+
+  // Check if system already has alerts in DB if hasUploaded is false
+  useEffect(() => {
+    if (isAuthenticated && !hasUploaded) {
+      api.getDashboardStats()
+        .then((stats) => {
+          if (stats && (stats.total_alerts > 0 || stats.chains_count > 0)) {
+            localStorage.setItem('d2_has_uploaded', 'true');
+            setHasUploaded(true);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isAuthenticated, hasUploaded]);
+
+  // Route Guard: Prevent access to console routes if user hasn't uploaded CSV
+  useEffect(() => {
+    if (isAuthenticated && !hasUploaded) {
+      const openRoutes = ['/upload', '/settings', '/', '/landing'];
+      if (!openRoutes.includes(currentRoute)) {
+        navigate('/upload');
+      }
+    }
+  }, [isAuthenticated, hasUploaded, currentRoute]);
 
   const navigate = (route) => {
     window.history.pushState({}, '', route);
@@ -101,7 +129,7 @@ function App() {
     return (
       <LoginPage
         navigate={navigate}
-        onLogin={() => navigate('/dashboard')}
+        onLogin={(targetRoute) => navigate(targetRoute || (hasUploaded ? '/dashboard' : '/upload'))}
         theme={theme}
         toggleTheme={toggleTheme}
       />
@@ -182,7 +210,12 @@ function App() {
       case '/upload':
         pageTitle = 'Alert Feed Ingestion';
         breadcrumb = 'DATA INTAKE';
-        content = <UploadPage navigate={navigate} />;
+        content = (
+          <UploadPage
+            navigate={navigate}
+            onUploadSuccess={() => setHasUploaded(true)}
+          />
+        );
         break;
 
       case '/attack-chains':
@@ -254,6 +287,7 @@ function App() {
         navigate={navigate}
         collapsed={collapsed}
         setCollapsed={setCollapsed}
+        hasUploaded={hasUploaded}
       />
 
       <div className="main-shell">

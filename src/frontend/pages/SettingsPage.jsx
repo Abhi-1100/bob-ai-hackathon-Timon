@@ -198,6 +198,9 @@ export function SettingsPage() {
     setResettingDb(true);
     try {
       await api.post('/api/v1/dashboard/reset');
+      try {
+        localStorage.setItem('d2_has_uploaded', 'false');
+      } catch {}
       setResetConfirmOpen(false);
       triggerSuccess('Database wiped to 0-state. Ready for clean CSV upload!');
       fetchSystemStatus();

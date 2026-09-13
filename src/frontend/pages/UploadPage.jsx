@@ -19,7 +19,7 @@ import {
 import { api } from '../services/api';
 import { ErrorBanner } from '../components/Common';
 
-export function UploadPage({ navigate }) {
+export function UploadPage({ navigate, onUploadSuccess }) {
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
   const [currentStep, setCurrentStep] = useState('');
@@ -28,6 +28,9 @@ export function UploadPage({ navigate }) {
   const [resetMessage, setResetMessage] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
   const fileInputRef = useRef(null);
+  const [hasUploadedState, setHasUploadedState] = useState(() => {
+    return typeof window !== 'undefined' && localStorage.getItem('d2_has_uploaded') === 'true';
+  });
 
   const handleFile = (f) => {
     setError('');
@@ -52,6 +55,11 @@ export function UploadPage({ navigate }) {
       setCurrentStep('Correlating multi-stage attack chains & mapping MITRE techniques...');
       const response = await api.uploadAndIngest(selectedFile);
       setResult(response);
+      try {
+        localStorage.setItem('d2_has_uploaded', 'true');
+        setHasUploadedState(true);
+      } catch {}
+      if (onUploadSuccess) onUploadSuccess();
     } catch (err) {
       setError(err.message || 'Alert ingest failed. Please check CSV format and API connection.');
     } finally {
@@ -69,6 +77,10 @@ export function UploadPage({ navigate }) {
       setResult(null);
       setFile(null);
       setConfirmReset(false);
+      try {
+        localStorage.setItem('d2_has_uploaded', 'false');
+        setHasUploadedState(false);
+      } catch {}
     } catch (err) {
       setError(err.message || 'Failed to reset database.');
     } finally {
@@ -182,6 +194,57 @@ export function UploadPage({ navigate }) {
       </div>
 
       <ErrorBanner message={error} onDismiss={() => setError('')} />
+
+      {/* Onboarding Callout: Ingest CSV to Unlock Platform */}
+      {!hasUploadedState && !result && (
+        <div style={{
+          padding: '20px 24px',
+          background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(6, 182, 212, 0.08))',
+          border: '1px solid rgba(6, 182, 212, 0.4)',
+          borderRadius: 12,
+          marginBottom: 24,
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 16,
+          boxShadow: '0 4px 20px -2px rgba(6, 182, 212, 0.15)'
+        }}>
+          <div style={{
+            width: 44,
+            height: 44,
+            borderRadius: 10,
+            background: 'rgba(6, 182, 212, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--cyan-bright)',
+            flexShrink: 0
+          }}>
+            <ShieldAlert size={24} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+              <span style={{
+                background: 'var(--blue)',
+                color: '#fff',
+                fontSize: 10.5,
+                fontWeight: 700,
+                padding: '2px 8px',
+                borderRadius: 4,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase'
+              }}>
+                Action Required
+              </span>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                Initial Setup: Upload Security Telemetry to Launch Platform
+              </h3>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 13, lineHeight: 1.5, margin: 0 }}>
+              To access your Threat Intelligence Dashboard, Attack Chains, and AI Copilot, please upload your security alert CSV below, or click <strong>Load Test Alert CSV</strong> to initialize with enterprise telemetry.
+            </p>
+          </div>
+        </div>
+      )}
 
       {resetMessage && (
         <div style={{

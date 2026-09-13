@@ -13,13 +13,16 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   LogOut,
-  Globe
+  Globe,
+  Lock
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { useAuthStore } from '../store/authStore';
+import { useToast } from './auth/Toast';
 
-export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
+export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed, hasUploaded = true }) {
   const { user } = useAuthStore();
+  const { showToast } = useToast();
   const displayName = user?.name || 'Security Analyst';
   const displayRole = user?.role || 'SOC Analyst';
   const initials = displayName
@@ -29,18 +32,27 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
     .substring(0, 2)
     .toUpperCase();
   const navItems = [
-    { route: '/', label: 'Product Landing', icon: Globe },
-    { route: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { route: '/upload', label: 'Upload Alerts', icon: UploadCloud },
-    { route: '/attack-chains', label: 'Attack Chains', icon: Network },
-    { route: '/mitre', label: 'MITRE Analysis', icon: ShieldAlert },
-    { route: '/risk', label: 'Risk Prioritization', icon: Flame },
-    { route: '/recommendations', label: 'Recommendations', icon: Lightbulb },
-    { route: '/reports', label: 'Intelligence Reports', icon: FileText },
-    { route: '/chat', label: 'AI Analyst Chat', icon: MessageSquare },
-    { route: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { route: '/settings', label: 'Settings', icon: Settings },
+    { route: '/', label: 'Product Landing', icon: Globe, requiresUpload: false },
+    { route: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, requiresUpload: true },
+    { route: '/upload', label: 'Upload Alerts', icon: UploadCloud, requiresUpload: false },
+    { route: '/attack-chains', label: 'Attack Chains', icon: Network, requiresUpload: true },
+    { route: '/mitre', label: 'MITRE Analysis', icon: ShieldAlert, requiresUpload: true },
+    { route: '/risk', label: 'Risk Prioritization', icon: Flame, requiresUpload: true },
+    { route: '/recommendations', label: 'Recommendations', icon: Lightbulb, requiresUpload: true },
+    { route: '/reports', label: 'Intelligence Reports', icon: FileText, requiresUpload: true },
+    { route: '/chat', label: 'AI Analyst Chat', icon: MessageSquare, requiresUpload: true },
+    { route: '/analytics', label: 'Analytics', icon: BarChart3, requiresUpload: true },
+    { route: '/settings', label: 'Settings', icon: Settings, requiresUpload: false },
   ];
+
+  const handleNavClick = (item) => {
+    if (item.requiresUpload && !hasUploaded) {
+      showToast('Please upload an alert CSV or load test data to unlock the platform.', 'warning');
+      navigate('/upload');
+      return;
+    }
+    navigate(item.route);
+  };
 
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
@@ -73,15 +85,40 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
         {navItems.map(item => {
           const Icon = item.icon;
           const isActive = currentRoute === item.route || (item.route === '/attack-chains' && currentRoute.startsWith('/incident'));
+          const isLocked = item.requiresUpload && !hasUploaded;
+
           return (
             <button
               key={item.route}
               className={`nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => navigate(item.route)}
-              title={collapsed ? item.label : undefined}
+              onClick={() => handleNavClick(item)}
+              title={collapsed ? (isLocked ? `${item.label} (Upload Required)` : item.label) : undefined}
+              style={{
+                opacity: isLocked ? 0.65 : 1,
+              }}
             >
               <Icon size={18} />
               <span className="nav-text">{item.label}</span>
+              {isLocked && !collapsed && (
+                <Lock size={12} style={{ marginLeft: 'auto', color: '#F59E0B' }} />
+              )}
+              {item.route === '/upload' && !hasUploaded && !collapsed && (
+                <span
+                  className="nav-badge"
+                  style={{
+                    marginLeft: 'auto',
+                    background: 'rgba(6, 182, 212, 0.15)',
+                    color: 'var(--cyan-bright)',
+                    border: '1px solid rgba(6, 182, 212, 0.3)',
+                    fontSize: 10,
+                    fontWeight: 700,
+                    padding: '1px 6px',
+                    borderRadius: 4,
+                  }}
+                >
+                  Step 1
+                </span>
+              )}
               {item.badge && <span className="nav-badge">{item.badge}</span>}
             </button>
           );
