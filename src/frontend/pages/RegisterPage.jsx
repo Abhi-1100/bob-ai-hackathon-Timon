@@ -96,28 +96,27 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {/* Row 1: Name & Email */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-            <AuthInput
-              label="Full Name"
-              icon={User}
-              placeholder="Alex Vance"
-              error={errors.name?.message}
-              {...register('name')}
-            />
+          {/* Full Name - Full Width */}
+          <AuthInput
+            label="Full Name"
+            icon={User}
+            placeholder="Alex Vance"
+            error={errors.name?.message}
+            {...register('name')}
+          />
 
-            <AuthInput
-              label="Work Email"
-              type="email"
-              icon={Mail}
-              placeholder="alex@company.com"
-              error={errors.email?.message}
-              {...register('email')}
-            />
-          </div>
+          {/* Work Email - Full Width */}
+          <AuthInput
+            label="Work Email"
+            type="email"
+            icon={Mail}
+            placeholder="alex@company.com"
+            error={errors.email?.message}
+            {...register('email')}
+          />
 
-          {/* Row 2: Organization & Role */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {/* Company & Role Row */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <AuthInput
               label="Company / Team"
               icon={Building2}
@@ -144,7 +143,7 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
                   background: 'var(--input-bg)',
                   border: '1px solid var(--input-border)',
                   borderRadius: 9,
-                  padding: '9px 12px',
+                  padding: '9.5px 12px',
                   color: 'var(--input-text)',
                   fontSize: 13,
                   outline: 'none',
@@ -162,27 +161,26 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
             </div>
           </div>
 
-          {/* Row 3: Password & Confirm Password */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-            <PasswordInput
-              label="Password"
-              value={passwordVal}
-              error={errors.password?.message}
-              placeholder="Min 8 characters"
-              {...register('password')}
-            />
+          {/* Password - Full Width */}
+          <PasswordInput
+            label="Password"
+            value={passwordVal}
+            error={errors.password?.message}
+            placeholder="At least 8 characters"
+            {...register('password')}
+          />
 
-            <PasswordInput
-              label="Confirm Password"
-              value={confirmPasswordVal}
-              error={errors.confirmPassword?.message}
-              placeholder="Re-type password"
-              {...register('confirmPassword')}
-            />
-          </div>
+          {/* Confirm Password - Full Width */}
+          <PasswordInput
+            label="Confirm Password"
+            value={confirmPasswordVal}
+            error={errors.confirmPassword?.message}
+            placeholder="Re-enter your password"
+            {...register('confirmPassword')}
+          />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-secondary)', fontSize: 11.5, cursor: 'pointer' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 2 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 7, color: 'var(--text-secondary)', fontSize: 12, cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 style={{ accentColor: 'var(--blue)' }}

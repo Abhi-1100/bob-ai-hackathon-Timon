@@ -10,13 +10,13 @@ export function AuthCard({ children, className = "" }) {
       className={`auth-card ${className}`}
       style={{
         width: '100%',
-        maxWidth: 440,
+        maxWidth: 480,
         margin: '0 auto',
         background: 'var(--card)',
         border: '1px solid var(--card-border)',
-        borderRadius: '14px',
-        padding: '20px 24px',
-        boxShadow: '0 12px 32px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(37, 99, 235, 0.08)',
+        borderRadius: '16px',
+        padding: '24px 28px',
+        boxShadow: '0 20px 45px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(37, 99, 235, 0.08)',
         position: 'relative',
         overflow: 'hidden',
       }}
