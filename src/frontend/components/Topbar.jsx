@@ -146,7 +146,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
             </div>
             <div style={{ textAlign: 'left', display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.1 }}>{displayName}</span>
-              <span style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.1 }}>Level 3 SOC</span>
+              <span style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.1 }}>{displayRole}</span>
             </div>
             <ChevronDown size={13} color="var(--text-muted)" />
           </button>

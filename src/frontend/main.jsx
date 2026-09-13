@@ -228,7 +228,7 @@ function App() {
         break;
 
       case '/settings':
-        pageTitle = 'Station & Engine Configurations';
+        pageTitle = 'Platform Settings & Preferences';
         breadcrumb = 'SETTINGS';
         content = <SettingsPage />;
         break;

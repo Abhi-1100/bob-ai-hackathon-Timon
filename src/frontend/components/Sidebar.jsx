@@ -16,8 +16,18 @@ import {
   Globe
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
+import { useAuthStore } from '../store/authStore';
 
 export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
+  const { user } = useAuthStore();
+  const displayName = user?.name || 'Security Analyst';
+  const displayRole = user?.role || 'SOC Analyst';
+  const initials = displayName
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase();
   const navItems = [
     { route: '/', label: 'Product Landing', icon: Globe },
     { route: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -80,11 +90,11 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
 
       <div className="sidebar-footer">
         <div className="operator-badge">
-          <div className="operator-avatar">SO</div>
+          <div className="operator-avatar">{initials}</div>
           {!collapsed && (
             <div className="operator-meta">
-              <div className="operator-name">Analyst Jaimin</div>
-              <div className="operator-role">Level 03 · TimonTrack</div>
+              <div className="operator-name">{displayName}</div>
+              <div className="operator-role">{displayRole}</div>
             </div>
           )}
         </div>

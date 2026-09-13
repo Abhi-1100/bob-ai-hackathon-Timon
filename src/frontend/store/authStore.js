@@ -43,6 +43,18 @@ export const useAuthStore = create((set, get) => ({
     set({ user });
   },
 
+  updateProfile: (updatedFields) => {
+    const current = get().user || {};
+    const updatedUser = { ...current, ...updatedFields };
+    try {
+      localStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
+    } catch (e) {
+      console.warn('localStorage error', e);
+    }
+    set({ user: updatedUser });
+    return updatedUser;
+  },
+
   setToken: (token) => {
     try {
       if (token) {
