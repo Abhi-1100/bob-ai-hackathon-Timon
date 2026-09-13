@@ -1,78 +1,144 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BrandLogo } from '../BrandLogo';
-import { ArrowRight, Shield, Moon, Sun, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronRight, Moon, Sun, Shield, Sparkles, Activity, Layers } from 'lucide-react';
 
 export function LandingNavbar({ navigate, theme, toggleTheme, onRequestDemo }) {
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   const scrollTo = (id) => {
+    setSolutionsOpen(false);
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSolutionsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <header className="landing-navbar">
-      <div className="landing-nav-container">
-        {/* Brand */}
-        <div className="landing-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="brand-icon">
-            <BrandLogo size={24} />
+    <header className="landing-navbar-wrapper">
+      <div className="landing-navbar-pill">
+        {/* Left: Brand Logo & Title */}
+        <div
+          className="nav-brand-simple"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="nav-brand-icon-box">
+            <BrandLogo size={22} />
           </div>
-          <div>
-            <div className="brand-title">
-              D2 <span>THREAT INTEL</span>
-            </div>
-            <span className="brand-subtitle">CORRELATION & PRIORITISATION</span>
-          </div>
+          <span className="nav-brand-text">D2 ThreatIntel</span>
         </div>
 
-        {/* Nav Links */}
-        <nav className="landing-nav-links">
-          <button onClick={() => scrollTo('features')} className="nav-link-btn">Features</button>
-          <button onClick={() => scrollTo('how-it-works')} className="nav-link-btn">How It Works</button>
-          <button onClick={() => scrollTo('platform')} className="nav-link-btn">Platform Preview</button>
-          <button onClick={() => scrollTo('chat-copilot')} className="nav-link-btn">AI Copilot</button>
-          <button onClick={() => scrollTo('architecture')} className="nav-link-btn">Architecture</button>
-          <button onClick={() => scrollTo('benefits')} className="nav-link-btn">Why D2</button>
+        {/* Center: Navigation Links */}
+        <nav className="nav-center-links">
+          {/* Solutions Dropdown */}
+          <div className="nav-dropdown-wrapper" ref={dropdownRef}>
+            <button
+              onClick={() => setSolutionsOpen(!solutionsOpen)}
+              className={`nav-simple-link ${solutionsOpen ? 'active' : ''}`}
+            >
+              <span>Solutions</span>
+              <ChevronDown size={14} className={`dropdown-chevron ${solutionsOpen ? 'rotated' : ''}`} />
+            </button>
+
+            {solutionsOpen && (
+              <div className="nav-dropdown-menu">
+                <button onClick={() => scrollTo('features')} className="dropdown-item">
+                  <div className="dropdown-item-icon">
+                    <Activity size={15} color="#2563EB" />
+                  </div>
+                  <div>
+                    <div className="dropdown-item-title">Alert Correlation</div>
+                    <div className="dropdown-item-desc">Transform thousands of alerts into attack chains</div>
+                  </div>
+                </button>
+
+                <button onClick={() => scrollTo('features')} className="dropdown-item">
+                  <div className="dropdown-item-icon">
+                    <Shield size={15} color="#059669" />
+                  </div>
+                  <div>
+                    <div className="dropdown-item-title">MITRE ATT&CK Mapping</div>
+                    <div className="dropdown-item-desc">Automated adversary technique classification</div>
+                  </div>
+                </button>
+
+                <button onClick={() => scrollTo('features')} className="dropdown-item">
+                  <div className="dropdown-item-icon">
+                    <Layers size={15} color="#EA580C" />
+                  </div>
+                  <div>
+                    <div className="dropdown-item-title">Risk Scoring Engine</div>
+                    <div className="dropdown-item-desc">Deterministic 0-100 severity prioritization</div>
+                  </div>
+                </button>
+
+                <button onClick={() => scrollTo('chat-copilot')} className="dropdown-item">
+                  <div className="dropdown-item-icon">
+                    <Sparkles size={15} color="#7C3AED" />
+                  </div>
+                  <div>
+                    <div className="dropdown-item-title">AI Analyst Copilot</div>
+                    <div className="dropdown-item-desc">Vector-grounded intelligence Q&A</div>
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
+
+          <button onClick={() => scrollTo('benefits')} className="nav-simple-link">
+            Enterprise
+          </button>
+
+          <button onClick={() => scrollTo('how-it-works')} className="nav-simple-link">
+            <span>Intelligence</span>
+            <span className="nav-pro-badge">PRO</span>
+          </button>
+
+          <button onClick={() => navigate('/dashboard')} className="nav-simple-link nav-live-app">
+            <span>Live App</span>
+            <span className="live-dot" />
+          </button>
+
+          <button onClick={() => scrollTo('platform')} className="nav-simple-link">
+            Pricing
+          </button>
         </nav>
 
-        {/* Action CTAs */}
-        <div className="landing-nav-actions">
+        {/* Right: Actions */}
+        <div className="nav-right-actions">
           <button
             onClick={toggleTheme}
-            className="theme-toggle-btn"
+            className="nav-theme-toggle"
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+            aria-label="Toggle theme"
           >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
 
-          <button
-            onClick={() => navigate('/login')}
-            className="btn btn-secondary"
-            style={{ padding: '7px 14px', fontSize: 13 }}
-          >
-            Sign In
+          <button onClick={() => navigate('/login')} className="nav-signin-btn">
+            Sign in
           </button>
 
-          <button
-            onClick={onRequestDemo}
-            className="btn btn-secondary"
-            style={{ padding: '7px 14px', fontSize: 13, borderColor: 'rgba(37, 99, 235, 0.4)' }}
-          >
-            <Sparkles size={14} color="var(--blue)" />
-            <span>Request Demo</span>
-          </button>
-
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="btn btn-primary"
-            style={{ padding: '7px 16px', fontSize: 13 }}
-          >
-            <span>Launch Console</span>
-            <ArrowRight size={14} />
+          <button onClick={onRequestDemo} className="nav-get-started-btn">
+            <span>Get started</span>
+            <ChevronRight size={14} />
           </button>
         </div>
       </div>
     </header>
   );
 }
+
