@@ -132,7 +132,7 @@ export function LandingNavbar({ navigate, theme, toggleTheme, onRequestDemo }) {
             Sign in
           </button>
 
-          <button onClick={onRequestDemo} className="nav-get-started-btn">
+          <button onClick={() => navigate('/signup')} className="nav-get-started-btn">
             <span>Get started</span>
             <ChevronRight size={14} />
           </button>

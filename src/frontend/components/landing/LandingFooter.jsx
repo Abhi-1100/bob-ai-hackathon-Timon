@@ -54,7 +54,8 @@ export function LandingFooter({ navigate }) {
               <li><button onClick={() => navigate('/chat')} className="footer-link">AI Threat Copilot (RAG)</button></li>
               <li><button onClick={() => navigate('/analytics')} className="footer-link">Cross-Domain Analytics</button></li>
               <li><button onClick={() => navigate('/settings')} className="footer-link">Vector DB & API Config</button></li>
-              <li><button onClick={() => navigate('/login')} className="footer-link">Station Clearance Authentication</button></li>
+              <li><button onClick={() => navigate('/login')} className="footer-link">Operator Sign In</button></li>
+              <li><button onClick={() => navigate('/signup')} className="footer-link">Provision Account (Sign Up)</button></li>
             </ul>
           </div>
 
