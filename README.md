@@ -121,3 +121,19 @@ cp src/.env.example src/.env
 ## 🔗 Repository
 
 [https://github.com/Abhi-1100/bob-ai-hackathon-Timon](https://github.com/Abhi-1100/bob-ai-hackathon-Timon)
+# Sentinel Forge frontend
+
+React/Vite frontend for the Threat Intelligence Correlation & Alert Prioritisation Assistant.
+
+Frontend source lives under `src/frontend/`; `index.html` loads `src/frontend/main.jsx` as the Vite entry point.
+
+## Run locally
+
+```powershell
+npm.cmd install
+npm.cmd run dev
+```
+
+The frontend uses `http://localhost:8000` by default. To point it at another FastAPI instance, copy `.env.example` to `.env` and set `VITE_API_BASE_URL`.
+
+The UI intentionally renders empty and error states when the API has no data; it does not seed fabricated threat records.
