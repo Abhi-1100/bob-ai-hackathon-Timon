@@ -12,12 +12,14 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
-  LogOut
+  LogOut,
+  Globe
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 
 export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed }) {
   const navItems = [
+    { route: '/', label: 'Product Landing', icon: Globe },
     { route: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { route: '/upload', label: 'Upload Alerts', icon: UploadCloud },
     { route: '/attack-chains', label: 'Attack Chains', icon: Network },

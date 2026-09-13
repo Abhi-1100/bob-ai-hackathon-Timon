@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
+import './landing.css';
 
 // Components
 import { Sidebar } from './components/Sidebar';
 import { Topbar } from './components/Topbar';
 
 // Pages
+import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { UploadPage } from './pages/UploadPage';
@@ -22,8 +24,7 @@ import { SettingsPage } from './pages/SettingsPage';
 
 function App() {
   const [currentRoute, setCurrentRoute] = useState(() => {
-    const p = window.location.pathname || '/dashboard';
-    return p === '/' ? '/dashboard' : p;
+    return window.location.pathname || '/';
   });
   const [collapsed, setCollapsed] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState('AC001');
@@ -32,6 +33,10 @@ function App() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('sentinel_theme') || 'light';
   });
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -42,8 +47,7 @@ function App() {
   // Sync route on popstate (browser back/forward buttons)
   useEffect(() => {
     const handlePop = () => {
-      const p = window.location.pathname || '/dashboard';
-      setCurrentRoute(p === '/' ? '/dashboard' : p);
+      setCurrentRoute(window.location.pathname || '/');
     };
     window.addEventListener('popstate', handlePop);
     return () => window.removeEventListener('popstate', handlePop);
@@ -65,7 +69,18 @@ function App() {
     navigate(`/reports/${reportId}`);
   };
 
-  // 1. Login Page has its own full-screen layout
+  // 1. Landing Page has its own full-screen layout
+  if (currentRoute === '/' || currentRoute === '/landing') {
+    return (
+      <LandingPage
+        navigate={navigate}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  // 2. Login Page has its own full-screen layout
   if (currentRoute === '/login') {
     return <LoginPage onLogin={() => navigate('/dashboard')} />;
   }

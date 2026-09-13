@@ -8,7 +8,8 @@ import {
   FileText,
   Radio,
   Sun,
-  Moon
+  Moon,
+  Sparkles
 } from 'lucide-react';
 
 export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, theme, setTheme }) {
@@ -28,6 +29,16 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
           <span className="pulse-dot" />
           <span>SYSTEM NOMINAL</span>
         </div>
+
+        <button
+          className="btn btn-secondary"
+          onClick={() => navigate('/')}
+          title="Return to Product Landing Page"
+          style={{ padding: '6px 12px', borderColor: 'rgba(37, 99, 235, 0.35)' }}
+        >
+          <Sparkles size={15} color="var(--blue)" />
+          <span>Product Overview</span>
+        </button>
 
         {setTheme && (
           <button
