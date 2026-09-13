@@ -95,93 +95,103 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <AuthInput
-            label="Full Name"
-            icon={User}
-            placeholder="Alex Vance"
-            error={errors.name?.message}
-            {...register('name')}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* Row 1: Name & Email */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <AuthInput
+              label="Full Name"
+              icon={User}
+              placeholder="Alex Vance"
+              error={errors.name?.message}
+              {...register('name')}
+            />
 
-          <AuthInput
-            label="Enterprise Work Email"
-            type="email"
-            icon={Mail}
-            placeholder="alex.vance@company.com"
-            error={errors.email?.message}
-            {...register('email')}
-          />
-
-          <AuthInput
-            label="Organization / Domain"
-            icon={Building2}
-            placeholder="Acme Cyber Defense Lab"
-            error={errors.organization?.message}
-            {...register('organization')}
-          />
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <label
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: 'var(--text-secondary)',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Operational Role
-            </label>
-            <select
-              style={{
-                width: '100%',
-                background: 'var(--input-bg)',
-                border: '1px solid var(--input-border)',
-                borderRadius: 9,
-                padding: '10px 14px',
-                color: 'var(--input-text)',
-                fontSize: 13.5,
-                outline: 'none',
-                fontFamily: 'inherit',
-                boxSizing: 'border-box',
-              }}
-              {...register('role')}
-            >
-              <option value="Tier 2/3 SOC Analyst">Tier 2/3 SOC Analyst</option>
-              <option value="Threat Intelligence Analyst">Threat Intelligence Analyst</option>
-              <option value="Incident Response Lead">Incident Response Lead</option>
-              <option value="CISO / Security Director">CISO / Security Director</option>
-              <option value="Security Operations Manager">Security Operations Manager</option>
-            </select>
+            <AuthInput
+              label="Work Email"
+              type="email"
+              icon={Mail}
+              placeholder="alex@company.com"
+              error={errors.email?.message}
+              {...register('email')}
+            />
           </div>
 
-          <PasswordInput
-            label="Security Passphrase"
-            showStrengthMeter={true}
-            value={passwordVal}
-            error={errors.password?.message}
-            {...register('password')}
-          />
+          {/* Row 2: Organization & Role */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <AuthInput
+              label="Organization / Domain"
+              icon={Building2}
+              placeholder="Acme Cyber Lab"
+              error={errors.organization?.message}
+              {...register('organization')}
+            />
 
-          <PasswordInput
-            label="Confirm Passphrase"
-            value={confirmPasswordVal}
-            error={errors.confirmPassword?.message}
-            {...register('confirmPassword')}
-          />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: 'var(--text-secondary)',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Operational Role
+              </label>
+              <select
+                style={{
+                  width: '100%',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--input-border)',
+                  borderRadius: 9,
+                  padding: '9px 12px',
+                  color: 'var(--input-text)',
+                  fontSize: 13,
+                  outline: 'none',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box',
+                }}
+                {...register('role')}
+              >
+                <option value="Tier 2/3 SOC Analyst">Tier 2/3 SOC Analyst</option>
+                <option value="Threat Intelligence Analyst">Threat Intel Analyst</option>
+                <option value="Incident Response Lead">Incident Responder</option>
+                <option value="CISO / Security Director">CISO / Security Lead</option>
+                <option value="Security Operations Manager">SOC Manager</option>
+              </select>
+            </div>
+          </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, color: 'var(--text-secondary)', fontSize: 12.5, cursor: 'pointer' }}>
+          {/* Row 3: Password & Confirm Password */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <PasswordInput
+              label="Passphrase"
+              value={passwordVal}
+              error={errors.password?.message}
+              placeholder="Min 8 characters"
+              {...register('password')}
+            />
+
+            <PasswordInput
+              label="Confirm"
+              value={confirmPasswordVal}
+              error={errors.confirmPassword?.message}
+              placeholder="Repeat passphrase"
+              {...register('confirmPassword')}
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-secondary)', fontSize: 11.5, cursor: 'pointer' }}>
               <input
                 type="checkbox"
-                style={{ accentColor: 'var(--blue)', marginTop: 2 }}
+                style={{ accentColor: 'var(--blue)' }}
                 {...register('acceptTerms')}
               />
-              <span>I confirm adherence to Enterprise TLP:AMBER handling protocols and terms.</span>
+              <span>I confirm adherence to Enterprise TLP:AMBER handling protocols.</span>
             </label>
             {errors.acceptTerms && (
-              <span style={{ fontSize: 11.5, color: '#EF4444', fontWeight: 500 }}>
+              <span style={{ fontSize: 11, color: '#EF4444', fontWeight: 500 }}>
                 {errors.acceptTerms.message}
               </span>
             )}

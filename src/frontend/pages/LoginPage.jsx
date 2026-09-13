@@ -68,7 +68,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
         />
 
         {/* Enterprise SSO */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
           <button
             type="button"
             onClick={handleEvaluatorBypass}
@@ -76,19 +76,19 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 8,
-              padding: '9px 12px',
-              borderRadius: 9,
+              gap: 6,
+              padding: '7px 10px',
+              borderRadius: 8,
               border: '1px solid var(--card-border)',
               background: 'var(--bg-tertiary)',
               color: 'var(--text-primary)',
-              fontSize: 13,
+              fontSize: 12.5,
               fontWeight: 600,
               cursor: 'pointer',
               fontFamily: 'inherit',
             }}
           >
-            <KeyRound size={15} color="var(--blue)" />
+            <KeyRound size={14} color="var(--blue)" />
             <span>Okta SSO</span>
           </button>
 
@@ -99,19 +99,19 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 8,
-              padding: '9px 12px',
-              borderRadius: 9,
+              gap: 6,
+              padding: '7px 10px',
+              borderRadius: 8,
               border: '1px solid var(--card-border)',
               background: 'var(--bg-tertiary)',
               color: 'var(--text-primary)',
-              fontSize: 13,
+              fontSize: 12.5,
               fontWeight: 600,
               cursor: 'pointer',
               fontFamily: 'inherit',
             }}
           >
-            <Shield size={15} color="#0284C7" />
+            <Shield size={14} color="#0284C7" />
             <span>Microsoft Entra</span>
           </button>
         </div>
@@ -121,21 +121,21 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
         {authError && (
           <div
             style={{
-              padding: '10px 14px',
+              padding: '8px 12px',
               borderRadius: 8,
               background: 'rgba(239, 68, 68, 0.1)',
               border: '1px solid rgba(239, 68, 68, 0.3)',
               color: '#EF4444',
-              fontSize: 12.5,
+              fontSize: 12,
               fontWeight: 500,
-              marginBottom: 16,
+              marginBottom: 10,
             }}
           >
             {authError}
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
           <AuthInput
             label="Operator ID or Email"
             type="email"
@@ -152,8 +152,8 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
             {...register('password')}
           />
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12.5 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 7, color: 'var(--text-secondary)', cursor: 'pointer' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-secondary)', cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={rememberMe}
@@ -187,28 +187,28 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
         {/* Hackathon Evaluator Fast Entry */}
         <div
           style={{
-            marginTop: 20,
-            padding: 12,
-            borderRadius: 10,
+            marginTop: 10,
+            padding: 8,
+            borderRadius: 8,
             background: 'rgba(37, 99, 235, 0.05)',
             border: '1px dashed rgba(37, 99, 235, 0.35)',
             textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--blue)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
-            ⚡ Hackathon Evaluator & Judge Quick-Pass
+          <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--blue)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 4 }}>
+            ⚡ Hackathon Evaluator Quick-Pass
           </div>
           <button
             type="button"
             onClick={handleEvaluatorBypass}
             style={{
               width: '100%',
-              padding: '8px 12px',
-              borderRadius: 8,
+              padding: '6px 10px',
+              borderRadius: 6,
               background: 'var(--card)',
               border: '1px solid var(--card-border)',
               color: 'var(--text-primary)',
-              fontSize: 12.5,
+              fontSize: 12,
               fontWeight: 600,
               display: 'flex',
               alignItems: 'center',
@@ -217,8 +217,8 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
               cursor: 'pointer',
             }}
           >
-            <CheckCircle2 size={15} color="#16A34A" />
-            <span>Instant 1-Click Sandbox Entry (Preloaded Telemetry)</span>
+            <CheckCircle2 size={14} color="#16A34A" />
+            <span>Instant 1-Click Sandbox Entry</span>
           </button>
         </div>
 

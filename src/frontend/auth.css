@@ -3,22 +3,25 @@
    ============================================================================= */
 
 .auth-page-container {
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   width: 100%;
   display: flex;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow: hidden;
   position: relative;
 }
 
 /* Split Layout */
 .auth-split-layout {
   display: grid;
-  grid-template-columns: 1fr 1.25fr;
+  grid-template-columns: 1fr 1.2fr;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 @media (max-width: 1024px) {
@@ -33,13 +36,16 @@
 .auth-brand-panel {
   background: linear-gradient(145deg, #060B14 0%, #0B132B 50%, #0F172A 100%);
   color: #FFFFFF;
-  padding: 48px 56px;
+  padding: 24px 36px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   overflow: hidden;
   border-right: 1px solid #1E293B;
+  height: 100vh;
+  max-height: 100vh;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
@@ -128,43 +134,43 @@
 .auth-brand-center {
   position: relative;
   z-index: 2;
-  margin: 40px 0;
+  margin: 16px 0;
 }
 
 .auth-brand-headline {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.025em;
   line-height: 1.25;
   color: #FFFFFF;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .auth-brand-subheadline {
-  font-size: 15px;
+  font-size: 13.5px;
   color: #94A3B8;
-  line-height: 1.6;
-  margin-bottom: 32px;
+  line-height: 1.5;
+  margin-bottom: 18px;
 }
 
 /* Live Telemetry KPI Chips */
 .auth-telemetry-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 32px;
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
 .auth-telemetry-card {
   background: rgba(15, 23, 42, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 14px;
+  border-radius: 10px;
+  padding: 10px 12px;
   backdrop-filter: blur(12px);
 }
 
 .auth-telemetry-num {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 800;
   color: #38BDF8;
   letter-spacing: -0.02em;
@@ -172,59 +178,59 @@
 }
 
 .auth-telemetry-lbl {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: #64748B;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 /* Testimonial Quote Box */
 .auth-quote-card {
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(56, 189, 248, 0.2);
-  border-radius: 14px;
-  padding: 20px 22px;
+  border-radius: 12px;
+  padding: 14px 16px;
   position: relative;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 .auth-quote-text {
-  font-size: 13.5px;
+  font-size: 12.5px;
   color: #CBD5E1;
-  line-height: 1.6;
+  line-height: 1.5;
   font-style: italic;
 }
 
 .auth-quote-author {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .auth-quote-avatar {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #2563EB;
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 
 .auth-quote-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: #FFFFFF;
 }
 
 .auth-quote-role {
-  font-size: 11px;
+  font-size: 10.5px;
   color: #64748B;
 }
 
@@ -233,7 +239,7 @@
   position: relative;
   z-index: 2;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 24px;
+  padding-top: 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -241,8 +247,8 @@
 
 .auth-compliance-tags {
   display: flex;
-  gap: 12px;
-  font-size: 11.5px;
+  gap: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: #64748B;
 }
@@ -260,14 +266,24 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 40px 56px;
+  padding: 20px 48px;
   position: relative;
   background-color: var(--bg-secondary);
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.auth-form-panel::-webkit-scrollbar {
+  display: none;
 }
 
 @media (max-width: 640px) {
   .auth-form-panel {
-    padding: 24px 20px;
+    padding: 16px 18px;
   }
 }
 
@@ -276,7 +292,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .auth-back-btn {
