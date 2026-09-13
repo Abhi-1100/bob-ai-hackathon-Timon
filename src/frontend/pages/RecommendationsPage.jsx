@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Lightbulb,
   Shield,
@@ -9,21 +9,47 @@ import {
   Square,
   Sparkles,
   CheckCircle2,
-  Clock
+  Clock,
+  Upload,
+  ChevronDown
 } from 'lucide-react';
-import { MOCK_ATTACK_CHAINS } from '../services/mockData';
+import { api, listFrom } from '../services/api';
 
-export function RecommendationsPage({ onOpenChain }) {
-  const [selectedChainId, setSelectedChainId] = useState('AC001');
+export function RecommendationsPage({ onOpenChain, navigate }) {
+  const [recommendations, setRecommendations] = useState([]);
+  const [selectedChainId, setSelectedChainId] = useState('');
   const [activeTab, setActiveTab] = useState('immediate');
   const [completedTasks, setCompletedTasks] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const chain = MOCK_ATTACK_CHAINS.find(c => c.chain_id === selectedChainId) || MOCK_ATTACK_CHAINS[0];
-  const recs = chain.recommendations || {
-    immediate_actions: ['Immediately isolate compromised host 10.0.4.12.', 'Block attacker IP on perimeter firewalls.', 'Rotate root & service account passwords.'],
-    containment_actions: ['Segment internal subnet 10.0.4.0/24 from financial databases.', 'Terminate unauthorized SSH sessions.'],
-    investigation_actions: ['Extract live volatile memory dump from 10.0.4.12.', 'Query SIEM logs for anomalous outbound egress.'],
-    prevention_actions: ['Enforce FIDO2 hardware MFA on all external jump hosts.', 'Deploy endpoint LSASS behavioral blocking.']
+  useEffect(() => {
+    setLoading(true);
+    api.getRecommendations()
+      .then(res => {
+        const list = listFrom(res, ['recommendations', 'results', 'data']);
+        setRecommendations(list);
+        if (list.length > 0 && !selectedChainId) {
+          setSelectedChainId(list[0].chain_id);
+        }
+      })
+      .catch(() => setRecommendations([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const chain = recommendations.find(c => c.chain_id === selectedChainId) || recommendations[0];
+
+  const recs = chain ? {
+    immediate_actions: chain.immediate_actions || [],
+    containment_actions: chain.containment_actions || [],
+    investigation_actions: chain.investigation_actions || [],
+    prevention_actions: chain.prevention_actions || [],
+    executive_summary: chain.executive_summary || ''
+  } : {
+    immediate_actions: [],
+    containment_actions: [],
+    investigation_actions: [],
+    prevention_actions: [],
+    executive_summary: ''
   };
 
   const tabs = [
@@ -60,165 +86,191 @@ export function RecommendationsPage({ onOpenChain }) {
             Tactical Action Recommendations
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4 }}>
-            Remediation steps synthesized by Llama 3.3 70B based on observed kill-chain stages, MITRE techniques, and asset criticality.
+            Remediation steps synthesized across 4 containment tiers for active attack campaigns.
           </p>
         </div>
 
-        {/* Chain Selector */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Target Chain:</span>
-          <select
-            value={selectedChainId}
-            onChange={e => setSelectedChainId(e.target.value)}
-            style={{
-              background: '#131A2A',
-              border: '1px solid var(--card-border)',
-              borderRadius: 6,
-              padding: '6px 12px',
-              color: 'var(--cyan-bright)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: 13,
-              fontWeight: 700,
-              outline: 'none'
-            }}
-          >
-            {MOCK_ATTACK_CHAINS.map(c => (
-              <option key={c.chain_id} value={c.chain_id}>
-                {c.chain_id} — {c.severity} ({c.risk_score}/100)
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* Campaign Selector Dropdown */}
+        {recommendations.length > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>Select Campaign:</span>
+            <select
+              value={selectedChainId}
+              onChange={e => setSelectedChainId(e.target.value)}
+              style={{
+                background: 'var(--card)',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--cyan)',
+                padding: '8px 12px',
+                borderRadius: 6,
+                fontSize: 13,
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 700,
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {recommendations.map(r => (
+                <option key={r.chain_id} value={r.chain_id}>
+                  {r.chain_id} — {r.source_ip} (Risk {r.risk_score})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
-      {/* Playbook Header Card */}
-      <div className="soc-card" style={{
-        background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.05), rgba(19, 26, 42, 0.95))',
-        marginBottom: 20
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span className="badge-severity critical">Active Incident</span>
-              <span className="mono" style={{ fontSize: 13, color: 'var(--text-muted)' }}>Adversary: {chain.source_ip}</span>
-            </div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 6 }}>
-              Incident Response Plan for {chain.chain_id}
-            </h3>
-            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>
-              Execute containment immediately to prevent lateral credential movement to database servers.
-            </p>
-          </div>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '6px 12px',
-            background: 'rgba(255, 255, 255, 0.03)',
-            borderRadius: 6,
-            border: '1px solid var(--card-border)'
-          }}>
-            <Sparkles size={15} color="var(--cyan-bright)" />
-            <span style={{ fontSize: 11.5, color: '#94A3B8' }}>Inference: <strong>Llama 3.3 70B</strong></span>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: 10, borderBottom: '1px solid var(--card-border)', marginBottom: 20 }}>
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '12px 18px',
-              border: 'none',
-              background: 'none',
-              borderBottom: '2px solid',
-              borderBottomColor: activeTab === tab.id ? 'var(--cyan)' : 'transparent',
-              color: activeTab === tab.id ? '#fff' : 'var(--text-muted)',
-              fontSize: 13.5,
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.15s'
-            }}
-          >
-            <span>{tab.label}</span>
-            <span style={{
-              fontSize: 10.5,
-              fontWeight: 700,
-              padding: '2px 7px',
-              borderRadius: 9999,
-              background: 'rgba(255, 255, 255, 0.05)',
-              color: tab.color
-            }}>
-              {tab.count}
-            </span>
+      {recommendations.length === 0 && !loading ? (
+        <div className="soc-card" style={{ padding: '60px 24px', textAlign: 'center' }}>
+          <Lightbulb size={48} color="var(--text-muted)" style={{ opacity: 0.4, marginBottom: 16 }} />
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
+            0 Recommendations Available
+          </h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 13, maxWidth: 460, margin: '0 auto 20px' }}>
+            Recommendations are generated dynamically for correlated attack chains. Ingest alert CSV logs to evaluate campaigns and produce actionable playbooks.
+          </p>
+          <button className="btn btn-primary" onClick={() => navigate('/upload')}>
+            <Upload size={14} />
+            <span>Upload Alerts CSV</span>
           </button>
-        ))}
-      </div>
-
-      {/* Task Checklist Panel */}
-      <div className="soc-card">
-        <div className="card-header">
-          <h4 className="card-title">
-            <CheckCircle2 size={16} color="var(--cyan-bright)" />
-            <span>Remediation Action Checklist</span>
-          </h4>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-            Click item to mark completed
-          </span>
         </div>
+      ) : (
+        <>
+          {/* Executive Overview Banner */}
+          {chain && (
+            <div className="soc-card" style={{
+              marginBottom: 24,
+              borderLeft: `4px solid ${
+                (chain.severity || '').toLowerCase() === 'critical' ? 'var(--critical)' :
+                (chain.severity || '').toLowerCase() === 'high' ? 'var(--high)' : 'var(--medium)'
+              }`,
+              background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.05), rgba(19, 26, 42, 0.9))'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <code style={{ fontSize: 15, fontWeight: 800, color: 'var(--cyan-bright)' }}>{chain.chain_id}</code>
+                    <span className={`badge-severity ${(chain.severity || 'medium').toLowerCase()}`}>
+                      {chain.severity || 'Medium'} Priority
+                    </span>
+                    <span className="mono" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                      Origin: {chain.source_ip}
+                    </span>
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: 13.5, marginTop: 8, lineHeight: 1.5 }}>
+                    {recs.executive_summary || `Automated playbook generated for incident ${chain.chain_id}.`}
+                  </p>
+                </div>
+                {onOpenChain && (
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => onOpenChain(chain.chain_id)}
+                    style={{ fontSize: 12 }}
+                  >
+                    View Attack Graph
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {currentList.map((item, idx) => {
-            const taskKey = `${selectedChainId}-${activeTab}-${idx}`;
-            const isDone = Boolean(completedTasks[taskKey]);
-
-            return (
-              <div
-                key={idx}
-                onClick={() => toggleTask(taskKey)}
+          {/* Action Tabs */}
+          <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
                 style={{
                   display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: 14,
-                  padding: '14px 18px',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '10px 18px',
                   borderRadius: 8,
-                  background: isDone ? 'rgba(34, 197, 94, 0.05)' : 'rgba(255, 255, 255, 0.02)',
                   border: '1px solid',
-                  borderColor: isDone ? 'rgba(34, 197, 94, 0.3)' : 'var(--card-border)',
+                  borderColor: activeTab === tab.id ? 'var(--cyan)' : 'var(--card-border)',
+                  background: activeTab === tab.id ? 'rgba(6, 182, 212, 0.12)' : 'var(--card)',
+                  color: activeTab === tab.id ? '#fff' : 'var(--text-secondary)',
+                  fontWeight: 700,
+                  fontSize: 13,
                   cursor: 'pointer',
                   transition: 'all 0.15s'
                 }}
               >
-                <div style={{ color: isDone ? '#4ADE80' : '#64748B', marginTop: 2 }}>
-                  {isDone ? <CheckSquare size={18} /> : <Square size={18} />}
-                </div>
+                <span>{tab.label}</span>
+                <span style={{
+                  padding: '2px 7px',
+                  borderRadius: 10,
+                  background: tab.color,
+                  color: '#fff',
+                  fontSize: 11,
+                  fontWeight: 800
+                }}>
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
 
-                <div style={{ flex: 1 }}>
-                  <span style={{
-                    fontSize: 13.5,
-                    color: isDone ? '#94A3B8' : '#F8FAFC',
-                    textDecoration: isDone ? 'line-through' : 'none',
-                    lineHeight: 1.5,
-                    display: 'block'
-                  }}>
-                    {item}
-                  </span>
-                  <div style={{ display: 'flex', gap: 12, marginTop: 4, fontSize: 11, color: 'var(--text-muted)' }}>
-                    <span>Target: <strong>{chain.dest_ips?.[0] || '10.0.4.12'}</strong></span>
-                    <span>Status: <strong style={{ color: isDone ? '#4ADE80' : '#FBBF24' }}>{isDone ? 'Completed' : 'Pending Action'}</strong></span>
-                  </div>
+          {/* Tasks checklist card */}
+          <div className="soc-card">
+            <div className="card-header">
+              <h3 className="card-title">
+                <CheckCircle2 size={18} color="var(--cyan-bright)" />
+                <span>Action Checklist ({currentList.length} Tasks)</span>
+              </h3>
+              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                Click to mark actions completed during incident containment
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
+              {currentList.length === 0 ? (
+                <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>
+                  No actions defined for this tier.
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+              ) : (
+                currentList.map((action, idx) => {
+                  const taskKey = `${chain.chain_id}-${activeTab}-${idx}`;
+                  const isDone = Boolean(completedTasks[taskKey]);
+
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => toggleTask(taskKey)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: 14,
+                        padding: '14px 18px',
+                        borderRadius: 8,
+                        background: isDone ? 'rgba(34, 197, 94, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid',
+                        borderColor: isDone ? 'rgba(34, 197, 94, 0.3)' : 'var(--card-border)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <div style={{ marginTop: 2, color: isDone ? '#4ADE80' : 'var(--text-muted)' }}>
+                        {isDone ? <CheckSquare size={18} /> : <Square size={18} />}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <span style={{
+                          fontSize: 13.5,
+                          color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
+                          textDecoration: isDone ? 'line-through' : 'none',
+                          lineHeight: 1.5
+                        }}>
+                          {action}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

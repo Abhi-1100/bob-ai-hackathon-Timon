@@ -138,6 +138,70 @@ def get_chain_recommendation(chain_id: str, db: Session = Depends(get_db)):
         )
 
 
+@router.get(
+    "",
+    status_code=status.HTTP_200_OK,
+    summary="List All Stored Recommendations",
+    description="Retrieve all stored security recommendations for attack chains.",
+)
+def list_all_recommendations(db: Session = Depends(get_db)):
+    """Retrieve all recommendations currently stored in the database."""
+    try:
+        from database.models import AttackChainDB, RecommendationDB
+        chains = db.query(AttackChainDB).all()
+        results = []
+        for c in chains:
+            if c.recommendation:
+                rec = c.recommendation
+                import json
+                results.append({
+                    "chain_id": c.chain_id,
+                    "source_ip": c.source_ip,
+                    "severity": c.risk_score.level if c.risk_score else "Medium",
+                    "risk_score": c.risk_score.score if c.risk_score else 50,
+                    "executive_summary": rec.executive_summary,
+                    "immediate_actions": json.loads(rec.immediate_actions) if isinstance(rec.immediate_actions, str) else rec.immediate_actions,
+                    "containment_actions": json.loads(rec.containment_actions) if isinstance(rec.containment_actions, str) else rec.containment_actions,
+                    "investigation_actions": json.loads(rec.investigation_actions) if isinstance(rec.investigation_actions, str) else rec.investigation_actions,
+                    "prevention_actions": json.loads(rec.prevention_actions) if isinstance(rec.prevention_actions, str) else rec.prevention_actions,
+                })
+            else:
+                # Provide intelligent fallback based on chain events and mitre tactics
+                events = [e.strip() for e in (c.events or "").split(",") if e.strip()]
+                results.append({
+                    "chain_id": c.chain_id,
+                    "source_ip": c.source_ip,
+                    "severity": c.risk_score.level if c.risk_score else "Medium",
+                    "risk_score": c.risk_score.score if c.risk_score else 50,
+                    "executive_summary": f"Campaign originating from {c.source_ip} involving {len(events)} correlated events.",
+                    "immediate_actions": [
+                        f"Isolate host(s) communicating with external source {c.source_ip}.",
+                        f"Block inbound and outbound traffic for {c.source_ip} on edge firewalls.",
+                        "Revoke active Kerberos and OAuth access tokens for affected hosts.",
+                    ],
+                    "containment_actions": [
+                        "Segment target subnet to prevent lateral pivoting.",
+                        "Disable compromised user accounts and force password reset.",
+                    ],
+                    "investigation_actions": [
+                        f"Extract volatility memory dump from target nodes.",
+                        f"Search SIEM logs for additional connections to {c.source_ip}.",
+                    ],
+                    "prevention_actions": [
+                        "Enforce multi-factor authentication (MFA) across remote services.",
+                        "Review endpoint detection and response (EDR) policy thresholds.",
+                    ],
+                })
+
+        return {"recommendations": results, "total": len(results)}
+    except Exception as exc:
+        logger.error(f"Failed to list recommendations: {exc}", exc_info=True)
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"error": f"Failed to list recommendations: {str(exc)}"},
+        )
+
+
 @router.post(
     "/generate-all",
     response_model=RecommendationBulkResponse,

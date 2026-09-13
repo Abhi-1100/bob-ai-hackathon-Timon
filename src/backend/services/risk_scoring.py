@@ -321,17 +321,49 @@ class RiskScoringEngine:
 
     def score_all_chains(self) -> List[RiskScore]:
         """
-        Calculate and persist risk scores for ALL attack chains in the database.
+        Calculate and persist risk scores for ALL attack chains in the database in high-speed bulk batch.
         Returns list of scored chains ordered by score descending.
         """
         start_time = time.perf_counter()
-        chains = self.chain_repo.get_all_chains(limit=2000)
+        from database.models import RiskScoreDB
+        chains = self.db.query(AttackChainDB).all()
         logger.info(f"Scoring all chains: {len(chains)} chains found")
+
+        # Load existing risk scores in 1 single query
+        existing_scores = {s.attack_chain_id: s for s in self.db.query(RiskScoreDB).all()}
 
         results: List[RiskScore] = []
         for chain in chains:
-            score_obj = self.calculate_and_store_for_chain(chain.chain_id, commit=False)
+            events = [e.strip() for e in (chain.events or "").split(",") if e.strip()]
+            mitre_mappings = chain.mitre_mappings or []
+
+            score_obj = self.score_chain_data(
+                chain_id=chain.chain_id,
+                events=events,
+                mitre_mappings=mitre_mappings,
+            )
             results.append(score_obj)
+
+            reasoning_json = json.dumps(score_obj.reasoning)
+            existing = existing_scores.get(chain.id)
+            if existing:
+                existing.score = score_obj.score
+                existing.level = score_obj.level
+                existing.reasoning = reasoning_json
+                existing.event_score = score_obj.event_score
+                existing.mitre_score = score_obj.mitre_score
+                existing.chain_bonus = score_obj.chain_bonus
+            else:
+                new_record = RiskScoreDB(
+                    attack_chain_id=chain.id,
+                    score=score_obj.score,
+                    level=score_obj.level,
+                    reasoning=reasoning_json,
+                    event_score=score_obj.event_score,
+                    mitre_score=score_obj.mitre_score,
+                    chain_bonus=score_obj.chain_bonus,
+                )
+                self.db.add(new_record)
 
         try:
             self.db.commit()
@@ -343,7 +375,7 @@ class RiskScoringEngine:
         results.sort(key=lambda r: r.score, reverse=True)
 
         elapsed_ms = (time.perf_counter() - start_time) * 1000
-        logger.info(f"Completed scoring {len(results)} chains in {elapsed_ms:.2f}ms")
+        logger.info(f"Completed bulk scoring {len(results)} chains in {elapsed_ms:.2f}ms")
         return results
 
     def get_stored_score(self, chain_id_str: str) -> Optional[RiskScore]:

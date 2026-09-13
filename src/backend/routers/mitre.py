@@ -20,6 +20,96 @@ router = APIRouter(
 )
 
 
+@router.get(
+    "/overview",
+    status_code=status.HTTP_200_OK,
+    summary="Get Dynamic MITRE ATT&CK Matrix & Technique Breakdown",
+    description="Returns dynamic MITRE tactics and techniques aggregated strictly from database attack chains.",
+)
+def get_mitre_overview(db: Session = Depends(get_db)):
+    """Retrieve dynamic MITRE ATT&CK enterprise matrix and technique frequencies."""
+    try:
+        from database.models import MitreMappingDB, AttackChainDB
+        from collections import defaultdict
+
+        mappings = db.query(MitreMappingDB).all()
+
+        # Group by technique_id
+        tech_map = defaultdict(lambda: {
+            "id": "",
+            "name": "",
+            "tactic": "Unknown",
+            "count": 0,
+            "chains": set(),
+            "severity": "medium",
+        })
+
+        for m in mappings:
+            t = tech_map[m.technique_id]
+            t["id"] = m.technique_id
+            t["name"] = m.technique_name
+            t["tactic"] = m.tactic or "Execution"
+            t["count"] += 1
+            if m.attack_chain:
+                t["chains"].add(m.attack_chain.chain_id)
+                if m.attack_chain.risk_score:
+                    lvl = m.attack_chain.risk_score.level.lower()
+                    if lvl == "critical" or (lvl == "high" and t["severity"] != "critical"):
+                        t["severity"] = lvl
+
+        flat_techniques = [
+            {
+                "id": v["id"],
+                "name": v["name"],
+                "tactic": v["tactic"],
+                "count": v["count"],
+                "chains": list(v["chains"]),
+                "severity": v["severity"],
+            }
+            for v in sorted(tech_map.values(), key=lambda x: x["count"], reverse=True)
+        ]
+
+        # Group into tactics for matrix heatmap
+        standard_tactics = [
+            "Reconnaissance",
+            "Initial Access",
+            "Execution",
+            "Persistence",
+            "Privilege Escalation",
+            "Credential Access",
+            "Discovery",
+            "Lateral Movement",
+            "Command and Control",
+            "Exfiltration",
+            "Impact",
+        ]
+
+        tactic_buckets = defaultdict(list)
+        for tech in flat_techniques:
+            tactic_buckets[tech["tactic"]].append(tech)
+
+        matrix = []
+        for tac in standard_tactics:
+            techs = tactic_buckets.get(tac, [])
+            matrix.append({
+                "tactic": tac,
+                "techniques": techs,
+            })
+
+        return {
+            "total_detected": len(flat_techniques),
+            "techniques": flat_techniques,
+            "matrix": matrix,
+        }
+
+    except Exception as exc:
+        logger.error(f"Error generating MITRE overview: {exc}", exc_info=True)
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"error": f"Failed to retrieve MITRE overview: {str(exc)}"},
+        )
+
+
 @router.post(
     "/map/{chain_id}",
     response_model=MitreMappingResponse,

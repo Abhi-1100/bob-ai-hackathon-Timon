@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FileText,
-  Download,
   Printer,
   ArrowLeft,
   ShieldAlert,
@@ -9,22 +8,36 @@ import {
   CheckCircle2,
   AlertOctagon,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Upload
 } from 'lucide-react';
 import { SeverityBadge } from '../components/Common';
-import { MOCK_ATTACK_CHAINS } from '../services/mockData';
+import { api, listFrom } from '../services/api';
 
-export function ReportsPage({ selectedReportId, onSelectReport, onBack }) {
+export function ReportsPage({ selectedReportId, onSelectReport, onBack, navigate }) {
+  const [reports, setReports] = useState([]);
   const [activeId, setActiveId] = useState(selectedReportId || null);
+  const [loading, setLoading] = useState(true);
 
-  const activeChain = activeId
-    ? MOCK_ATTACK_CHAINS.find(c => c.chain_id === activeId) || MOCK_ATTACK_CHAINS[0]
+  useEffect(() => {
+    setLoading(true);
+    api.getReports()
+      .then(res => {
+        const list = listFrom(res, ['reports', 'results', 'data']);
+        setReports(list);
+        if (selectedReportId) {
+          setActiveId(selectedReportId);
+        }
+      })
+      .catch(() => setReports([]))
+      .finally(() => setLoading(false));
+  }, [selectedReportId]);
+
+  const activeReport = activeId
+    ? reports.find(r => r.chain_id === activeId) || reports[0]
     : null;
 
-  if (activeChain) {
-    const r = activeChain.report || {};
-    const recs = activeChain.recommendations?.immediate_actions || [];
-
+  if (activeReport) {
     return (
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         {/* Toolbar */}
@@ -58,123 +71,92 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack }) {
           }}>
             <div>
               <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--critical)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                DEFENSE INTELLIGENCE BRIEFING // BLUF
+                // TLP:AMBER // STRICT SOC DISSEMINATION
               </span>
-              <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginTop: 2 }}>
-                Incident Commander Briefing: {activeChain.chain_id}
-              </h2>
+              <h1 style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginTop: 4, letterSpacing: '-0.02em' }}>
+                COMMANDER THREAT BRIEFING (BLUF)
+              </h1>
+              <span className="mono" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                Target Incident Reference: {activeReport.chain_id}
+              </span>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-                DTG: 2026-09-13 20:00:00 UTC
-              </div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--cyan-bright)' }}>
-                SENTINEL FORGE AI CO-PILOT
+              <SeverityBadge value={activeReport.threat_level || 'Medium'} />
+              <div className="mono" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
+                Generated: Live Dynamic
               </div>
             </div>
           </div>
 
-          {/* Threat Level Banner */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px 20px',
-            borderRadius: 8,
-            background: 'var(--critical-bg)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            marginBottom: 24
-          }}>
-            <div>
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#FCA5A5', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                EVALUATED THREAT SEVERITY
+          {/* Section 1: Bottom Line Up Front */}
+          <div style={{ marginBottom: 28 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--cyan-bright)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              1.0 BOTTOM LINE UP FRONT (BLUF)
+            </span>
+            <div style={{
+              background: 'rgba(6, 182, 212, 0.08)',
+              borderLeft: '4px solid var(--cyan)',
+              padding: '16px 20px',
+              borderRadius: '0 8px 8px 0',
+              marginTop: 8
+            }}>
+              <p style={{ color: '#E2E8F0', fontSize: 14.5, lineHeight: 1.6, fontWeight: 500, margin: 0 }}>
+                {activeReport.executive_summary}
+              </p>
+            </div>
+          </div>
+
+          {/* Section 2: Attack Progression Overview */}
+          <div style={{ marginBottom: 28 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--cyan-bright)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              2.0 ATTACK PROGRESSION OVERVIEW
+            </span>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 13.5, lineHeight: 1.6, marginTop: 8 }}>
+              {activeReport.attack_overview}
+            </p>
+          </div>
+
+          {/* Section 3: Affected Assets & MITRE */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 28 }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: 16, borderRadius: 8, border: '1px solid var(--card-border)' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                Affected Assets & Targets
               </span>
-              <h3 style={{ fontSize: 22, fontWeight: 900, color: '#EF4444', margin: '2px 0' }}>
-                {activeChain.severity} (Score: {activeChain.risk_score} / 100)
-              </h3>
+              <p style={{ color: 'var(--text-primary)', fontSize: 13, marginTop: 6, margin: 0, fontWeight: 600 }}>
+                {activeReport.affected_assets || 'Internal network telemetry'}
+              </p>
             </div>
-            <AlertOctagon size={42} color="var(--critical)" />
+            <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: 16, borderRadius: 8, border: '1px solid var(--card-border)' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                MITRE ATT&CK Matrix Alignment
+              </span>
+              <p style={{ color: 'var(--text-primary)', fontSize: 13, marginTop: 6, margin: 0, fontWeight: 600 }}>
+                {activeReport.mitre_summary || 'Multi-stage techniques'}
+              </p>
+            </div>
           </div>
 
-          {/* 1. Executive Summary (BLUF) */}
-          <section style={{ marginBottom: 24 }}>
-            <h4 style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-              1. Executive Summary (BLUF)
-            </h4>
-            <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--text-primary)' }}>
-              {r.executive_summary || 'Cross-domain threat campaign actively propagating across network segments.'}
-            </p>
-          </section>
-
-          {/* 2. Attack Overview */}
-          <section style={{ marginBottom: 24 }}>
-            <h4 style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-              2. Attack Overview & Campaign Vector
-            </h4>
-            <p style={{ fontSize: 13.5, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-              {r.attack_overview || 'Adversary leveraged external reconnaissance to locate open ports, subsequently executing brute-force credential attacks.'}
-            </p>
-          </section>
-
-          {/* 3. Affected Infrastructure */}
-          <section style={{ marginBottom: 24 }}>
-            <h4 style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-              3. Affected Critical Infrastructure
-            </h4>
-            <p style={{ fontSize: 13.5, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-              {r.affected_assets || `Primary Host: ${activeChain.dest_ips?.[0] || '10.0.4.12'}, Database Core: 10.0.2.8`}
-            </p>
-          </section>
-
-          {/* 4. MITRE Mapping Summary */}
-          <section style={{ marginBottom: 24 }}>
-            <h4 style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-              4. MITRE ATT&CK Framework Correlation
-            </h4>
-            <p style={{ fontSize: 13.5, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 10 }}>
-              {r.mitre_summary || 'Mapped across Reconnaissance, Credential Access, and Lateral Movement stages.'}
-            </p>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {(activeChain.mitre_techniques || []).map((t, idx) => (
-                <span
-                  key={idx}
-                  style={{
-                    padding: '3px 10px',
-                    borderRadius: 4,
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid var(--card-border)',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 12,
-                    color: 'var(--cyan-bright)'
-                  }}
-                >
-                  {t.technique_id || t.id}: {t.name}
-                </span>
-              ))}
+          {/* Section 4: Recommended Commander Actions */}
+          <div style={{ marginBottom: 28 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--cyan-bright)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              3.0 RECOMMENDED COMMAND ACTIONS
+            </span>
+            <div style={{ marginTop: 10, padding: 16, background: 'rgba(239, 68, 68, 0.06)', borderRadius: 8, border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+              <p style={{ color: '#FCA5A5', fontSize: 13.5, lineHeight: 1.5, margin: 0 }}>
+                {activeReport.recommended_actions || 'Isolate compromised hosts and block attacker origin at edge firewalls.'}
+              </p>
             </div>
-          </section>
+          </div>
 
-          {/* 5. Recommended Actions */}
-          <section style={{ marginBottom: 24 }}>
-            <h4 style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>
-              5. Priority Tactical Remediation
-            </h4>
-            <ul style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13.5, color: 'var(--text-secondary)' }}>
-              {recs.map((item, idx) => (
-                <li key={idx} style={{ lineHeight: 1.6 }}>{item}</li>
-              ))}
-            </ul>
-          </section>
-
-          {/* 6. Strategic Conclusion */}
-          <section style={{ paddingTop: 16, borderTop: '1px solid var(--card-border)' }}>
-            <h4 style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-              6. Conclusion & Defense Posture Status
-            </h4>
-            <p style={{ fontSize: 13.5, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-              {r.conclusion || 'Containment commands queued for execution. Security posture escalated to DEFCON 2 across affected subnets.'}
+          {/* Section 5: Conclusion */}
+          <div style={{ borderTop: '1px solid #1E293B', paddingTop: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              4.0 CONCLUSION
+            </span>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 6, lineHeight: 1.5 }}>
+              {activeReport.conclusion || 'Ongoing monitoring enabled across perimeter and endpoint telemetry.'}
             </p>
-          </section>
+          </div>
         </article>
       </div>
     );
@@ -182,88 +164,99 @@ export function ReportsPage({ selectedReportId, onSelectReport, onBack }) {
 
   return (
     <div>
-      <div style={{ marginBottom: 20 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--cyan-bright)', textTransform: 'uppercase' }}>
-          COMMANDER INTELLIGENCE ARCHIVE
-        </span>
-        <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', marginTop: 4 }}>
-          Executive BLUF Intelligence Reports
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4 }}>
-          Structured Bottom-Line-Up-Front briefings synthesized for leadership, summarizing technical kill-chains into tactical decision assets.
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--cyan-bright)', textTransform: 'uppercase' }}>
+            EXECUTIVE INTELLIGENCE SYNTHESIS
+          </span>
+          <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', marginTop: 4 }}>
+            Commander BLUF Intelligence Briefings ({reports.length} Reports)
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4 }}>
+            Synthesized Bottom Line Up Front (BLUF) briefings ready for executive briefing, printable PDF export, and legal triage.
+          </p>
+        </div>
+
+        {reports.length === 0 && !loading && (
+          <button className="btn btn-primary" onClick={() => navigate('/upload')}>
+            <Upload size={14} />
+            <span>Upload Alerts CSV</span>
+          </button>
+        )}
       </div>
 
-      <div className="soc-card">
-        <div className="soc-table-wrap">
-          <table className="soc-table">
-            <thead>
-              <tr>
-                <th>Report ID / Chain</th>
-                <th>Threat Level</th>
-                <th>Risk Score</th>
-                <th>Executive BLUF Summary</th>
-                <th>Source Model</th>
-                <th>Generated At</th>
-                <th style={{ textAlign: 'right' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {MOCK_ATTACK_CHAINS.map(c => (
-                <tr key={c.chain_id} onClick={() => setActiveId(c.chain_id)}>
-                  <td>
-                    <code style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--cyan-bright)' }}>
-                      RPT-{c.chain_id}
-                    </code>
-                  </td>
-                  <td>
-                    <SeverityBadge value={c.severity} />
-                  </td>
-                  <td>
-                    <span className="mono" style={{ fontWeight: 800, color: '#fff' }}>
-                      {c.risk_score} / 100
-                    </span>
-                  </td>
-                  <td style={{ maxWidth: 380 }}>
-                    <div style={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      color: 'var(--text-secondary)',
-                      fontSize: 12.5
-                    }}>
-                      {c.report?.executive_summary || 'Automated multi-vector threat brief.'}
-                    </div>
-                  </td>
-                  <td>
-                    <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>
-                      Llama 3.3 70B (watsonx)
-                    </span>
-                  </td>
-                  <td>
-                    <span className="mono" style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                      {c.created_at || 'Just now'}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveId(c.chain_id);
-                      }}
-                      style={{ padding: '5px 12px', fontSize: 12 }}
-                    >
-                      <span>Read Brief</span>
-                      <ChevronRight size={14} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {reports.length === 0 && !loading ? (
+        <div className="soc-card" style={{ padding: '60px 24px', textAlign: 'center' }}>
+          <FileText size={48} color="var(--text-muted)" style={{ opacity: 0.4, marginBottom: 16 }} />
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
+            0 Intelligence Reports Available
+          </h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 13, maxWidth: 460, margin: '0 auto 20px' }}>
+            Executive BLUF briefings are generated dynamically from correlated attack chains. Ingest alert CSV logs to evaluate incidents.
+          </p>
+          <button className="btn btn-primary" onClick={() => navigate('/upload')}>
+            <Upload size={14} />
+            <span>Upload Alerts CSV</span>
+          </button>
         </div>
-      </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 20 }}>
+          {reports.map(r => (
+            <div
+              key={r.chain_id}
+              className="soc-card hover-glow"
+              onClick={() => setActiveId(r.chain_id)}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                borderLeft: `4px solid ${
+                  (r.threat_level || '').toLowerCase() === 'critical' ? 'var(--critical)' :
+                  (r.threat_level || '').toLowerCase() === 'high' ? 'var(--high)' : 'var(--medium)'
+                }`
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <code style={{ fontSize: 14, fontWeight: 800, color: 'var(--cyan-bright)' }}>{r.chain_id}</code>
+                  <SeverityBadge value={r.threat_level || 'Medium'} />
+                </div>
+                <h4 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.4, marginBottom: 8 }}>
+                  {r.chain_id}: Commander Threat Briefing
+                </h4>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
+                  {r.executive_summary?.slice(0, 160)}…
+                </p>
+              </div>
+
+              <div style={{
+                marginTop: 20,
+                paddingTop: 14,
+                borderTop: '1px solid var(--card-border)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <span className="mono" style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                  Target: {r.affected_assets?.slice(0, 20) || 'Internal subnet'}
+                </span>
+                <button
+                  className="btn btn-secondary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveId(r.chain_id);
+                  }}
+                  style={{ padding: '4px 10px', fontSize: 12 }}
+                >
+                  <span>Read BLUF Briefing</span>
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

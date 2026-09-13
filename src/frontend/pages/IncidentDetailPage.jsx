@@ -17,7 +17,6 @@ import {
 import { api } from '../services/api';
 import { SeverityBadge, MitreChip, RiskScoreGauge } from '../components/Common';
 import { AttackGraph } from '../components/AttackGraph';
-import { MOCK_ATTACK_CHAINS } from '../services/mockData';
 
 export function IncidentDetailPage({ chainId, onBack, navigate }) {
   const [chain, setChain] = useState(null);
@@ -26,20 +25,43 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
   useEffect(() => {
     if (!chainId) return;
     setLoading(true);
-    api(`/api/v1/chains/${chainId}`)
+    api.getChain(chainId)
       .then(res => {
-        setChain(res && res.chain_id ? res : MOCK_ATTACK_CHAINS.find(c => c.chain_id === chainId) || MOCK_ATTACK_CHAINS[0]);
+        setChain(res && res.chain_id ? res : null);
       })
       .catch(() => {
-        setChain(MOCK_ATTACK_CHAINS.find(c => c.chain_id === chainId) || MOCK_ATTACK_CHAINS[0]);
+        setChain(null);
       })
       .finally(() => setLoading(false));
   }, [chainId]);
 
-  if (loading || !chain) {
+  if (loading) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
         Loading incident intelligence for {chainId}…
+      </div>
+    );
+  }
+
+  if (!chain) {
+    return (
+      <div style={{ padding: 60, textAlign: 'center' }}>
+        <ShieldAlert size={48} color="var(--text-muted)" style={{ opacity: 0.4, marginBottom: 16 }} />
+        <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
+          Incident {chainId} Not Found
+        </h3>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 13, maxWidth: 450, margin: '0 auto 20px' }}>
+          This attack chain record does not exist in the active database. Ingest security logs via CSV upload to correlate incidents.
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+          <button className="btn btn-secondary" onClick={onBack}>
+            <ArrowLeft size={15} />
+            <span>Back to Attack Chains</span>
+          </button>
+          <button className="btn btn-primary" onClick={() => navigate('/upload')}>
+            <span>Upload Alerts CSV</span>
+          </button>
+        </div>
       </div>
     );
   }

@@ -14,16 +14,16 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { api, listFrom } from '../services/api';
-import { MOCK_CHAT_SESSIONS } from '../services/mockData';
-
 export function ChatPage({ onOpenChain }) {
-  const [sessions, setSessions] = useState(MOCK_CHAT_SESSIONS);
-  const [activeSessionId, setActiveSessionId] = useState(MOCK_CHAT_SESSIONS[0].id);
+  const [sessions, setSessions] = useState([
+    { id: 'session-live', title: 'Live Ingested Telemetry Analysis', updated: 'Active' }
+  ]);
+  const [activeSessionId, setActiveSessionId] = useState('session-live');
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      message: 'Sentinel AI Threat Analyst initialized and grounded on the local Qdrant vector database and telemetry corpus. Ask me about correlated attack chains, MITRE tactics, or priority recommendations.',
-      sources: ['Qdrant Threat Store (BAAI/bge-small)', 'SQLite Telemetry Index', 'MITRE ATT&CK Matrix']
+      message: 'Sentinel AI Threat Analyst initialized. I am grounded directly in your uploaded CSV logs and correlated attack chains. Ask me about detected adversary techniques, critical incidents, or remediation playbooks.',
+      sources: ['PostgreSQL Telemetry DB', 'Deterministic Correlation Engine', 'MITRE ATT&CK Matrix']
     }
   ]);
   const [input, setInput] = useState('');

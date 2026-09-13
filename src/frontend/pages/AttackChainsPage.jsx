@@ -12,9 +12,8 @@ import {
 } from 'lucide-react';
 import { api, listFrom, severity } from '../services/api';
 import { SeverityBadge, MitreChip } from '../components/Common';
-import { MOCK_ATTACK_CHAINS } from '../services/mockData';
 
-export function AttackChainsPage({ onOpenChain }) {
+export function AttackChainsPage({ onOpenChain, navigate }) {
   const [chains, setChains] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
@@ -22,12 +21,12 @@ export function AttackChainsPage({ onOpenChain }) {
 
   const loadChains = () => {
     setLoading(true);
-    api('/api/v1/chains/generate')
+    api.getChains()
       .then(res => {
         const list = listFrom(res, ['chains', 'results', 'data']);
-        setChains(list.length ? list : MOCK_ATTACK_CHAINS);
+        setChains(list);
       })
-      .catch(() => setChains(MOCK_ATTACK_CHAINS))
+      .catch(() => setChains([]))
       .finally(() => setLoading(false));
   };
 

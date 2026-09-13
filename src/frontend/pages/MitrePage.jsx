@@ -1,36 +1,76 @@
-import React, { useState } from 'react';
-import { ShieldAlert, Layers, ExternalLink, Flame, Info, CheckCircle2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ShieldAlert, Layers, ExternalLink, Flame, Info, CheckCircle2, Upload } from 'lucide-react';
 import { MitreMatrixHeatmap } from '../components/Charts';
 import { MitreChip } from '../components/Common';
-import { MOCK_MITRE_MATRIX, MOCK_MITRE_FREQUENCY } from '../services/mockData';
+import { api } from '../services/api';
 
-export function MitrePage({ onOpenChain }) {
+export function MitrePage({ onOpenChain, navigate }) {
   const [selectedTechnique, setSelectedTechnique] = useState(null);
+  const [mitreData, setMitreData] = useState({ total_detected: 0, techniques: [], matrix: [] });
+  const [loading, setLoading] = useState(true);
 
-  const flatTechniques = [
-    { id: 'T1110', name: 'Brute Force', tactic: 'Credential Access', count: 48, chains: ['AC001', 'AC007', 'AC012'], severity: 'critical' },
-    { id: 'T1595', name: 'Active Scanning', tactic: 'Reconnaissance', count: 42, chains: ['AC001', 'AC004', 'AC009'], severity: 'medium' },
-    { id: 'T1190', name: 'Exploit Public-Facing Application', tactic: 'Initial Access', count: 35, chains: ['AC002', 'AC008'], severity: 'critical' },
-    { id: 'T1059', name: 'Command and Scripting Interpreter', tactic: 'Execution', count: 29, chains: ['AC002', 'AC003', 'AC011'], severity: 'high' },
-    { id: 'T1003', name: 'OS Credential Dumping', tactic: 'Credential Access', count: 24, chains: ['AC001', 'AC015'], severity: 'critical' },
-    { id: 'T1021', name: 'Remote Services (SSH/RDP)', tactic: 'Lateral Movement', count: 19, chains: ['AC001', 'AC014'], severity: 'high' },
-    { id: 'T1071', name: 'Application Layer Protocol', tactic: 'Command and Control', count: 16, chains: ['AC003', 'AC010'], severity: 'high' },
-    { id: 'T1486', name: 'Data Encrypted for Impact', tactic: 'Impact', count: 8, chains: ['AC003', 'AC016'], severity: 'critical' },
-  ];
+  useEffect(() => {
+    setLoading(true);
+    api.getMitreOverview()
+      .then(res => {
+        if (res && typeof res === 'object') {
+          setMitreData(res);
+        }
+      })
+      .catch(() => {
+        setMitreData({ total_detected: 0, techniques: [], matrix: [] });
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const flatTechniques = mitreData.techniques || [];
+  const matrix = mitreData.matrix || [];
 
   return (
     <div>
-      <div style={{ marginBottom: 20 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--cyan-bright)', textTransform: 'uppercase' }}>
-          ENTERPRISE DEFENSE MATRIX
-        </span>
-        <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', marginTop: 4 }}>
-          MITRE ATT&CK® Matrix & Technique Analytics
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4 }}>
-          Tactics and techniques correlated across multi-source security feeds, highlighted by detection frequency and attack severity.
-        </p>
+      <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--cyan-bright)', textTransform: 'uppercase' }}>
+            ENTERPRISE DEFENSE MATRIX
+          </span>
+          <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', marginTop: 4 }}>
+            MITRE ATT&CK® Matrix & Dynamic Analytics
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4 }}>
+            Adversary tactics and techniques correlated dynamically from user uploaded security alert logs.
+          </p>
+        </div>
+
+        {flatTechniques.length === 0 && !loading && (
+          <button className="btn btn-primary" onClick={() => navigate('/upload')}>
+            <Upload size={14} />
+            <span>Upload Alert CSV</span>
+          </button>
+        )}
       </div>
+
+      {/* 0-State banner if no techniques mapped */}
+      {flatTechniques.length === 0 && !loading && (
+        <div style={{
+          background: 'rgba(6, 182, 212, 0.05)',
+          border: '1px solid rgba(6, 182, 212, 0.2)',
+          borderRadius: 8,
+          padding: '24px',
+          marginBottom: 24,
+          textAlign: 'center'
+        }}>
+          <Layers size={36} color="var(--cyan-bright)" style={{ opacity: 0.6, marginBottom: 10 }} />
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
+            0 MITRE ATT&CK Techniques Currently Detected
+          </h3>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', maxWidth: 500, margin: '0 auto 16px' }}>
+            Upload raw security logs via the Upload page. The MITRE mapping service will parse events (e.g. BruteForce, PortScan, LateralMovement) and plot them onto the enterprise matrix.
+          </p>
+          <button className="btn btn-primary" onClick={() => navigate('/upload')}>
+            <span>Ingest Alerts CSV</span>
+          </button>
+        </div>
+      )}
 
       {/* ATT&CK Matrix Heatmap Card */}
       <div className="soc-card" style={{ marginBottom: 24 }}>
@@ -38,9 +78,9 @@ export function MitrePage({ onOpenChain }) {
           <div>
             <h3 className="card-title">
               <Layers size={17} color="var(--cyan-bright)" />
-              <span>ATT&CK Enterprise Matrix Heatmap</span>
+              <span>ATT&CK Enterprise Matrix Heatmap ({mitreData.total_detected || 0} Techniques Identified)</span>
             </h3>
-            <p className="card-subtitle">Click on any technique cell to inspect observed campaigns and telemetry triggers</p>
+            <p className="card-subtitle">Click on any detected technique cell to inspect observed campaigns and telemetry triggers</p>
           </div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', fontSize: 11 }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -55,47 +95,74 @@ export function MitrePage({ onOpenChain }) {
           </div>
         </div>
 
-        <MitreMatrixHeatmap
-          matrix={MOCK_MITRE_MATRIX}
-          onSelectTechnique={tech => setSelectedTechnique(tech)}
-        />
+        {matrix.length > 0 && matrix.some(m => m.techniques.length > 0) ? (
+          <MitreMatrixHeatmap
+            matrix={matrix}
+            onSelectTechnique={tech => setSelectedTechnique(tech)}
+          />
+        ) : (
+          <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>
+            No techniques mapped. Ingest CSV alerts to populate the matrix heatmap.
+          </div>
+        )}
       </div>
 
-      {/* Selected Technique Detail Modal / Drawer */}
+      {/* Detail drawer / modal if technique selected */}
       {selectedTechnique && (
         <div className="soc-card" style={{
-          background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.08), rgba(19, 26, 42, 0.95))',
-          borderColor: 'var(--cyan)',
-          marginBottom: 24
+          marginBottom: 24,
+          border: '1px solid var(--cyan)',
+          background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.08), rgba(19, 26, 42, 0.95))'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <code style={{ fontSize: 16, fontWeight: 800, color: 'var(--cyan-bright)' }}>{selectedTechnique.id}</code>
-                <h4 style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{selectedTechnique.name}</h4>
+                <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>{selectedTechnique.name}</h3>
+                <span className="badge-severity high">{selectedTechnique.tactic}</span>
               </div>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>
-                Observed in <strong>{selectedTechnique.count}</strong> correlated event triggers across active campaigns.
+              <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 8 }}>
+                Observed in <strong>{selectedTechnique.count}</strong> alert events across correlated campaigns.
               </p>
             </div>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setSelectedTechnique(null)}
-              style={{ padding: '4px 10px', fontSize: 12 }}
-            >
+            <button className="btn btn-secondary" onClick={() => setSelectedTechnique(null)} style={{ padding: '4px 10px', fontSize: 12 }}>
               Close
             </button>
           </div>
+
+          {selectedTechnique.chains?.length > 0 && (
+            <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                Correlated Attack Chains Featuring this Technique:
+              </span>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                {selectedTechnique.chains.map(cId => (
+                  <button
+                    key={cId}
+                    className="btn btn-secondary"
+                    onClick={() => onOpenChain && onOpenChain(cId)}
+                    style={{ padding: '5px 12px', fontSize: 12, borderColor: 'rgba(6, 182, 212, 0.3)' }}
+                  >
+                    <span>{cId}</span>
+                    <ExternalLink size={12} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* MITRE Table */}
+      {/* Technique Frequency & Campaign Linkage Table */}
       <div className="soc-card">
         <div className="card-header">
-          <h3 className="card-title">Technique Inventory & Associated Chains</h3>
-          <span className="mono" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-            {flatTechniques.length} Detected Techniques
-          </span>
+          <div>
+            <h3 className="card-title">
+              <Flame size={17} color="var(--high)" />
+              <span>Observed Technique Prevalence Table</span>
+            </h3>
+            <p className="card-subtitle">Techniques identified from ingested alert events</p>
+          </div>
         </div>
 
         <div className="soc-table-wrap">
@@ -104,67 +171,80 @@ export function MitrePage({ onOpenChain }) {
               <tr>
                 <th>Technique ID</th>
                 <th>Technique Name</th>
-                <th>ATT&CK Tactic</th>
-                <th>Detections</th>
-                <th>Associated Attack Chains</th>
-                <th style={{ textAlign: 'right' }}>MITRE Reference</th>
+                <th>Primary Tactic</th>
+                <th>Observed Detections</th>
+                <th>Severity Tier</th>
+                <th>Linked Chains</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {flatTechniques.map(tech => (
-                <tr key={tech.id}>
-                  <td>
-                    <code style={{ fontSize: 13, fontWeight: 800, color: 'var(--cyan-bright)' }}>{tech.id}</code>
-                  </td>
-                  <td>
-                    <strong style={{ color: 'var(--text-primary)' }}>{tech.name}</strong>
-                  </td>
-                  <td>
-                    <span style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>
-                      {tech.tactic}
-                    </span>
-                  </td>
-                  <td>
-                    <span className="mono" style={{ fontWeight: 700, color: '#F8FAFC' }}>
-                      {tech.count} triggers
-                    </span>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {tech.chains.map(cid => (
-                        <button
-                          key={cid}
-                          onClick={() => onOpenChain && onOpenChain(cid)}
-                          style={{
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            border: '1px solid var(--card-border)',
-                            borderRadius: 4,
-                            padding: '2px 8px',
-                            color: 'var(--cyan-bright)',
-                            fontSize: 11,
-                            fontFamily: 'var(--font-mono)',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          {cid}
-                        </button>
-                      ))}
-                    </div>
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <a
-                      href={`https://attack.mitre.org/techniques/${tech.id.replace('.', '/')}/`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-secondary"
-                      style={{ padding: '4px 10px', fontSize: 11 }}
-                    >
-                      <span>MITRE Docs</span>
-                      <ExternalLink size={12} />
-                    </a>
+              {flatTechniques.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '36px 0', color: 'var(--text-muted)' }}>
+                    0 MITRE techniques observed. Ingest alert CSV to populate detections.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                flatTechniques.map(tech => (
+                  <tr key={tech.id} onClick={() => setSelectedTechnique(tech)}>
+                    <td>
+                      <MitreChip id={tech.id} />
+                    </td>
+                    <td>
+                      <strong style={{ color: 'var(--text-primary)' }}>{tech.name}</strong>
+                    </td>
+                    <td>
+                      <span className="mono" style={{ fontSize: 12, color: 'var(--cyan-bright)' }}>{tech.tactic}</span>
+                    </td>
+                    <td>
+                      <span className="mono" style={{ fontWeight: 700 }}>{tech.count} events</span>
+                    </td>
+                    <td>
+                      <span className={`badge-severity ${tech.severity || 'medium'}`}>
+                        {tech.severity || 'Medium'}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        {(tech.chains || []).slice(0, 4).map(cId => (
+                          <button
+                            key={cId}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (onOpenChain) onOpenChain(cId);
+                            }}
+                            style={{
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              border: '1px solid var(--card-border)',
+                              borderRadius: 4,
+                              color: 'var(--cyan-bright)',
+                              padding: '2px 6px',
+                              fontSize: 11,
+                              fontFamily: 'var(--font-mono)',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {cId}
+                          </button>
+                        ))}
+                      </div>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedTechnique(tech);
+                        }}
+                        style={{ padding: '4px 10px', fontSize: 12 }}
+                      >
+                        Inspect
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

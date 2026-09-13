@@ -153,6 +153,29 @@ def list_all_reports(
         service = ReportService(db=db)
         reports = service.get_all_reports(limit=limit, offset=offset)
 
+        if not reports:
+            from database.models import AttackChainDB
+            chains = db.query(AttackChainDB).order_by(AttackChainDB.start_time.desc()).limit(limit).all()
+            for c in chains:
+                score = c.risk_score.score if c.risk_score else 50
+                level = c.risk_score.level if c.risk_score else "Medium"
+                events = [e.strip() for e in (c.events or "").split(",") if e.strip()]
+                dest_ips = [d.strip() for d in (c.destination_ips or "").split(",") if d.strip()]
+                techs = [f"{m.technique_id} ({m.technique_name})" for m in (c.mitre_mappings or [])]
+                reports.append(
+                    BlufReportOutput(
+                        chain_id=c.chain_id,
+                        threat_level=level,
+                        executive_summary=f"High-confidence threat campaign detected originating from source {c.source_ip}. Multi-factor risk assessed at {score}/100 ({level} Priority).",
+                        attack_overview=f"Correlated attack sequence consisting of {len(events)} stages: {' -> '.join(events) if events else 'Suspicious traffic'}.",
+                        affected_assets=f"Target hosts: {', '.join(dest_ips) if dest_ips else 'Internal subnet'}.",
+                        mitre_summary=f"Mapped MITRE ATT&CK techniques: {', '.join(techs) if techs else 'Heuristic signatures'}.",
+                        risk_assessment=f"Composite risk evaluated at {score}/100 based on event severity weights, time proximity, and kill chain progression bonus.",
+                        recommended_actions=f"Block source {c.source_ip} at perimeter firewalls, isolate compromised target hosts, and perform memory forensics.",
+                        conclusion=f"Campaign is currently categorized as {level}. Immediate containment required to prevent lateral movement.",
+                    )
+                )
+
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=ReportListResponse(

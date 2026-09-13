@@ -38,6 +38,7 @@ from routers.recommendations import router as recommendation_router
 from routers.reports import router as report_router
 from routers.workflow import router as workflow_router
 from routers.chat import router as chat_router
+from routers.dashboard import router as dashboard_router
 
 # Configure production-ready structured logging
 logging.basicConfig(
@@ -72,6 +73,7 @@ app.add_middleware(
 
 # Mount Routers
 app.include_router(upload_router)
+app.include_router(dashboard_router)
 app.include_router(correlation_router)
 app.include_router(mitre_router)
 app.include_router(risk_router)

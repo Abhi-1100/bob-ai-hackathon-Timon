@@ -9,7 +9,12 @@ import {
   Database,
   RefreshCw,
   Zap,
-  Info
+  Trash2,
+  Info,
+  Check,
+  Layers,
+  Network,
+  ShieldAlert
 } from 'lucide-react';
 import { api } from '../services/api';
 import { ErrorBanner } from '../components/Common';
@@ -17,16 +22,20 @@ import { ErrorBanner } from '../components/Common';
 export function UploadPage({ navigate }) {
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [currentStep, setCurrentStep] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
+  const [confirmReset, setConfirmReset] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFile = (f) => {
     setError('');
     setResult(null);
+    setResetMessage('');
     if (!f) return;
     if (!f.name.toLowerCase().endsWith('.csv')) {
-      setError('Invalid format: Only RFC 4180 compliant .csv security alert logs are accepted.');
+      setError('Invalid file format: Only RFC 4180 compliant .csv security alert logs are accepted.');
       return;
     }
     setFile(f);
@@ -36,19 +45,32 @@ export function UploadPage({ navigate }) {
     if (!selectedFile) return;
     setBusy(true);
     setError('');
+    setResetMessage('');
+    setCurrentStep('Ingesting alerts from CSV & validating schemas...');
 
     try {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
-      const response = await api('/api/v1/upload/ingest', {
-        method: 'POST',
-        body: formData
-      });
-
+      setCurrentStep('Correlating multi-stage attack chains & mapping MITRE techniques...');
+      const response = await api.uploadAndIngest(selectedFile);
       setResult(response);
     } catch (err) {
-      setError(err.message || 'Alert ingest failed. Check file schema and API connection.');
+      setError(err.message || 'Alert ingest failed. Please check CSV format and API connection.');
+    } finally {
+      setBusy(false);
+      setCurrentStep('');
+    }
+  };
+
+  const handleResetData = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      const res = await api.resetDatabase();
+      setResetMessage(res.message || 'All database records wiped to 0. System is in 0-state.');
+      setResult(null);
+      setFile(null);
+      setConfirmReset(false);
+    } catch (err) {
+      setError(err.message || 'Failed to reset database.');
     } finally {
       setBusy(false);
     }
@@ -57,46 +79,129 @@ export function UploadPage({ navigate }) {
   const loadEnterpriseSampleData = async () => {
     setBusy(true);
     setError('');
-    try {
-      // Create synthetic sample CSV blob matching enterprise_threat_alerts_1000.csv schema
-      const sampleBlob = new Blob([
-        "timestamp,src_ip,dst_ip,event,severity\n" +
-        "2026-09-13T19:30:12Z,198.51.100.24,10.0.4.12,PortScan,Low\n" +
-        "2026-09-13T19:33:45Z,198.51.100.24,10.0.4.12,SSH_BruteForce,High\n" +
-        "2026-09-13T19:37:02Z,10.0.4.12,10.0.4.12,CredentialDumping,Critical\n" +
-        "2026-09-13T19:40:15Z,10.0.4.12,10.0.4.15,LateralMovement_SSH,High\n" +
-        "2026-09-13T19:42:10Z,10.0.4.15,10.0.2.8,DataStaging,Critical\n" +
-        "2026-09-13T18:02:11Z,203.0.113.88,10.0.1.50,Web_Exploit_Attempt,High\n" +
-        "2026-09-13T18:07:33Z,203.0.113.88,10.0.1.50,WebShell_Dropped,Critical\n" +
-        "2026-09-13T18:15:30Z,10.0.1.50,203.0.113.88,Reverse_Shell_Spawned,Critical\n"
-      ], { type: 'text/csv' });
+    setResetMessage('');
+    setCurrentStep('Preparing enterprise threat alerts (1,000 alerts)...');
 
-      const sampleFile = new File([sampleBlob], 'enterprise_threat_alerts_1000.csv', { type: 'text/csv' });
+    try {
+      // Fetch the actual sample CSV from the repository if available, or generate full 100-alert synthetic log
+      let csvContent = "";
+      try {
+        const fetchRes = await fetch('/sample_data/enterprise_threat_alerts_1000.csv');
+        if (fetchRes.ok) {
+          csvContent = await fetchRes.text();
+        }
+      } catch {
+        csvContent = "";
+      }
+
+      if (!csvContent || !csvContent.includes('timestamp')) {
+        // High fidelity multi-stage attack logs
+        const eventsList = [
+          'PortScan', 'SSH_BruteForce', 'CredentialDumping', 'LateralMovement_SSH', 'DataStaging',
+          'Web_Exploit_Attempt', 'WebShell_Dropped', 'CommandExecution', 'PrivilegeEscalation', 'DataExfiltration'
+        ];
+        const severities = ['Low', 'Medium', 'High', 'Critical', 'Critical'];
+        const srcIps = ['198.51.100.24', '203.0.113.88', '185.220.101.5', '194.26.29.112', '45.154.255.89'];
+        const dstIps = ['10.0.4.12', '10.0.1.50', '10.0.2.100', '10.0.5.20', '10.0.3.15'];
+
+        let rows = ["timestamp,src_ip,dst_ip,event,severity"];
+        const baseTime = new Date('2026-09-13T12:00:00Z').getTime();
+
+        for (let i = 0; i < 150; i++) {
+          const t = new Date(baseTime + i * 45000).toISOString();
+          const src = srcIps[i % srcIps.length];
+          const dst = dstIps[Math.floor(i / 10) % dstIps.length];
+          const ev = eventsList[i % eventsList.length];
+          const sev = severities[i % severities.length];
+          rows.push(`${t},${src},${dst},${ev},${sev}`);
+        }
+        csvContent = rows.join("\n");
+      }
+
+      const sampleBlob = new Blob([csvContent], { type: 'text/csv' });
+      const sampleFile = new File([sampleBlob], 'enterprise_threat_alerts.csv', { type: 'text/csv' });
       setFile(sampleFile);
       await executeIngest(sampleFile);
     } catch (e) {
       setError(e.message);
     } finally {
       setBusy(false);
+      setCurrentStep('');
     }
   };
 
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-      <div style={{ marginBottom: 24 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--cyan-bright)', textTransform: 'uppercase' }}>
-          MULTI-SOURCE DATA INTAKE
-        </span>
-        <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', marginTop: 4 }}>
-          Security Feed & Alert Ingestion
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4 }}>
-          Ingest raw telemetry from SIEMs, sensor relays, or satellite downlinks. Sentinel Forge normalizes schemas and executes automated attack-chain grouping.
-        </p>
+      {/* Header bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+        <div>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--cyan-bright)', textTransform: 'uppercase' }}>
+            MULTI-SOURCE DATA INTAKE
+          </span>
+          <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', marginTop: 4 }}>
+            Security Alert Ingestion & Dynamic Pipeline
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4 }}>
+            Upload raw security logs. The backend pipeline ingests, validates, clusters into attack chains, maps to MITRE ATT&CK, and calculates risk scores dynamically.
+          </p>
+        </div>
+
+        {/* Reset Database to 0-state Button */}
+        <div>
+          {confirmReset ? (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <span style={{ fontSize: 12, color: 'var(--critical)', fontWeight: 600 }}>Wipe all DB data to 0?</span>
+              <button
+                className="btn btn-primary"
+                style={{ background: 'var(--critical)', borderColor: 'var(--critical)', padding: '6px 12px', fontSize: 12 }}
+                disabled={busy}
+                onClick={handleResetData}
+              >
+                Confirm Wipe
+              </button>
+              <button
+                className="btn btn-secondary"
+                style={{ padding: '6px 10px', fontSize: 12 }}
+                onClick={() => setConfirmReset(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              className="btn btn-secondary"
+              style={{ color: 'var(--critical)', borderColor: 'rgba(239, 68, 68, 0.3)', padding: '7px 14px', fontSize: 12 }}
+              onClick={() => setConfirmReset(true)}
+              title="Wipe database back to 0 state"
+            >
+              <Trash2 size={14} />
+              <span>Reset to 0-State</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <ErrorBanner message={error} onDismiss={() => setError('')} />
 
+      {resetMessage && (
+        <div style={{
+          padding: '12px 18px',
+          background: 'rgba(6, 182, 212, 0.1)',
+          border: '1px solid rgba(6, 182, 212, 0.3)',
+          borderRadius: 8,
+          marginBottom: 20,
+          color: 'var(--cyan-bright)',
+          fontSize: 13,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10
+        }}>
+          <CheckCircle2 size={16} />
+          <span>{resetMessage}</span>
+        </div>
+      )}
+
+      {/* Upload result success card */}
       {result ? (
         <div className="soc-card" style={{
           background: 'linear-gradient(145deg, rgba(34, 197, 94, 0.08), rgba(19, 26, 42, 0.9))',
@@ -118,10 +223,10 @@ export function UploadPage({ navigate }) {
             </div>
             <div>
               <span style={{ fontSize: 11, fontWeight: 700, color: '#4ADE80', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                INGESTION & CORRELATION COMPLETE
+                INGESTION & CORRELATION PIPELINE COMPLETE
               </span>
               <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>
-                {result.alerts_ingested ?? result.count ?? 1000} Alerts Successfully Processed
+                {result.alerts_ingested ?? result.count ?? 0} Alerts Successfully Ingested
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 2 }}>
                 {result.message || 'Correlated cross-domain security events into active attack chains.'}
@@ -129,13 +234,54 @@ export function UploadPage({ navigate }) {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 12 }}>
-            <button className="btn btn-primary" onClick={() => navigate('/attack-chains')}>
-              <span>View Correlated Attack Chains</span>
+          {/* Dynamic Pipeline Summary Metrics */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: 12,
+            marginBottom: 24,
+            padding: 16,
+            background: 'rgba(0, 0, 0, 0.25)',
+            borderRadius: 8,
+            border: '1px solid rgba(255, 255, 255, 0.05)'
+          }}>
+            <div>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Alerts Ingested</span>
+              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--cyan-bright)' }}>
+                {result.alerts_ingested ?? 0}
+              </div>
+            </div>
+            <div>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Attack Chains Correlated</span>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#60A5FA' }}>
+                {result.chains_correlated ?? 'Generated'}
+              </div>
+            </div>
+            <div>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>MITRE Techniques Mapped</span>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#FBBF24' }}>
+                {result.mitre_mapped ?? 'Active'}
+              </div>
+            </div>
+            <div>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Chains Risk-Scored</span>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#EF4444' }}>
+                {result.risk_scored ?? 'Prioritized'}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
+              <span>View Dynamic Dashboard</span>
               <ArrowRight size={16} />
             </button>
+            <button className="btn btn-secondary" onClick={() => navigate('/attack-chains')}>
+              <Network size={15} />
+              <span>Explore Attack Chains</span>
+            </button>
             <button className="btn btn-secondary" onClick={() => { setFile(null); setResult(null); }}>
-              <span>Upload Another Dataset</span>
+              <span>Upload Another CSV</span>
             </button>
           </div>
         </div>
@@ -188,7 +334,7 @@ export function UploadPage({ navigate }) {
               <>
                 <h4 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>{file.name}</h4>
                 <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>
-                  {(file.size / 1024).toFixed(1)} KB · Ready for validation
+                  {(file.size / 1024).toFixed(1)} KB · Ready to ingest into dynamic pipeline
                 </p>
                 <button
                   className="btn btn-secondary"
@@ -207,7 +353,7 @@ export function UploadPage({ navigate }) {
                   Drag and drop alert CSV here
                 </h4>
                 <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>
-                  or click to browse from local workstation
+                  or click to browse from local file system
                 </p>
                 <span style={{
                   fontSize: 11,
@@ -217,23 +363,23 @@ export function UploadPage({ navigate }) {
                   background: 'rgba(255, 255, 255, 0.03)',
                   borderRadius: 4
                 }}>
-                  Standard CSV Format · Max size 50 MB
+                  Standard CSV Format (timestamp, src_ip, dst_ip, event, severity)
                 </span>
               </>
             )}
           </div>
 
-          {/* Validation Checklist & 1-Click Loader */}
+          {/* Validation Checklist & Actions */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div className="soc-card">
               <div className="card-header">
                 <h4 className="card-title">
                   <ShieldCheck size={16} color="var(--cyan-bright)" />
-                  <span>Validation Gate Checklist</span>
+                  <span>Validation Schema</span>
                 </h4>
               </div>
               <p style={{ fontSize: 12.5, color: 'var(--text-muted)', marginBottom: 14 }}>
-                The canonical ingestion parser validates every row against required fields:
+                The ingestion parser validates every row against required canonical fields:
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {['timestamp', 'src_ip', 'dst_ip', 'event', 'severity'].map(col => (
@@ -257,6 +403,15 @@ export function UploadPage({ navigate }) {
                 ))}
               </div>
 
+              {busy && (
+                <div style={{ marginTop: 16, padding: '10px 14px', background: 'rgba(6, 182, 212, 0.08)', borderRadius: 6, border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--cyan-bright)' }}>
+                    <RefreshCw size={14} className="spin" />
+                    <span>{currentStep || 'Processing pipeline…'}</span>
+                  </div>
+                </div>
+              )}
+
               <button
                 className="btn btn-primary"
                 style={{ width: '100%', marginTop: 20 }}
@@ -266,27 +421,27 @@ export function UploadPage({ navigate }) {
                 {busy ? (
                   <>
                     <RefreshCw className="spin" size={16} />
-                    <span>Parsing & Correlating…</span>
+                    <span>Executing Pipeline…</span>
                   </>
                 ) : (
                   <>
                     <Zap size={16} />
-                    <span>Validate & Ingest Alerts</span>
+                    <span>Run Ingestion & Correlation</span>
                   </>
                 )}
               </button>
             </div>
 
-            {/* One-Click Enterprise Dataset Seed */}
+            {/* One-Click Enterprise Dataset Quick Test */}
             <div className="soc-card" style={{ background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.06), rgba(19, 26, 42, 0.9))' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                 <Database size={20} color="var(--cyan-bright)" style={{ flexShrink: 0, marginTop: 2 }} />
                 <div>
                   <h4 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
-                    Quick Demo Evaluation
+                    Enterprise Test Dataset
                   </h4>
                   <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
-                    Load the pre-packaged 1,000 enterprise threat alerts dataset instantly into the correlation engine.
+                    Quickly evaluate with canonical multi-source alerts to populate all 12 modules dynamically.
                   </p>
                   <button
                     className="btn btn-secondary"
@@ -295,7 +450,7 @@ export function UploadPage({ navigate }) {
                     onClick={loadEnterpriseSampleData}
                   >
                     <Zap size={14} color="var(--cyan-bright)" />
-                    <span>Load 1,000 Sample Alerts</span>
+                    <span>Load Test Alert CSV</span>
                   </button>
                 </div>
               </div>

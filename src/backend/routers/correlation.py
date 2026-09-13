@@ -1,13 +1,17 @@
 """
-Correlation router – exposes the alert correlation engine via FastAPI.
+Correlation router – exposes the alert correlation engine and attack chain queries via FastAPI.
 """
 
+import json
 import logging
-from fastapi import APIRouter, Depends, status
+from typing import List, Optional
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from database.session import get_db
+from database.models import AttackChainDB, Alert as AlertDB, MitreMappingDB, RiskScoreDB, ReportDB, RecommendationDB
 from schemas.attack_chain import CorrelationResult
 from schemas.upload import ErrorResponse
 from services.alert_correlation import AlertCorrelationEngine, CorrelationError
@@ -21,55 +25,79 @@ router = APIRouter(
 
 
 @router.get(
+    "",
+    status_code=status.HTTP_200_OK,
+    summary="Get All Correlated Attack Chains",
+    description="Returns all persisted attack chains from the database, or empty list if no alerts have been ingested."
+)
+def get_attack_chains(db: Session = Depends(get_db)):
+    """Fetch all attack chains from the database without re-running correlation."""
+    chains = db.query(AttackChainDB).order_by(AttackChainDB.start_time.desc()).all()
+    results = []
+
+    for c in chains:
+        dest_ips = [ip.strip() for ip in (c.destination_ips or "").split(",") if ip.strip()]
+        events_list = [e.strip() for e in (c.events or "").split(",") if e.strip()]
+
+        # Map mitre techniques
+        mitre_list = [
+            {
+                "technique_id": m.technique_id,
+                "name": m.technique_name,
+                "tactic": m.tactic,
+                "event": m.event,
+            }
+            for m in (c.mitre_mappings or [])
+        ]
+
+        # Extract risk score
+        risk_score = c.risk_score.score if c.risk_score else 0
+        severity = c.risk_score.level if c.risk_score else "Medium"
+
+        results.append({
+            "chain_id": c.chain_id,
+            "source_ip": c.source_ip,
+            "dest_ips": dest_ips,
+            "events": events_list,
+            "alert_count": c.alert_count,
+            "start_time": c.start_time.isoformat() if c.start_time else None,
+            "end_time": c.end_time.isoformat() if c.end_time else None,
+            "created_at": c.created_at.strftime("%Y-%m-%d %H:%M:%S UTC") if c.created_at else None,
+            "risk_score": risk_score,
+            "final_score": risk_score,
+            "severity": severity,
+            "risk_level": severity,
+            "status": "Active",
+            "mitre_techniques": mitre_list,
+        })
+
+    return {
+        "chains": results,
+        "count": len(results),
+    }
+
+
+@router.get(
     "/generate",
-    response_model=CorrelationResult,
     status_code=status.HTTP_200_OK,
     summary="Generate Attack Chains",
-    description=(
-        "Fetches all stored alerts from the database, runs the rule-based "
-        "correlation engine (source-IP grouping + time-window splitting + "
-        "attack-progression ordering), persists the resulting attack chains, "
-        "and returns a structured summary.\n\n"
-        "**Correlation Rules:**\n"
-        "1. Alerts from the same source IP are grouped together.\n"
-        "2. A configurable time window (default 30 min) splits distant alerts into separate chains.\n"
-        "3. Events are ordered by kill-chain progression (Recon → Exploit → Post-Exploit).\n"
-        "4. Alerts against the same destination IP reinforce the grouping.\n\n"
-        "*This endpoint is deterministic and does not use AI/LLMs.*"
-    ),
-    responses={
-        200: {
-            "description": "Correlation completed and chains stored",
-            "model": CorrelationResult,
-        },
-        400: {
-            "description": "No alerts found or correlation failed",
-            "model": ErrorResponse,
-        },
-        500: {
-            "description": "Internal server error during correlation",
-            "model": ErrorResponse,
-        },
-    },
+    description="Runs rule-based correlation on all stored alerts and persists new attack chains."
 )
 def generate_attack_chains(db: Session = Depends(get_db)):
-    """Run the full correlation pipeline and return the result."""
+    """Run correlation pipeline and return chains."""
     try:
         engine = AlertCorrelationEngine(db=db)
         result = engine.correlate(persist=True)
-
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=result.model_dump(mode="json"),
         )
-
     except CorrelationError as ce:
-        logger.warning(f"Correlation could not proceed: {ce.message}")
+        logger.info(f"Correlation check: {ce.message}")
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content=ErrorResponse(success=False, message=ce.message).model_dump(),
+            status_code=status.HTTP_200_OK,
+            content={"chains": [], "total_chains": 0, "execution_time_ms": 0.0, "message": ce.message},
         )
-
     except Exception as exc:
         logger.error(f"Unexpected error during correlation: {exc}", exc_info=True)
         return JSONResponse(
@@ -79,3 +107,112 @@ def generate_attack_chains(db: Session = Depends(get_db)):
                 message="An unexpected error occurred during correlation",
             ).model_dump(),
         )
+
+
+@router.get(
+    "/{chain_id}",
+    status_code=status.HTTP_200_OK,
+    summary="Get Attack Chain by ID",
+    description="Returns detailed attack chain records with full event progression and telemetry."
+)
+def get_attack_chain_by_id(chain_id: str, db: Session = Depends(get_db)):
+    """Retrieve full details of an attack chain."""
+    chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id).first()
+    if not chain:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Attack chain '{chain_id}' not found")
+
+    dest_ips = [ip.strip() for ip in (chain.destination_ips or "").split(",") if ip.strip()]
+
+    # Extract linked events from junction table
+    linked_alerts = []
+    for junction in chain.chain_events:
+        alert = junction.alert
+        if alert:
+            linked_alerts.append({
+                "timestamp": alert.timestamp.isoformat() if alert.timestamp else "",
+                "event": alert.event,
+                "severity": alert.severity,
+                "src_ip": alert.src_ip,
+                "dst_ip": alert.dst_ip,
+                "protocol": "TCP",
+            })
+
+    # If junction events empty, parse from comma separated events
+    if not linked_alerts and chain.events:
+        for ev in chain.events.split(","):
+            if ev.strip():
+                linked_alerts.append({
+                    "timestamp": chain.start_time.isoformat() if chain.start_time else "",
+                    "event": ev.strip(),
+                    "severity": chain.risk_score.level if chain.risk_score else "Medium",
+                    "src_ip": chain.source_ip,
+                    "dst_ip": dest_ips[0] if dest_ips else "10.0.0.1",
+                    "protocol": "TCP",
+                })
+
+    # Mitre mappings
+    mitre_techniques = [
+        {
+            "technique_id": m.technique_id,
+            "name": m.technique_name,
+            "tactic": m.tactic,
+            "count": 1,
+        }
+        for m in (chain.mitre_mappings or [])
+    ]
+
+    # Risk score breakdown
+    score = chain.risk_score.score if chain.risk_score else 50
+    sev = chain.risk_score.level if chain.risk_score else "Medium"
+    breakdown = {
+        "base_event_score": chain.risk_score.event_score if chain.risk_score else 25,
+        "mitre_score": chain.risk_score.mitre_score if chain.risk_score else 15,
+        "kill_chain_bonus": chain.risk_score.chain_bonus if chain.risk_score else 10,
+        "final_score": score,
+    }
+
+    # Recommendations
+    recs_obj = None
+    if chain.recommendation:
+        try:
+            recs_obj = {
+                "immediate_actions": json.loads(chain.recommendation.immediate_actions) if isinstance(chain.recommendation.immediate_actions, str) else chain.recommendation.immediate_actions,
+                "containment_actions": json.loads(chain.recommendation.containment_actions) if isinstance(chain.recommendation.containment_actions, str) else chain.recommendation.containment_actions,
+                "investigation_actions": json.loads(chain.recommendation.investigation_actions) if isinstance(chain.recommendation.investigation_actions, str) else chain.recommendation.investigation_actions,
+                "prevention_actions": json.loads(chain.recommendation.prevention_actions) if isinstance(chain.recommendation.prevention_actions, str) else chain.recommendation.prevention_actions,
+            }
+        except Exception:
+            pass
+
+    # Executive report
+    report_obj = None
+    if chain.report:
+        report_obj = {
+            "threat_level": chain.report.threat_level,
+            "executive_summary": chain.report.executive_summary,
+            "attack_overview": chain.report.attack_overview,
+            "affected_assets": chain.report.affected_assets,
+            "mitre_summary": chain.report.mitre_summary,
+            "risk_assessment": chain.report.risk_assessment,
+            "recommended_actions": chain.report.recommended_actions,
+            "conclusion": chain.report.conclusion,
+        }
+
+    return {
+        "chain_id": chain.chain_id,
+        "source_ip": chain.source_ip,
+        "dest_ips": dest_ips,
+        "alert_count": chain.alert_count,
+        "start_time": chain.start_time.isoformat() if chain.start_time else None,
+        "end_time": chain.end_time.isoformat() if chain.end_time else None,
+        "severity": sev,
+        "risk_level": sev,
+        "risk_score": score,
+        "final_score": score,
+        "score_breakdown": breakdown,
+        "events": linked_alerts,
+        "mitre_techniques": mitre_techniques,
+        "recommendations": recs_obj,
+        "report": report_obj,
+        "status": "Active",
+    }

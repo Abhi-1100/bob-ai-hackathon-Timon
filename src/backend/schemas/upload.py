@@ -2,6 +2,7 @@
 Pydantic V2 schemas for the File Upload module.
 """
 
+from typing import Optional
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -46,4 +47,7 @@ class IngestResponse(BaseModel):
     upload_id: str = Field(..., description="Database UUID for the upload record")
     file_name: str = Field(..., description="Uploaded filename")
     alerts_ingested: int = Field(..., description="Total number of alert rows inserted into database")
+    chains_correlated: Optional[int] = Field(default=0, description="Number of attack chains produced")
+    mitre_mapped: Optional[int] = Field(default=0, description="Total MITRE techniques mapped")
+    risk_scored: Optional[int] = Field(default=0, description="Number of chains evaluated for risk")
 

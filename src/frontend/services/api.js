@@ -1,207 +1,158 @@
 /**
- * Sentinel Forge — Enterprise API Service
- * Handles REST communication with the FastAPI backend with seamless mock fallback.
+ * Sentinel Forge — Enterprise Dynamic API Service
+ * Interacts directly with FastAPI backend. All data is dynamically loaded
+ * from PostgreSQL database populated by user-uploaded CSV alerts.
+ * Fallbacks are strictly zero-state (0 static mock data).
  */
-
-import {
-  MOCK_ATTACK_CHAINS,
-  MOCK_KPIS,
-  MOCK_RISK_DISTRIBUTION,
-  MOCK_TREND_DATA,
-  MOCK_MITRE_FREQUENCY,
-  MOCK_MITRE_MATRIX,
-  MOCK_CHAT_SESSIONS
-} from './mockData';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export async function api(path, options = {}) {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     const response = await fetch(`${API_BASE}${path}`, {
       ...options,
-      signal: controller.signal
+      signal: controller.signal,
     });
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
+      const errText = await response.text().catch(() => '');
+      throw new Error(`API returned ${response.status}: ${errText}`);
     }
     const data = await response.json();
     return data;
   } catch (err) {
-    console.warn(`[Sentinel Forge API] Fetch failed for ${path} (${err.message}). Using intelligent mock fallback.`);
+    console.warn(`[Sentinel Forge API] Fetch failed for ${path} (${err.message}). Returning zero-state dynamic fallback.`);
     return getFallbackData(path, options);
   }
 }
 
+/**
+ * 0-Data Dynamic Fallbacks: strictly empty states (no fake static records)
+ */
 function getFallbackData(path, options = {}) {
-  // 1. Attack Chains / Correlated Incidents
-  if (path.includes('/api/v1/chains/generate') || path.includes('/api/v1/chains') && !path.split('/')[4]) {
-    return { chains: MOCK_ATTACK_CHAINS, count: MOCK_ATTACK_CHAINS.length };
+  // Dashboard stats
+  if (path.includes('/api/v1/dashboard/stats')) {
+    return {
+      total_alerts: 0,
+      total_chains: 0,
+      critical_incidents: 0,
+      high_risk_incidents: 0,
+      medium_risk_incidents: 0,
+      low_risk_incidents: 0,
+      mitre_techniques_count: 0,
+      avg_risk_score: 0.0,
+      noise_reduction: 0.0,
+      risk_distribution: [
+        { name: 'Critical', value: 0, color: '#EF4444' },
+        { name: 'High', value: 0, color: '#F97316' },
+        { name: 'Medium', value: 0, color: '#FBBF24' },
+        { name: 'Low', value: 0, color: '#10B981' },
+      ],
+      mitre_frequency: [],
+      timeline: [],
+      recent_incidents: [],
+    };
   }
+
+  // Analytics
+  if (path.includes('/api/v1/analytics/overview')) {
+    return {
+      total_alerts: 0,
+      total_chains: 0,
+      unique_sources: 0,
+      unique_destinations: 0,
+      attack_types: [],
+      severity_breakdown: [],
+      top_sources: [],
+      top_targets: [],
+      mitre_frequency: [],
+      trend_data: [],
+    };
+  }
+
+  // Chains list
+  if (path.includes('/api/v1/chains') && !path.split('/')[4]) {
+    return { chains: [], count: 0 };
+  }
+
+  // Single chain detail
   if (path.match(/\/api\/v1\/chains\/([^/]+)$/)) {
-    const chainId = path.split('/').pop();
-    return MOCK_ATTACK_CHAINS.find(c => c.chain_id === chainId) || MOCK_ATTACK_CHAINS[0];
+    return null;
   }
 
-  // 2. Risk Scoring
-  if (path.includes('/api/v1/risk/calculate-all')) {
+  // MITRE overview
+  if (path.includes('/api/v1/mitre/overview')) {
     return {
-      chains: MOCK_ATTACK_CHAINS.map(c => ({
-        chain_id: c.chain_id,
-        source_ip: c.source_ip,
-        final_score: c.risk_score,
-        risk_score: c.risk_score,
-        severity: c.severity,
-        risk_level: c.risk_level,
-        end_time: c.end_time
-      }))
-    };
-  }
-  if (path.includes('/api/v1/risk/distribution')) {
-    return MOCK_RISK_DISTRIBUTION;
-  }
-  if (path.includes('/api/v1/risk/calculate/')) {
-    const chainId = path.split('/').pop();
-    const chain = MOCK_ATTACK_CHAINS.find(c => c.chain_id === chainId) || MOCK_ATTACK_CHAINS[0];
-    return {
-      chain_id: chain.chain_id,
-      final_score: chain.risk_score,
-      risk_score: chain.risk_score,
-      severity: chain.severity,
-      base_event_score: chain.score_breakdown.base_event_score,
-      mitre_score: chain.score_breakdown.mitre_score,
-      kill_chain_bonus: chain.score_breakdown.kill_chain_bonus
+      total_detected: 0,
+      techniques: [],
+      matrix: [],
     };
   }
 
-  // 3. MITRE Mapping
-  if (path.includes('/api/v1/mitre/map/')) {
-    const chainId = path.split('/').pop();
-    const chain = MOCK_ATTACK_CHAINS.find(c => c.chain_id === chainId) || MOCK_ATTACK_CHAINS[0];
-    return {
-      chain_id: chain.chain_id,
-      techniques: chain.mitre_techniques,
-      data: chain.mitre_techniques
-    };
+  // Recommendations
+  if (path.includes('/api/v1/recommendations')) {
+    return { recommendations: [], total: 0 };
   }
 
-  // 4. Recommendations
-  if (path.includes('/api/v1/recommendations/')) {
-    const chainId = path.split('/').pop();
-    const chain = MOCK_ATTACK_CHAINS.find(c => c.chain_id === chainId) || MOCK_ATTACK_CHAINS[0];
-    return {
-      chain_id: chain.chain_id,
-      source: 'Llama 3.3 70B (AI Recommendation Agent)',
-      executive_summary: chain.report.executive_summary,
-      ...chain.recommendations
-    };
+  // Reports
+  if (path.includes('/api/v1/reports')) {
+    return { reports: [], total_reports: 0 };
   }
 
-  // 5. Reports
-  if (path.includes('/api/v1/reports/')) {
-    const chainId = path.split('/').pop();
-    const chain = MOCK_ATTACK_CHAINS.find(c => c.chain_id === chainId) || MOCK_ATTACK_CHAINS[0];
-    return {
-      chain_id: chain.chain_id,
-      ...chain.report,
-      recommended_actions: chain.recommendations.immediate_actions
-    };
-  }
-
-  // 6. Upload
-  if (path.includes('/api/v1/upload/ingest') || path.includes('/api/v1/upload/csv')) {
-    return {
-      status: 'success',
-      alerts_ingested: 1000,
-      count: 1000,
-      chains_generated: 18,
-      message: 'Successfully normalized and correlated 1,000 security feed alerts into 18 attack chains.'
-    };
-  }
-
-  // 7. Chat
-  if (path.includes('/api/v1/chat/new-session')) {
-    return { session_id: 'sess-' + Math.random().toString(36).substring(2, 9) };
-  }
-  if (path.includes('/api/v1/chat/history')) {
-    return {
-      messages: [
-        {
-          role: 'assistant',
-          message: 'Sentinel AI Threat Analyst initialized. Connected to Qdrant vector store and SQLite telemetry index. How can I assist your investigation today?',
-          sources: ['Qdrant Threat Store', 'MITRE ATT&CK Matrix']
-        }
-      ]
-    };
-  }
-  if (path === '/api/v1/chat' && options.method === 'POST') {
-    let query = '';
-    try { query = JSON.parse(options.body).message || ''; } catch(e) {}
-    return generateGroundedChatResponse(query);
-  }
-
-  // 8. Workflow
-  if (path.includes('/api/v1/workflow/status/')) {
-    return {
-      status: 'completed',
-      steps: ['completed', 'completed', 'completed', 'completed', 'completed', 'completed']
-    };
-  }
-  if (path.includes('/api/v1/workflow/run')) {
-    return { status: 'success', message: 'Workflow execution dispatched successfully.' };
-  }
-
-  return {};
+  return { success: false, data: null };
 }
 
-function generateGroundedChatResponse(query) {
-  const q = (query || '').toLowerCase();
-  if (q.includes('highest risk') || q.includes('most critical')) {
-    return {
-      role: 'assistant',
-      message: 'The highest risk incident currently active is Attack Chain **AC001** with a calibrated Risk Score of **94/100 (Critical)**. It represents an external intrusion from 198.51.100.24 targeting jump hosts and dumping credentials.',
-      chain_id: 'AC001',
-      sources: ['Alert Correlator (AC001)', 'Risk Scoring Engine (94/100)', 'MITRE T1003'],
-      references: ['AC001', '198.51.100.24', 'T1003', 'T1110']
-    };
-  }
-  if (q.includes('credential') || q.includes('password') || q.includes('dumping')) {
-    return {
-      role: 'assistant',
-      message: 'Credential theft was detected in incident **AC001** involving technique **T1003 (OS Credential Dumping)** and **T1110 (Brute Force)**. Host `10.0.4.12` exhibited LSASS memory scraping following successful SSH authentication.',
-      chain_id: 'AC001',
-      sources: ['Endpoint Telemetry (10.0.4.12)', 'Qdrant Embeddings / BAAI-bge', 'MITRE ATT&CK T1003'],
-      references: ['AC001', 'T1003']
-    };
-  }
-  if (q.includes('t1110') || q.includes('brute force')) {
-    return {
-      role: 'assistant',
-      message: 'MITRE Technique **T1110 (Brute Force)** is associated with **AC001** (SSH Brute Force) and account spray telemetry across 48 observed events.',
-      chain_id: 'AC001',
-      sources: ['MITRE Knowledge Base', 'Attack Chain AC001'],
-      references: ['T1110', 'AC001']
-    };
-  }
-  return {
-    role: 'assistant',
-    message: `Intelligence query processed for: "${query}". Based on multi-source correlation, active attack chains span ${MOCK_ATTACK_CHAINS.length} grouped campaigns with 4 Critical alerts currently prioritized in the triage queue.`,
-    sources: ['Sentinel Forge Threat Corpus', 'Canonical Alert Schema v1.0'],
-    references: ['AC001', 'AC002', 'AC003']
-  };
-}
+// Helper API methods
+api.getStats = () => api('/api/v1/dashboard/stats');
+api.getAnalytics = () => api('/api/v1/analytics/overview');
+api.resetDatabase = () =>
+  api('/api/v1/dashboard/reset', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+api.getChains = () => api('/api/v1/chains');
+api.getChain = (id) => api(`/api/v1/chains/${id}`);
+api.getMitreOverview = () => api('/api/v1/mitre/overview');
+api.getRecommendations = () => api('/api/v1/recommendations');
+api.getReports = () => api('/api/v1/reports');
+api.getReport = (id) => api(`/api/v1/reports/${id}`);
 
-export const severity = (value = '') => String(value).toLowerCase();
+/**
+ * Upload CSV file and trigger end-to-end correlation & scoring
+ */
+api.uploadAndIngest = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
 
-export function listFrom(payload, keys = []) {
-  if (Array.isArray(payload)) return payload;
-  for (const key of keys) {
-    if (Array.isArray(payload?.[key])) return payload[key];
+  const response = await fetch(`${API_BASE}/api/v1/upload/ingest`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({ message: 'Upload failed' }));
+    throw new Error(err.message || `Upload failed with status ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export function listFrom(obj, candidateKeys = ['items', 'results', 'data', 'chains', 'scores']) {
+  if (Array.isArray(obj)) return obj;
+  if (!obj || typeof obj !== 'object') return [];
+  for (const k of candidateKeys) {
+    if (Array.isArray(obj[k])) return obj[k];
   }
   return [];
 }
 
-export const getId = chain => chain?.chain_id || chain?.id || chain?.chainId;
+export function severity(val) {
+  const s = String(val || '').toLowerCase();
+  if (s.includes('crit')) return 'critical';
+  if (s.includes('high')) return 'high';
+  if (s.includes('med')) return 'medium';
+  return 'low';
+}

@@ -230,17 +230,47 @@ async def upload_and_ingest_alerts(
 
         # 5. Bulk insert alerts
         count = alert_repo.bulk_insert_alerts(upload_id=upload_rec.id, alerts=orm_alerts)
-
         logger.info("Successfully ingested %d alerts from file %s", count, file_name)
+
+        # 6. Trigger automated correlation, MITRE mapping, and risk scoring pipeline
+        chains_count = 0
+        mitre_count = 0
+        scored_count = 0
+        try:
+            from services.alert_correlation import AlertCorrelationEngine
+            from services.mitre_mapping import MitreMappingService
+            from services.risk_scoring import RiskScoringEngine
+
+            corr_engine = AlertCorrelationEngine(db=db)
+            corr_result = corr_engine.correlate(persist=True)
+            chains_count = len(corr_result.chains)
+
+            mitre_service = MitreMappingService(db=db)
+            mitre_res = mitre_service.map_all_chains()
+            mitre_count = mitre_res.total_techniques
+
+            risk_engine = RiskScoringEngine(db=db)
+            risk_scores = risk_engine.score_all_chains()
+            scored_count = len(risk_scores)
+
+            logger.info(
+                f"Auto-pipeline executed successfully: {chains_count} chains correlated, "
+                f"{mitre_count} MITRE techniques mapped, {scored_count} risk-scored"
+            )
+        except Exception as pipe_err:
+            logger.warning(f"Correlation pipeline post-ingest warning: {pipe_err}")
 
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content=IngestResponse(
                 success=True,
-                message=f"Successfully ingested {count} alerts into database",
+                message=f"Successfully ingested {count} alerts and correlated {chains_count} attack chains",
                 upload_id=str(upload_rec.id),
                 file_name=file_name,
                 alerts_ingested=count,
+                chains_correlated=chains_count,
+                mitre_mapped=mitre_count,
+                risk_scored=scored_count,
             ).model_dump(),
         )
 
