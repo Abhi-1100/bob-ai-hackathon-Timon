@@ -2,12 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   ChevronRight,
   RefreshCw,
-  UploadCloud,
-  MessageSquare,
-  FileText,
   Sun,
   Moon,
-  Sparkles,
   User,
   Settings,
   LogOut,
@@ -53,64 +49,86 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
     <header className="topbar">
       <div className="topbar-left">
         <div className="breadcrumbs">
-          <span>THREAT INTEL ASSISTANT</span>
-          <ChevronRight size={12} />
+          <span>Threat Intelligence</span>
+          <ChevronRight size={11} />
           <span>{breadcrumb}</span>
         </div>
         <h1 className="topbar-title">{title}</h1>
       </div>
 
       <div className="topbar-right">
-        <div className="status-beacon">
+        {/* Subtle Live Status */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            borderRadius: 9999,
+            background: 'var(--low-bg)',
+            border: '1px solid var(--low-border)',
+            fontSize: 11.5,
+            fontWeight: 700,
+            color: 'var(--low-text)',
+            letterSpacing: '0.03em',
+          }}
+        >
           <span className="pulse-dot" />
-          <span>SYSTEM NOMINAL</span>
+          <span>LIVE TELEMETRY</span>
         </div>
 
-        <button
-          className="btn btn-secondary"
-          onClick={() => navigate('/')}
-          title="Return to Product Landing Page"
-          style={{ padding: '6px 12px', borderColor: 'rgba(37, 99, 235, 0.35)' }}
-        >
-          <Sparkles size={15} color="var(--blue)" />
-          <span>Product Overview</span>
-        </button>
+        <div style={{ width: 1, height: 18, background: 'var(--card-border)' }} />
 
+        {/* Sync Refresh Icon */}
+        {onRefresh && (
+          <button
+            onClick={onRefresh}
+            title="Refresh Telemetry"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              border: '1px solid var(--card-border)',
+              background: 'var(--card)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+            }}
+          >
+            <RefreshCw size={14} />
+          </button>
+        )}
+
+        {/* Theme Toggle Icon */}
         {setTheme && (
           <button
-            className="btn btn-secondary"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} theme`}
-            style={{ padding: '6px 12px' }}
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              border: '1px solid var(--card-border)',
+              background: 'var(--card)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+            }}
           >
             {theme === 'dark' ? <Sun size={15} color="#FBBF24" /> : <Moon size={15} color="#2563EB" />}
-            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         )}
 
-        {onRefresh && (
-          <button className="btn-icon" onClick={onRefresh} title="Sync Live Telemetry">
-            <RefreshCw size={16} />
-          </button>
-        )}
-
-        <button className="btn btn-secondary" onClick={() => navigate('/upload')} style={{ padding: '6px 12px' }}>
-          <UploadCloud size={15} color="var(--cyan-bright)" />
-          <span>Upload CSV</span>
-        </button>
-
-        <button className="btn btn-secondary" onClick={() => navigate('/chat')} style={{ padding: '6px 12px' }}>
-          <MessageSquare size={15} color="var(--blue)" />
-          <span>Open Chat</span>
-        </button>
-
-        <button className="btn btn-primary" onClick={() => navigate('/reports')} style={{ padding: '6px 14px' }}>
-          <FileText size={15} />
-          <span>Reports</span>
-        </button>
+        <div style={{ width: 1, height: 18, background: 'var(--card-border)' }} />
 
         {/* User Profile Menu */}
-        <div style={{ position: 'relative', marginLeft: 6 }} ref={menuRef}>
+        <div style={{ position: 'relative' }} ref={menuRef}>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
