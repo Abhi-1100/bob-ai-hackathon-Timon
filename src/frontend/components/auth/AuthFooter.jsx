@@ -8,7 +8,7 @@ export function AuthFooter({
     <div style={{ marginTop: 24, textAlign: 'center', fontSize: 13 }}>
       {mode === 'login' && (
         <div style={{ color: 'var(--text-secondary)' }}>
-          <span>Don't have an operator account? </span>
+          <span>Don't have an account? </span>
           <button
             type="button"
             onClick={() => navigate && navigate('/register')}
@@ -21,14 +21,14 @@ export function AuthFooter({
               padding: 0,
             }}
           >
-            Provision Account
+            Sign up
           </button>
         </div>
       )}
 
       {mode === 'register' && (
         <div style={{ color: 'var(--text-secondary)' }}>
-          <span>Already provisioned? </span>
+          <span>Already have an account? </span>
           <button
             type="button"
             onClick={() => navigate && navigate('/login')}
@@ -41,14 +41,14 @@ export function AuthFooter({
               padding: 0,
             }}
           >
-            Sign In to Station
+            Sign in
           </button>
         </div>
       )}
 
       {(mode === 'forgot-password' || mode === 'reset-password') && (
         <div style={{ color: 'var(--text-secondary)' }}>
-          <span>Remember your credentials? </span>
+          <span>Remember your password? </span>
           <button
             type="button"
             onClick={() => navigate && navigate('/login')}
@@ -61,7 +61,7 @@ export function AuthFooter({
               padding: 0,
             }}
           >
-            Return to Login
+            Back to sign in
           </button>
         </div>
       )}
@@ -79,9 +79,9 @@ export function AuthFooter({
           gap: 12,
         }}
       >
-        <span>TLP:AMBER Security Protocols</span>
+        <span>Secure SSL Encryption</span>
         <span>•</span>
-        <span>FIPS 140-3 Cryptographic Core</span>
+        <span>Privacy Protected</span>
       </div>
     </div>
   );

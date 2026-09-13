@@ -15,8 +15,8 @@ import { useAuthStore } from '../store/authStore';
 import { useToast } from '../components/auth/Toast';
 
 const loginSchema = z.object({
-  email: z.string().min(1, 'Operator email is required').email('Enter a valid email address'),
-  password: z.string().min(1, 'Station password is required'),
+  email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
@@ -53,7 +53,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
 
   const handleEvaluatorBypass = () => {
     const user = loginAsEvaluator();
-    showToast(`Level 3 Clearance granted for ${user.name}`, 'success');
+    showToast(`Logged in as ${user.name}`, 'success');
     if (onLogin) onLogin();
     else if (navigate) navigate('/dashboard');
   };
@@ -62,9 +62,9 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
     <AuthLayout navigate={navigate} theme={theme} toggleTheme={toggleTheme}>
       <AuthCard>
         <AuthHeader
-          title="Sign In to Station"
-          subtitle="Authenticate with enterprise credentials to access your SOC command console."
-          badge="Enterprise SOC Gateway · Level 3 Clearance"
+          title="Sign in to your account"
+          subtitle="Welcome back! Please enter your details to continue."
+          badge="Secure Sign In"
         />
 
         {/* Enterprise SSO */}
@@ -116,7 +116,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
           </button>
         </div>
 
-        <AuthDivider text="or sign in with operator credentials" />
+        <AuthDivider text="or sign in with email" />
 
         {authError && (
           <div
@@ -137,16 +137,16 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
 
         <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
           <AuthInput
-            label="Operator ID or Email"
+            label="Email Address"
             type="email"
             icon={Mail}
-            placeholder="analyst@sentinelforge.mil"
+            placeholder="alex@company.com"
             error={errors.email?.message}
             {...register('email')}
           />
 
           <PasswordInput
-            label="Station Password"
+            label="Password"
             value={passwordVal}
             error={errors.password?.message}
             {...register('password')}
@@ -160,7 +160,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 style={{ accentColor: 'var(--blue)' }}
               />
-              <span>Remember station</span>
+              <span>Remember me</span>
             </label>
 
             <button
@@ -180,7 +180,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
           </div>
 
           <AuthButton type="submit" loading={loading} icon={ArrowRight}>
-            Enter Operations Console
+            Sign In
           </AuthButton>
         </form>
 
@@ -196,7 +196,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
           }}
         >
           <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--blue)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 4 }}>
-            ⚡ Hackathon Evaluator Quick-Pass
+            ⚡ Quick Demo Access
           </div>
           <button
             type="button"
@@ -218,7 +218,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
             }}
           >
             <CheckCircle2 size={14} color="#16A34A" />
-            <span>Instant 1-Click Sandbox Entry</span>
+            <span>1-Click Demo Login</span>
           </button>
         </div>
 

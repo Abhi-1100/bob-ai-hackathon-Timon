@@ -17,13 +17,13 @@ import { useToast } from '../components/auth/Toast';
 const registerSchema = z
   .object({
     name: z.string().min(2, 'Full name is required (min 2 characters)'),
-    email: z.string().min(1, 'Work email is required').email('Enter a valid enterprise email address'),
+    email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
     organization: z.string().optional(),
-    role: z.string().default('SOC Analyst'),
+    role: z.string().default('Security Analyst'),
     password: z.string().min(8, 'Password must contain at least 8 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
     acceptTerms: z.boolean().refine((val) => val === true, {
-      message: 'You must accept the security protocols to continue',
+      message: 'You must agree to the terms to continue',
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -44,9 +44,9 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: 'Alex Vance',
-      email: 'alex.vance@sentinelforge.mil',
-      organization: 'Vance Cyber Defense Lab',
-      role: 'Threat Intelligence Analyst',
+      email: 'alex.vance@company.com',
+      organization: 'Vance Security',
+      role: 'Security Analyst',
       password: '',
       confirmPassword: '',
       acceptTerms: true,
@@ -60,7 +60,7 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
     clearError();
     const res = await registerUser(data);
     if (res.success) {
-      showToast('Account successfully provisioned! Redirecting to login…', 'success');
+      showToast('Account created successfully! Redirecting to login…', 'success');
       setTimeout(() => {
         if (navigate) navigate('/login');
       }, 700);
@@ -73,9 +73,9 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
     <AuthLayout navigate={navigate} theme={theme} toggleTheme={toggleTheme}>
       <AuthCard>
         <AuthHeader
-          title="Provision Operator Account"
-          subtitle="Provision your SOC organization with AI threat correlation in under 60 seconds."
-          badge="Enterprise Tenant Provisioning"
+          title="Create your account"
+          subtitle="Get started with smart threat intelligence in under a minute."
+          badge="Get Started"
         />
 
         {authError && (
@@ -119,9 +119,9 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
           {/* Row 2: Organization & Role */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             <AuthInput
-              label="Organization / Domain"
+              label="Company / Team"
               icon={Building2}
-              placeholder="Acme Cyber Lab"
+              placeholder="Acme Corp"
               error={errors.organization?.message}
               {...register('organization')}
             />
@@ -136,7 +136,7 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
                   textTransform: 'uppercase',
                 }}
               >
-                Operational Role
+                Your Role
               </label>
               <select
                 style={{
@@ -153,11 +153,11 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
                 }}
                 {...register('role')}
               >
-                <option value="Tier 2/3 SOC Analyst">Tier 2/3 SOC Analyst</option>
-                <option value="Threat Intelligence Analyst">Threat Intel Analyst</option>
-                <option value="Incident Response Lead">Incident Responder</option>
-                <option value="CISO / Security Director">CISO / Security Lead</option>
-                <option value="Security Operations Manager">SOC Manager</option>
+                <option value="Security Analyst">Security Analyst</option>
+                <option value="Incident Responder">Incident Responder</option>
+                <option value="Security Manager / Lead">Security Manager / Lead</option>
+                <option value="IT Administrator">IT Administrator</option>
+                <option value="Developer / DevOps">Developer / DevOps</option>
               </select>
             </div>
           </div>
@@ -165,7 +165,7 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
           {/* Row 3: Password & Confirm Password */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             <PasswordInput
-              label="Passphrase"
+              label="Password"
               value={passwordVal}
               error={errors.password?.message}
               placeholder="Min 8 characters"
@@ -173,10 +173,10 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
             />
 
             <PasswordInput
-              label="Confirm"
+              label="Confirm Password"
               value={confirmPasswordVal}
               error={errors.confirmPassword?.message}
-              placeholder="Repeat passphrase"
+              placeholder="Re-type password"
               {...register('confirmPassword')}
             />
           </div>
@@ -188,7 +188,7 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
                 style={{ accentColor: 'var(--blue)' }}
                 {...register('acceptTerms')}
               />
-              <span>I confirm adherence to Enterprise TLP:AMBER handling protocols.</span>
+              <span>I agree to the Terms of Service and Privacy Policy.</span>
             </label>
             {errors.acceptTerms && (
               <span style={{ fontSize: 11, color: '#EF4444', fontWeight: 500 }}>
@@ -198,7 +198,7 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
           </div>
 
           <AuthButton type="submit" loading={loading} icon={ArrowRight}>
-            Create Enterprise Account
+            Create Account
           </AuthButton>
         </form>
 

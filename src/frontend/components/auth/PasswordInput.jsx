@@ -24,9 +24,9 @@ export const PasswordInput = forwardRef(function PasswordInput(
     if (/[A-Z]/.test(val)) score++;
     if (/[0-9]/.test(val)) score++;
     if (/[^A-Za-z0-9]/.test(val)) score++;
-    if (score <= 1) return { score: 1, label: 'Weak (needs 8+ chars & numbers)' };
-    if (score <= 3) return { score: 2, label: 'Medium (add symbols for enterprise grade)' };
-    return { score: 3, label: 'Strong enterprise-grade passphrase' };
+    if (score <= 1) return { score: 1, label: 'Weak (needs 8+ characters & numbers)' };
+    if (score <= 3) return { score: 2, label: 'Medium (add symbols for a stronger password)' };
+    return { score: 3, label: 'Strong password' };
   };
 
   const strength = showStrengthMeter ? getStrength(value || '') : null;

@@ -14,7 +14,7 @@ import { useToast } from '../components/auth/Toast';
 
 const resetSchema = z
   .object({
-    newPassword: z.string().min(8, 'Passphrase must contain at least 8 characters'),
+    newPassword: z.string().min(8, 'Password must contain at least 8 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your new password'),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -58,7 +58,7 @@ export function ResetPasswordPage({ navigate, theme, toggleTheme }) {
     const res = await resetPassword({ token, newPassword: data.newPassword });
     if (res.success) {
       setIsSuccess(true);
-      showToast('Credentials successfully updated!', 'success');
+      showToast('Password successfully updated!', 'success');
       setTimeout(() => {
         if (navigate) navigate('/login');
       }, 1500);
@@ -71,9 +71,9 @@ export function ResetPasswordPage({ navigate, theme, toggleTheme }) {
     <AuthLayout navigate={navigate} theme={theme} toggleTheme={toggleTheme}>
       <AuthCard>
         <AuthHeader
-          title="Update Credentials"
-          subtitle="Establish a new enterprise-grade passphrase for your station."
-          badge="Cryptographic Key Exchange"
+          title="Set new password"
+          subtitle="Please enter a new password for your account."
+          badge="Security Update"
         />
 
         {isSuccess ? (
@@ -95,10 +95,10 @@ export function ResetPasswordPage({ navigate, theme, toggleTheme }) {
             </div>
 
             <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-              Passphrase Updated
+              Password Updated
             </h3>
             <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.6, margin: '0 0 20px 0' }}>
-              Your operator credentials have been renewed. Redirecting you to the authentication gateway…
+              Your password has been changed successfully. Redirecting you to sign in…
             </p>
 
             <AuthButton
@@ -106,7 +106,7 @@ export function ResetPasswordPage({ navigate, theme, toggleTheme }) {
               onClick={() => navigate && navigate('/login')}
               icon={ArrowRight}
             >
-              Proceed to Sign In
+              Sign In Now
             </AuthButton>
           </div>
         ) : (
@@ -130,7 +130,7 @@ export function ResetPasswordPage({ navigate, theme, toggleTheme }) {
 
             <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <PasswordInput
-                label="New Station Passphrase"
+                label="New Password"
                 showStrengthMeter={true}
                 value={passwordVal}
                 error={errors.newPassword?.message}
@@ -138,14 +138,14 @@ export function ResetPasswordPage({ navigate, theme, toggleTheme }) {
               />
 
               <PasswordInput
-                label="Confirm Passphrase"
+                label="Confirm Password"
                 value={confirmVal}
                 error={errors.confirmPassword?.message}
                 {...register('confirmPassword')}
               />
 
               <AuthButton type="submit" loading={loading} icon={ShieldCheck}>
-                Reset Password
+                Save Password
               </AuthButton>
             </form>
 

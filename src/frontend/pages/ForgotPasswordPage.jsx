@@ -47,9 +47,9 @@ export function ForgotPasswordPage({ navigate, theme, toggleTheme }) {
     <AuthLayout navigate={navigate} theme={theme} toggleTheme={toggleTheme}>
       <AuthCard>
         <AuthHeader
-          title="Reset Credentials"
-          subtitle="Enter your verified operator email to receive a cryptographically signed reset token."
-          badge="Station Recovery Protocol"
+          title="Reset your password"
+          subtitle="Enter your email address and we'll send you a link to reset your password."
+          badge="Password Help"
         />
 
         {successData ? (
@@ -71,7 +71,7 @@ export function ForgotPasswordPage({ navigate, theme, toggleTheme }) {
             </div>
 
             <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-              Check Your Secure Inbox
+              Check Your Inbox
             </h3>
 
             <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.6, margin: '0 0 20px 0' }}>
@@ -153,16 +153,16 @@ export function ForgotPasswordPage({ navigate, theme, toggleTheme }) {
 
             <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <AuthInput
-                label="Registered Work Email"
+                label="Email Address"
                 type="email"
                 icon={Mail}
-                placeholder="analyst@sentinelforge.mil"
+                placeholder="alex@company.com"
                 error={errors.email?.message}
                 {...register('email')}
               />
 
               <AuthButton type="submit" loading={loading} icon={ArrowRight}>
-                Send Secure Reset Link
+                Send Reset Link
               </AuthButton>
             </form>
 
