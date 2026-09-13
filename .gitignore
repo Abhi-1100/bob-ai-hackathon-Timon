@@ -29,6 +29,12 @@ build/
 .ruff_cache/
 *.coverage
 htmlcov/
+*.db
+*.sqlite
+*.sqlite3
+**/uploads/*.csv
+!**/uploads/.gitkeep
+
 
 # ── Node.js ───────────────────────────────────────────────────────────────────
 node_modules/
