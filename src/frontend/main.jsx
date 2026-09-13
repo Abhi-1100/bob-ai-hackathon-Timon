@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 import './landing.css';
+import './auth.css';
 
 // Components
 import { Sidebar } from './components/Sidebar';
@@ -9,7 +10,7 @@ import { Topbar } from './components/Topbar';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
-import { LoginPage } from './pages/LoginPage';
+import { AuthPage, LoginPage, SignupPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { UploadPage } from './pages/UploadPage';
 import { AttackChainsPage } from './pages/AttackChainsPage';
@@ -80,9 +81,29 @@ function App() {
     );
   }
 
-  // 2. Login Page has its own full-screen layout
-  if (currentRoute === '/login') {
-    return <LoginPage onLogin={() => navigate('/dashboard')} />;
+  // 2. Authentication Pages (Login & Signup) have their own full-screen split layout
+  if (currentRoute === '/login' || currentRoute === '/signin') {
+    return (
+      <AuthPage
+        initialMode="login"
+        navigate={navigate}
+        onLogin={() => navigate('/dashboard')}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  if (currentRoute === '/signup' || currentRoute === '/register') {
+    return (
+      <AuthPage
+        initialMode="signup"
+        navigate={navigate}
+        onLogin={() => navigate('/dashboard')}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
   }
 
   // Determine active view & Topbar title
