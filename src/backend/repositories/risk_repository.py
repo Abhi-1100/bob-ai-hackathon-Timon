@@ -118,9 +118,13 @@ class RiskRepository:
         """Return total number of risk score records."""
         return self.db.query(RiskScoreDB).count()
 
-    def get_distribution(self) -> Dict[str, int]:
-        """Return counts grouped by risk level (Critical, High, Medium, Low)."""
-        all_records = self.db.query(RiskScoreDB.level).all()
+    def get_distribution(self, user_id: Optional[UUID] = None) -> Dict[str, int]:
+        """Return counts grouped by risk level (Critical, High, Medium, Low), optionally scoped to a user."""
+        from database.models import AttackChainDB
+        query = self.db.query(RiskScoreDB.level)
+        if user_id:
+            query = query.join(AttackChainDB, RiskScoreDB.attack_chain_id == AttackChainDB.id).filter(AttackChainDB.user_id == user_id)
+        all_records = query.all()
         dist = {"Critical": 0, "High": 0, "Medium": 0, "Low": 0}
         for (level,) in all_records:
             if level in dist:

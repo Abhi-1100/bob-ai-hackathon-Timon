@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Mail, Building, User } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 export function DemoModal({ isOpen, onClose, navigate }) {
+  const { isAuthenticated } = useAuthStore();
   const [name, setName] = useState('Analyst Jaimin');
   const [email, setEmail] = useState('secops@enterprise.corp');
   const [company, setCompany] = useState('Global Cyber Defense Inc.');
@@ -93,10 +95,10 @@ export function DemoModal({ isOpen, onClose, navigate }) {
             <div className="modal-quick-sandbox">
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Prefer immediate hands-on access?</span>
               <button
-                onClick={() => { onClose(); navigate('/dashboard'); }}
+                onClick={() => { onClose(); navigate(isAuthenticated ? '/dashboard' : '/signup'); }}
                 className="sandbox-quick-link"
               >
-                <span>Launch Live SOC Sandbox Now</span>
+                <span>{isAuthenticated ? 'Launch Live SOC Sandbox Now' : 'Create Free Account to Access Platform'}</span>
                 <ArrowRight size={13} />
               </button>
             </div>
@@ -114,11 +116,11 @@ export function DemoModal({ isOpen, onClose, navigate }) {
             </p>
 
             <button
-              onClick={() => { onClose(); navigate('/dashboard'); }}
+              onClick={() => { onClose(); navigate(isAuthenticated ? '/dashboard' : '/signup'); }}
               className="btn btn-primary"
               style={{ width: '100%', padding: '12px' }}
             >
-              <span>Explore Live Platform in the Meantime</span>
+              <span>{isAuthenticated ? 'Explore Live Platform in the Meantime' : 'Register Account to Explore Platform'}</span>
               <ArrowRight size={16} />
             </button>
           </div>

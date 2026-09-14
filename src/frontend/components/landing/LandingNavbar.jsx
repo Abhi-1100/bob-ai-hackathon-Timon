@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BrandLogo } from '../BrandLogo';
 import { ChevronDown, ChevronRight, Moon, Sun, Shield, Sparkles, Activity, Layers } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 export function LandingNavbar({ navigate, theme, toggleTheme, onRequestDemo }) {
+  const { isAuthenticated } = useAuthStore();
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -107,7 +109,16 @@ export function LandingNavbar({ navigate, theme, toggleTheme, onRequestDemo }) {
             <span className="nav-pro-badge">PRO</span>
           </button>
 
-          <button onClick={() => navigate('/dashboard')} className="nav-simple-link nav-live-app">
+          <button
+            onClick={() => {
+              if (isAuthenticated) {
+                navigate('/dashboard');
+              } else {
+                navigate('/login');
+              }
+            }}
+            className="nav-simple-link nav-live-app"
+          >
             <span>Live App</span>
             <span className="live-dot" />
           </button>

@@ -45,7 +45,7 @@ function App() {
   const [selectedChainId, setSelectedChainId] = useState('AC001');
   const [selectedReportId, setSelectedReportId] = useState(null);
 
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, checkAuth } = useAuthStore();
   const [hasUploaded, setHasUploaded] = useState(() => {
     return localStorage.getItem('d2_has_uploaded') === 'true';
   });
@@ -57,6 +57,11 @@ function App() {
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
+
+  // Validate authentication with backend on mount
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -72,6 +77,16 @@ function App() {
     window.addEventListener('popstate', handlePop);
     return () => window.removeEventListener('popstate', handlePop);
   }, []);
+
+  // Route Guard: Redirect unauthenticated users away from protected console routes
+  useEffect(() => {
+    const publicRoutes = ['/', '/landing', '/login', '/signin', '/register', '/signup', '/forgot-password'];
+    const isPublic = publicRoutes.includes(currentRoute) || currentRoute.startsWith('/reset-password');
+    if (!isAuthenticated && !isPublic) {
+      window.history.replaceState({}, '', '/login');
+      setCurrentRoute('/login');
+    }
+  }, [isAuthenticated, currentRoute]);
 
   // Check if system already has alerts in DB if hasUploaded is false
   useEffect(() => {
@@ -175,9 +190,27 @@ function App() {
     return (
       <LoginPage
         navigate={navigate}
-        onLogin={() => navigate(currentRoute)}
+        onLogin={(targetRoute) => navigate(targetRoute || (hasUploaded ? '/dashboard' : '/upload'))}
         theme={theme}
         toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  // 4. Standalone Telemetry Onboarding: Professional distraction-free UI without Operations Console sidebar
+  if (currentRoute === '/upload') {
+    return (
+      <UploadPage
+        navigate={navigate}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        hasUploaded={hasUploaded}
+        onUploadSuccess={() => {
+          setHasUploaded(true);
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 1200);
+        }}
       />
     );
   }
@@ -211,17 +244,6 @@ function App() {
     );
   } else {
     switch (currentRoute) {
-      case '/upload':
-        pageTitle = 'Alert Feed Ingestion';
-        breadcrumb = 'DATA INTAKE';
-        content = (
-          <UploadPage
-            navigate={navigate}
-            onUploadSuccess={() => setHasUploaded(true)}
-          />
-        );
-        break;
-
       case '/attack-chains':
         pageTitle = 'Correlated Attack Chains';
         breadcrumb = 'CORRELATION ENGINE';

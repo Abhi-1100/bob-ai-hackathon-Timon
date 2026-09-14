@@ -9,7 +9,8 @@ import {
   Zap,
   Target,
   Globe,
-  Upload
+  Upload,
+  Network
 } from 'lucide-react';
 import { AreaTrendChart, FrequencyBarChart, RiskDistributionChart } from '../components/Charts';
 import { api } from '../services/api';
@@ -91,26 +92,78 @@ export function AnalyticsPage({ navigate }) {
       ) : (
         <>
           {/* Analytics KPI Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 24 }}>
-            <div className="soc-card">
-              <span className="kpi-label">Ingested Alert Events</span>
-              <div className="kpi-value" style={{ color: 'var(--cyan-bright)' }}>{totalAlerts.toLocaleString()}</div>
-              <p style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 4 }}>100% dynamic database records</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 24 }}>
+            <div className="kpi-card kpi-theme-alerts">
+              <div className="kpi-top">
+                <span className="kpi-label">Ingested Alert Events</span>
+                <div className="kpi-icon-wrap">
+                  <Activity size={16} />
+                </div>
+              </div>
+              <div className="kpi-value-row">
+                <span className="kpi-value">{totalAlerts.toLocaleString()}</span>
+              </div>
+              <div className="kpi-footer">
+                <span className="kpi-pill kpi-pill-cyan">
+                  <span className="kpi-pill-dot" />
+                  Live Records
+                </span>
+                <span className="kpi-subtext">Dynamic database telemetry</span>
+              </div>
             </div>
-            <div className="soc-card">
-              <span className="kpi-label">Correlated Campaigns</span>
-              <div className="kpi-value" style={{ color: '#60A5FA' }}>{analytics.total_chains || 0}</div>
-              <p style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 4 }}>Clustered via affinity engine</p>
+
+            <div className="kpi-card kpi-theme-correlated">
+              <div className="kpi-top">
+                <span className="kpi-label">Correlated Campaigns</span>
+                <div className="kpi-icon-wrap">
+                  <Network size={16} />
+                </div>
+              </div>
+              <div className="kpi-value-row">
+                <span className="kpi-value">{(analytics.total_chains || 0).toLocaleString()}</span>
+              </div>
+              <div className="kpi-footer">
+                <span className="kpi-pill kpi-pill-indigo">
+                  Affinity Clustered
+                </span>
+                <span className="kpi-subtext">Multi-stage incident chains</span>
+              </div>
             </div>
-            <div className="soc-card">
-              <span className="kpi-label">Unique Attacker Sources</span>
-              <div className="kpi-value" style={{ color: '#F97316' }}>{analytics.unique_sources || 0}</div>
-              <p style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 4 }}>Distinct adversary IPs identified</p>
+
+            <div className="kpi-card kpi-theme-high">
+              <div className="kpi-top">
+                <span className="kpi-label">Unique Attacker Sources</span>
+                <div className="kpi-icon-wrap">
+                  <Globe size={16} />
+                </div>
+              </div>
+              <div className="kpi-value-row">
+                <span className="kpi-value">{(analytics.unique_sources || 0).toLocaleString()}</span>
+              </div>
+              <div className="kpi-footer">
+                <span className="kpi-pill kpi-pill-high">
+                  Adversary IPs
+                </span>
+                <span className="kpi-subtext">External attack origin points</span>
+              </div>
             </div>
-            <div className="soc-card">
-              <span className="kpi-label">Unique Target Destinations</span>
-              <div className="kpi-value" style={{ color: '#A855F7' }}>{analytics.unique_destinations || 0}</div>
-              <p style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 4 }}>Target hosts under attack</p>
+
+            <div className="kpi-card kpi-theme-mitre">
+              <div className="kpi-top">
+                <span className="kpi-label">Target Destinations</span>
+                <div className="kpi-icon-wrap">
+                  <Target size={16} />
+                </div>
+              </div>
+              <div className="kpi-value-row">
+                <span className="kpi-value">{(analytics.unique_destinations || 0).toLocaleString()}</span>
+              </div>
+              <div className="kpi-footer">
+                <span className="kpi-pill kpi-pill-purple">
+                  Internal Hosts
+                </span>
+                <span className="kpi-subtext">Target infrastructure assets</span>
+              </div>
             </div>
           </div>
 

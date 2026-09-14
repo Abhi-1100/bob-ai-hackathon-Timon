@@ -38,12 +38,13 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
   const displayEmail = user?.email || 'analyst@sentinelforge.mil';
   const displayRole = user?.role || 'Tier 3 Incident Responder';
 
-  const initials = displayName
+  const initials = (displayName || 'SA')
     .split(' ')
+    .filter(Boolean)
     .map((n) => n[0])
     .join('')
     .substring(0, 2)
-    .toUpperCase();
+    .toUpperCase() || 'SA';
 
   return (
     <header className="topbar">

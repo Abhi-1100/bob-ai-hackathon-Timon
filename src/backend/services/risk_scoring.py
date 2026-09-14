@@ -319,18 +319,25 @@ class RiskScoringEngine:
         )
         return score_obj
 
-    def score_all_chains(self) -> List[RiskScore]:
+    def score_all_chains(self, user_id: Optional[UUID] = None) -> List[RiskScore]:
         """
-        Calculate and persist risk scores for ALL attack chains in the database in high-speed bulk batch.
+        Calculate and persist risk scores for attack chains in the database in high-speed bulk batch,
+        optionally scoped to a specific user.
         Returns list of scored chains ordered by score descending.
         """
         start_time = time.perf_counter()
         from database.models import RiskScoreDB
-        chains = self.db.query(AttackChainDB).all()
-        logger.info(f"Scoring all chains: {len(chains)} chains found")
+        query = self.db.query(AttackChainDB)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
+        chains = query.all()
+        logger.info(f"Scoring chains: {len(chains)} chains found (user_id={user_id})")
 
-        # Load existing risk scores in 1 single query
-        existing_scores = {s.attack_chain_id: s for s in self.db.query(RiskScoreDB).all()}
+        # Load existing risk scores for these chains only in 1 single query
+        chain_ids = [c.id for c in chains]
+        existing_scores = {}
+        if chain_ids:
+            existing_scores = {s.attack_chain_id: s for s in self.db.query(RiskScoreDB).filter(RiskScoreDB.attack_chain_id.in_(chain_ids)).all()}
 
         results: List[RiskScore] = []
         for chain in chains:
@@ -410,11 +417,11 @@ class RiskScoringEngine:
             },
         )
 
-    def get_risk_distribution(self) -> RiskDistribution:
+    def get_risk_distribution(self, user_id: Optional[UUID] = None) -> RiskDistribution:
         """
-        Return count distribution across risk levels.
+        Return count distribution across risk levels, optionally scoped to a user.
         """
-        dist = self.risk_repo.get_distribution()
+        dist = self.risk_repo.get_distribution(user_id=user_id)
         total = sum(dist.values())
         return RiskDistribution(
             total_chains=total,

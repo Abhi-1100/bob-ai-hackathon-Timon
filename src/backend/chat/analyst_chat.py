@@ -65,11 +65,11 @@ class AnalystChatService:
         start_time = time.time()
         logger.info("Incoming analyst chat question for session %s: '%s'", request.session_id, request.question)
 
-        # Validate session UUID format
+        # Validate or normalize session UUID format
         try:
-            session_uuid = uuid.UUID(request.session_id)
-        except ValueError:
-            raise ValueError(f"Invalid session_id format: '{request.session_id}'. Must be a valid UUID.")
+            session_uuid = uuid.UUID(str(request.session_id))
+        except (ValueError, TypeError, AttributeError):
+            session_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, str(request.session_id or "default-threat-session"))
 
         # 1. Fetch recent conversation history
         chat_repo = ChatRepository(db)
@@ -124,9 +124,9 @@ class AnalystChatService:
     def get_history(self, session_id: str, db: Session) -> ChatHistoryResponse:
         """Fetch chronological message history for a given session."""
         try:
-            session_uuid = uuid.UUID(session_id)
-        except ValueError:
-            raise ValueError(f"Invalid session_id format: '{session_id}'. Must be a valid UUID.")
+            session_uuid = uuid.UUID(str(session_id))
+        except (ValueError, TypeError, AttributeError):
+            session_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, str(session_id or "default-threat-session"))
 
         chat_repo = ChatRepository(db)
         records = chat_repo.get_history(session_id=session_uuid, limit=100)

@@ -24,7 +24,9 @@ from database.models import (
     RecommendationDB,
     ReportDB,
     Upload as UploadDB,
+    UserDB,
 )
+from routers.auth import get_current_user_obj
 
 logger = logging.getLogger("dashboard_router")
 
@@ -34,50 +36,84 @@ router = APIRouter(
 )
 
 
+from services.cache_service import cache
+from sqlalchemy.orm import joinedload, selectinload
+
 @router.get(
     "/dashboard/stats",
     status_code=status.HTTP_200_OK,
     summary="Get Dynamic Dashboard Statistics & KPIs",
     description="Returns dynamic SOC dashboard statistics aggregated from database alerts and attack chains.",
 )
-def get_dashboard_stats(db: Session = Depends(get_db)):
-    """Fetch 100% dynamic dashboard KPIs and telemetry charts."""
+def get_dashboard_stats(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Fetch 100% dynamic dashboard KPIs and telemetry charts for the authenticated user."""
+    cache_key = f"dashboard_stats_{current_user.id}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
-        total_alerts = db.query(func.count(AlertDB.id)).scalar() or 0
-        total_chains = db.query(func.count(AttackChainDB.id)).scalar() or 0
+        total_alerts = db.query(func.count(AlertDB.id)).filter(AlertDB.user_id == current_user.id).scalar() or 0
+        if total_alerts == 0:
+            empty_payload = {
+                "total_alerts": 0,
+                "total_chains": 0,
+                "critical_incidents": 0,
+                "high_risk_incidents": 0,
+                "medium_risk_incidents": 0,
+                "low_risk_incidents": 0,
+                "mitre_techniques_count": 0,
+                "avg_risk_score": 0.0,
+                "noise_reduction": 0.0,
+                "risk_distribution": [
+                    {"name": "Critical", "value": 0, "color": "#EF4444"},
+                    {"name": "High", "value": 0, "color": "#F97316"},
+                    {"name": "Medium", "value": 0, "color": "#FBBF24"},
+                    {"name": "Low", "value": 0, "color": "#10B981"},
+                ],
+                "mitre_frequency": [],
+                "timeline": [],
+                "recent_incidents": [],
+            }
+            cache.set(cache_key, empty_payload, ttl=300.0)
+            return empty_payload
 
-        # Risk severity breakdown from RiskScoreDB
-        crit_count = (
-            db.query(func.count(RiskScoreDB.id))
-            .filter(RiskScoreDB.level == "Critical")
-            .scalar()
-            or 0
-        )
-        high_count = (
-            db.query(func.count(RiskScoreDB.id))
-            .filter(RiskScoreDB.level == "High")
-            .scalar()
-            or 0
-        )
-        med_count = (
-            db.query(func.count(RiskScoreDB.id))
-            .filter(RiskScoreDB.level == "Medium")
-            .scalar()
-            or 0
-        )
-        low_count = (
-            db.query(func.count(RiskScoreDB.id))
-            .filter(RiskScoreDB.level == "Low")
-            .scalar()
-            or 0
-        )
+        total_chains = db.query(func.count(AttackChainDB.id)).filter(AttackChainDB.user_id == current_user.id).scalar() or 0
 
-        avg_score_raw = db.query(func.avg(RiskScoreDB.score)).scalar()
+        # Consolidated risk severity breakdown for this user
+        risk_breakdown = (
+            db.query(
+                RiskScoreDB.level,
+                func.count(RiskScoreDB.id).label("count"),
+            )
+            .join(AttackChainDB, RiskScoreDB.attack_chain_id == AttackChainDB.id)
+            .filter(AttackChainDB.user_id == current_user.id)
+            .group_by(RiskScoreDB.level)
+            .all()
+        )
+        risk_counts = {r.level: r.count for r in risk_breakdown}
+        crit_count = risk_counts.get("Critical", 0)
+        high_count = risk_counts.get("High", 0)
+        med_count = risk_counts.get("Medium", 0)
+        low_count = risk_counts.get("Low", 0)
+
+        avg_score_raw = (
+            db.query(func.avg(RiskScoreDB.score))
+            .join(AttackChainDB, RiskScoreDB.attack_chain_id == AttackChainDB.id)
+            .filter(AttackChainDB.user_id == current_user.id)
+            .scalar()
+        )
         avg_risk_score = round(float(avg_score_raw), 1) if avg_score_raw else 0.0
 
-        # Unique MITRE techniques detected
+        # Unique MITRE techniques detected for this user
         mitre_techniques_count = (
-            db.query(func.count(distinct(MitreMappingDB.technique_id))).scalar() or 0
+            db.query(func.count(distinct(MitreMappingDB.technique_id)))
+            .join(AttackChainDB, MitreMappingDB.attack_chain_id == AttackChainDB.id)
+            .filter(AttackChainDB.user_id == current_user.id)
+            .scalar() or 0
         )
 
         # Risk distribution for donut / pie chart
@@ -88,7 +124,7 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
             {"name": "Low", "value": low_count, "color": "#10B981"},
         ]
 
-        # Top MITRE technique frequencies
+        # Top MITRE technique frequencies for this user
         mitre_counts = (
             db.query(
                 MitreMappingDB.technique_id,
@@ -96,6 +132,8 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
                 MitreMappingDB.tactic,
                 func.count(MitreMappingDB.id).label("freq"),
             )
+            .join(AttackChainDB, MitreMappingDB.attack_chain_id == AttackChainDB.id)
+            .filter(AttackChainDB.user_id == current_user.id)
             .group_by(
                 MitreMappingDB.technique_id,
                 MitreMappingDB.technique_name,
@@ -116,14 +154,15 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
             for m in mitre_counts
         ]
 
-        # Timeline generation from alert timestamps
+        # Timeline generation from this user's alert timestamps
         timeline_query = (
             db.query(
                 AlertDB.timestamp,
                 AlertDB.severity,
             )
+            .filter(AlertDB.user_id == current_user.id)
             .order_by(AlertDB.timestamp.asc())
-            .limit(2000)
+            .limit(1000)
             .all()
         )
 
@@ -144,12 +183,17 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
                 "critical": data["critical"],
                 "high": data["high"],
             }
-            for time_key, data in list(hourly_buckets.items())[-14:]  # Last 14 hours/intervals
+            for time_key, data in list(hourly_buckets.items())[-14:]
         ]
 
-        # Recent incidents (latest 10 chains)
+        # Recent incidents for this user (eager loaded)
         recent_chains_db = (
             db.query(AttackChainDB)
+            .filter(AttackChainDB.user_id == current_user.id)
+            .options(
+                joinedload(AttackChainDB.risk_score),
+                selectinload(AttackChainDB.mitre_mappings),
+            )
             .order_by(AttackChainDB.start_time.desc())
             .limit(10)
             .all()
@@ -193,7 +237,7 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         if total_alerts > 0 and total_chains > 0:
             noise_reduction = round((1 - (total_chains / total_alerts)) * 100, 1)
 
-        return {
+        result = {
             "total_alerts": total_alerts,
             "total_chains": total_chains,
             "critical_incidents": crit_count,
@@ -208,6 +252,8 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
             "timeline": timeline,
             "recent_incidents": recent_incidents,
         }
+        cache.set(cache_key, result, ttl=300.0)
+        return result
 
     except Exception as exc:
         logger.error(f"Error computing dashboard stats: {exc}", exc_info=True)
@@ -223,21 +269,50 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
     summary="Get Detailed Security Analytics & Telemetry",
     description="Aggregates attack stage events, severity levels, top attacker IPs, and target breakdown.",
 )
-def get_analytics_overview(db: Session = Depends(get_db)):
-    """Fetch telemetry analytics aggregated strictly from stored alerts."""
+def get_analytics_overview(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Fetch telemetry analytics aggregated strictly from stored alerts for the authenticated user."""
+    cache_key = f"analytics_overview_{current_user.id}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
-        total_alerts = db.query(func.count(AlertDB.id)).scalar() or 0
-        total_chains = db.query(func.count(AttackChainDB.id)).scalar() or 0
+        total_alerts = db.query(func.count(AlertDB.id)).filter(AlertDB.user_id == current_user.id).scalar() or 0
+        if total_alerts == 0:
+            empty_payload = {
+                "total_alerts": 0,
+                "total_chains": 0,
+                "unique_sources": 0,
+                "unique_destinations": 0,
+                "attack_types": [],
+                "severity_breakdown": [],
+                "top_sources": [],
+                "top_targets": [],
+                "mitre_frequency": [],
+                "trend_data": [],
+            }
+            cache.set(cache_key, empty_payload, ttl=300.0)
+            return empty_payload
+
+        total_chains = db.query(func.count(AttackChainDB.id)).filter(AttackChainDB.user_id == current_user.id).scalar() or 0
         unique_sources = (
-            db.query(func.count(distinct(AlertDB.src_ip))).scalar() or 0
+            db.query(func.count(distinct(AlertDB.src_ip)))
+            .filter(AlertDB.user_id == current_user.id)
+            .scalar() or 0
         )
         unique_destinations = (
-            db.query(func.count(distinct(AlertDB.dst_ip))).scalar() or 0
+            db.query(func.count(distinct(AlertDB.dst_ip)))
+            .filter(AlertDB.user_id == current_user.id)
+            .scalar() or 0
         )
 
-        # Attack progression / event type breakdown
+        # Attack progression / event type breakdown for this user
         event_query = (
             db.query(AlertDB.event, AlertDB.severity, func.count(AlertDB.id).label("count"))
+            .filter(AlertDB.user_id == current_user.id)
             .group_by(AlertDB.event, AlertDB.severity)
             .order_by(desc("count"))
             .limit(10)
@@ -253,9 +328,10 @@ def get_analytics_overview(db: Session = Depends(get_db)):
             for eq in event_query
         ]
 
-        # Severity breakdown
+        # Severity breakdown for this user
         sev_query = (
             db.query(AlertDB.severity, func.count(AlertDB.id).label("count"))
+            .filter(AlertDB.user_id == current_user.id)
             .group_by(AlertDB.severity)
             .order_by(desc("count"))
             .all()
@@ -264,9 +340,10 @@ def get_analytics_overview(db: Session = Depends(get_db)):
             {"severity": sq.severity, "count": sq.count} for sq in sev_query
         ]
 
-        # Top source attacker IPs
+        # Top source attacker IPs for this user
         src_query = (
             db.query(AlertDB.src_ip, func.count(AlertDB.id).label("count"))
+            .filter(AlertDB.user_id == current_user.id)
             .group_by(AlertDB.src_ip)
             .order_by(desc("count"))
             .limit(8)
@@ -274,9 +351,10 @@ def get_analytics_overview(db: Session = Depends(get_db)):
         )
         top_sources = [{"ip": sq.src_ip, "count": sq.count} for sq in src_query]
 
-        # Top target IPs
+        # Top target IPs for this user
         dst_query = (
             db.query(AlertDB.dst_ip, func.count(AlertDB.id).label("count"))
+            .filter(AlertDB.user_id == current_user.id)
             .group_by(AlertDB.dst_ip)
             .order_by(desc("count"))
             .limit(8)
@@ -284,7 +362,7 @@ def get_analytics_overview(db: Session = Depends(get_db)):
         )
         top_targets = [{"ip": dq.dst_ip, "count": dq.count} for dq in dst_query]
 
-        # MITRE frequency
+        # MITRE frequency for this user
         mitre_counts = (
             db.query(
                 MitreMappingDB.technique_id,
@@ -292,6 +370,8 @@ def get_analytics_overview(db: Session = Depends(get_db)):
                 MitreMappingDB.tactic,
                 func.count(MitreMappingDB.id).label("freq"),
             )
+            .join(AttackChainDB, MitreMappingDB.attack_chain_id == AttackChainDB.id)
+            .filter(AttackChainDB.user_id == current_user.id)
             .group_by(
                 MitreMappingDB.technique_id,
                 MitreMappingDB.technique_name,
@@ -311,9 +391,10 @@ def get_analytics_overview(db: Session = Depends(get_db)):
             for m in mitre_counts
         ]
 
-        # Hourly trend
+        # Hourly trend for this user
         alerts_timeline = (
             db.query(AlertDB.timestamp, AlertDB.severity)
+            .filter(AlertDB.user_id == current_user.id)
             .order_by(AlertDB.timestamp.asc())
             .limit(2000)
             .all()
@@ -338,7 +419,7 @@ def get_analytics_overview(db: Session = Depends(get_db)):
             for k, v in list(buckets.items())[-12:]
         ]
 
-        return {
+        result = {
             "total_alerts": total_alerts,
             "total_chains": total_chains,
             "unique_sources": unique_sources,
@@ -350,6 +431,8 @@ def get_analytics_overview(db: Session = Depends(get_db)):
             "mitre_frequency": mitre_frequency,
             "trend_data": trend_data,
         }
+        cache.set(cache_key, result, ttl=300.0)
+        return result
 
     except Exception as exc:
         logger.error(f"Error computing analytics overview: {exc}", exc_info=True)
@@ -415,35 +498,49 @@ def get_system_status(db: Session = Depends(get_db)):
     "/dashboard/reset",
     status_code=status.HTTP_200_OK,
     summary="Reset All Ingested Data and Correlated Incidents",
-    description="Wipes all alerts, uploads, attack chains, MITRE mappings, risk scores, recommendations, and reports to return system to 0 state.",
+    description="Wipes all alerts, uploads, attack chains, MITRE mappings, risk scores, recommendations, and reports for the authenticated user.",
 )
-def reset_system_data(db: Session = Depends(get_db)):
-    """Wipe all user ingested data and correlation state for fresh CSV testing."""
+def reset_system_data(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Wipe current user's ingested data and correlation state for fresh CSV testing without affecting other tenants."""
     try:
-        # Delete children tables first
-        db.query(AttackChainEventDB).delete(synchronize_session=False)
-        db.query(MitreMappingDB).delete(synchronize_session=False)
-        db.query(RiskScoreDB).delete(synchronize_session=False)
-        db.query(RecommendationDB).delete(synchronize_session=False)
-        db.query(ReportDB).delete(synchronize_session=False)
-        db.query(AttackChainDB).delete(synchronize_session=False)
-        db.query(AlertDB).delete(synchronize_session=False)
-        db.query(UploadDB).delete(synchronize_session=False)
+        # 1. Find user's attack chains
+        user_chains = db.query(AttackChainDB).filter(AttackChainDB.user_id == current_user.id).all()
+        chain_ids = [c.id for c in user_chains]
+
+        if chain_ids:
+            db.query(AttackChainEventDB).filter(AttackChainEventDB.chain_id.in_(chain_ids)).delete(synchronize_session=False)
+            db.query(MitreMappingDB).filter(MitreMappingDB.attack_chain_id.in_(chain_ids)).delete(synchronize_session=False)
+            db.query(RiskScoreDB).filter(RiskScoreDB.attack_chain_id.in_(chain_ids)).delete(synchronize_session=False)
+            db.query(RecommendationDB).filter(RecommendationDB.attack_chain_id.in_(chain_ids)).delete(synchronize_session=False)
+            db.query(ReportDB).filter(ReportDB.attack_chain_id.in_(chain_ids)).delete(synchronize_session=False)
+            db.query(AttackChainDB).filter(AttackChainDB.id.in_(chain_ids)).delete(synchronize_session=False)
+
+        # 2. Delete user's alerts and uploads
+        db.query(AlertDB).filter(AlertDB.user_id == current_user.id).delete(synchronize_session=False)
+        db.query(UploadDB).filter(UploadDB.user_id == current_user.id).delete(synchronize_session=False)
 
         db.commit()
-        logger.info("Successfully wiped all database tables to 0 records.")
+
+        # Invalidate user cache keys
+        cache.delete(f"dashboard_stats_{current_user.id}")
+        cache.delete(f"analytics_overview_{current_user.id}")
+        logger.info(f"Successfully wiped user {current_user.id} records to 0.")
 
         return {
             "success": True,
-            "message": "All data cleared successfully. System is in 0-state ready for user CSV upload.",
+            "message": "User telemetry cleared successfully. Workspace is in 0-state ready for fresh CSV upload.",
             "total_alerts": 0,
             "total_chains": 0,
         }
 
     except Exception as exc:
         db.rollback()
-        logger.error(f"Failed to reset database: {exc}", exc_info=True)
+        logger.error(f"Failed to reset user database: {exc}", exc_info=True)
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"success": False, "message": f"Reset failed: {str(exc)}"},
         )
+

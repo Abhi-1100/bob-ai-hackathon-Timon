@@ -8,7 +8,7 @@ export const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000,
+  timeout: 60000,
 });
 
 axiosClient.interceptors.request.use(
@@ -49,44 +49,91 @@ axiosClient.interceptors.response.use(
   }
 );
 
+// Client-Side In-Memory Cache & In-Flight Request Deduplication
+const _clientCache = new Map();
+const _inFlightRequests = new Map();
+const CLIENT_CACHE_TTL_MS = 300000; // 5 minutes — matches backend Redis TTL
+
+export function clearApiClientCache() {
+  _clientCache.clear();
+}
+
 // 2. Dual-mode callable API function for backward-compatibility with existing pages
 export async function api(path, options = {}) {
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const method = (options.method || 'GET').toUpperCase();
+  const isGet = method === 'GET';
 
-    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('d2_access_token') : null;
-    const headers = {
-      ...(options.headers || {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-
-    const response = await fetch(`${API_BASE}${path}`, {
-      ...options,
-      headers,
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (response.status === 401) {
-      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-        localStorage.removeItem('d2_access_token');
-        localStorage.removeItem('d2_user_profile');
-        window.location.href = '/login?expired=true';
-      }
-      throw new Error('Unauthorized');
+  // Return cached result if available and fresh
+  if (isGet) {
+    const cached = _clientCache.get(path);
+    if (cached && Date.now() < cached.expiresAt) {
+      return cached.data;
     }
 
-    if (!response.ok) {
-      const errText = await response.text().catch(() => '');
-      throw new Error(`API returned ${response.status}: ${errText}`);
+    // Deduplicate in-flight concurrent requests for the same URL
+    if (_inFlightRequests.has(path)) {
+      return _inFlightRequests.get(path);
     }
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    console.warn(`[Sentinel Forge API] Fetch failed for ${path} (${err.message}). Returning zero-state dynamic fallback.`);
-    return getFallbackData(path, options);
+  } else {
+    // Non-GET requests (mutations) invalidate the client cache
+    _clientCache.clear();
   }
+
+  const fetchPromise = (async () => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 55000);
+
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('d2_access_token') : null;
+      const headers = {
+        ...(options.headers || {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+
+      const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers,
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (response.status === 401) {
+        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+          localStorage.removeItem('d2_access_token');
+          localStorage.removeItem('d2_user_profile');
+          window.location.href = '/login?expired=true';
+        }
+        throw new Error('Unauthorized');
+      }
+
+      if (!response.ok) {
+        const errText = await response.text().catch(() => '');
+        throw new Error(`API returned ${response.status}: ${errText}`);
+      }
+      const data = await response.json();
+
+      if (isGet) {
+        _clientCache.set(path, {
+          data,
+          expiresAt: Date.now() + CLIENT_CACHE_TTL_MS,
+        });
+      }
+      return data;
+    } catch (err) {
+      console.warn(`[Sentinel Forge API] Fetch failed for ${path} (${err.message}). Returning zero-state dynamic fallback.`);
+      return getFallbackData(path, options);
+    } finally {
+      if (isGet) {
+        _inFlightRequests.delete(path);
+      }
+    }
+  })();
+
+  if (isGet) {
+    _inFlightRequests.set(path, fetchPromise);
+  }
+
+  return fetchPromise;
 }
 
 // Attach Axios methods to api object
@@ -94,6 +141,7 @@ api.get = (url, config) => axiosClient.get(url, config);
 api.post = (url, data, config) => axiosClient.post(url, data, config);
 api.put = (url, data, config) => axiosClient.put(url, data, config);
 api.delete = (url, config) => axiosClient.delete(url, config);
+api.clearCache = clearApiClientCache;
 api.interceptors = axiosClient.interceptors;
 api.getDashboardStats = () => api('/api/v1/dashboard/stats');
 
@@ -209,6 +257,7 @@ api.uploadAndIngest = async (file) => {
     throw new Error(err.message || `Upload failed with status ${response.status}`);
   }
 
+  clearApiClientCache();
   return await response.json();
 };
 

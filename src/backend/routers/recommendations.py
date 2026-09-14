@@ -10,6 +10,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from database.session import get_db
+from database.models import UserDB, AttackChainDB
+from routers.auth import get_current_user_obj
 from schemas.recommendation import (
     RecommendationOutput,
     RecommendationResponse,
@@ -49,11 +51,18 @@ def generate_chain_recommendation(
         default=False,
         description="If True, bypasses database cache and forces LLM regeneration.",
     ),
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
 ):
     """Generate or retrieve cached security recommendations for an attack chain."""
     try:
-        service = RecommendationService(db=db)
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(success=False, message=f"Attack chain '{chain_id}' not found.").model_dump(),
+            )
+        service = RecommendationService(db=db, user_id=current_user.id)
         rec_output, is_cached = service.generate_recommendation(
             chain_id_str=chain_id,
             force_refresh=force_refresh,
@@ -101,10 +110,24 @@ def generate_chain_recommendation(
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def get_chain_recommendation(chain_id: str, db: Session = Depends(get_db)):
+def get_chain_recommendation(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve stored security recommendation for an attack chain."""
     try:
-        service = RecommendationService(db=db)
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(
+                    success=False,
+                    message=f"No recommendation found for chain '{chain_id}'. Call POST /generate/{chain_id} first.",
+                ).model_dump(),
+            )
+
+        service = RecommendationService(db=db, user_id=current_user.id)
         rec_output = service.get_recommendation(chain_id)
 
         if not rec_output:
@@ -138,17 +161,36 @@ def get_chain_recommendation(chain_id: str, db: Session = Depends(get_db)):
         )
 
 
+from services.cache_service import cache
+from sqlalchemy.orm import joinedload
+
 @router.get(
     "",
     status_code=status.HTTP_200_OK,
     summary="List All Stored Recommendations",
     description="Retrieve all stored security recommendations for attack chains.",
 )
-def list_all_recommendations(db: Session = Depends(get_db)):
+def list_all_recommendations(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve all recommendations currently stored in the database."""
+    cache_key = f"all_recommendations_{current_user.id}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
         from database.models import AttackChainDB, RecommendationDB
-        chains = db.query(AttackChainDB).all()
+        chains = (
+            db.query(AttackChainDB)
+            .filter(AttackChainDB.user_id == current_user.id)
+            .options(
+                joinedload(AttackChainDB.recommendation),
+                joinedload(AttackChainDB.risk_score),
+            )
+            .all()
+        )
         results = []
         for c in chains:
             if c.recommendation:
@@ -193,7 +235,9 @@ def list_all_recommendations(db: Session = Depends(get_db)):
                     ],
                 })
 
-        return {"recommendations": results, "total": len(results)}
+        payload = {"recommendations": results, "total": len(results)}
+        cache.set(cache_key, payload, ttl=300.0)
+        return payload
     except Exception as exc:
         logger.error(f"Failed to list recommendations: {exc}", exc_info=True)
         return JSONResponse(
@@ -211,13 +255,15 @@ def list_all_recommendations(db: Session = Depends(get_db)):
 )
 def generate_all_recommendations(
     force_refresh: bool = Query(default=False),
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
 ):
     """Batch generate recommendations for all attack chains."""
     start_time = time.perf_counter()
     try:
-        service = RecommendationService(db=db)
+        service = RecommendationService(db=db, user_id=current_user.id)
         results = service.generate_all_recommendations(force_refresh=force_refresh)
+        cache.delete(f"all_recommendations_{current_user.id}")
 
         recommendations = [r[0] for r in results]
         cached_count = sum(1 for r in results if r[1])
@@ -245,3 +291,4 @@ def generate_all_recommendations(
                 message=f"Batch recommendation generation failed: {str(exc)}",
             ).model_dump(),
         )
+

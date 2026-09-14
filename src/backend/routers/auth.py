@@ -64,17 +64,18 @@ def verify_password(password: str, hashed_password: str) -> bool:
         return False
 
 
-def create_access_token(user_id: str, email: str, role: str, full_name: str) -> str:
+def create_access_token(user_id: str, email: str, full_name: str, role: Optional[str] = None) -> str:
     """Generate a signed JWT access token."""
     expire = datetime.now(timezone.utc) + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
     payload = {
         "sub": str(user_id),
         "email": email,
-        "role": role,
         "name": full_name,
         "exp": expire,
         "iat": datetime.now(timezone.utc),
     }
+    if role:
+        payload["role"] = role
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 
@@ -105,8 +106,6 @@ _MEM_USERS[_DEFAULT_USER_EMAIL] = {
     "email": _DEFAULT_USER_EMAIL,
     "hashed_password": hash_password("SentinelForge#2026"),
     "full_name": "Chief SOC Analyst",
-    "organization": "Sentinel Defense Command",
-    "role": "Tier 3 Incident Responder",
     "reset_token": None,
     "reset_token_expires": None,
 }
@@ -119,8 +118,6 @@ class RegisterRequest(BaseModel):
     name: str = Field(..., min_length=2, max_length=255)
     email: str = Field(..., min_length=3, max_length=255)
     password: str = Field(..., min_length=8, max_length=128)
-    organization: Optional[str] = "Security Operations Center"
-    role: Optional[str] = "SOC Analyst"
 
 
 class LoginRequest(BaseModel):
@@ -141,8 +138,8 @@ class UserResponse(BaseModel):
     id: str
     name: str
     email: str
-    organization: str
-    role: str
+    organization: Optional[str] = None
+    role: Optional[str] = None
 
 
 class AuthResponse(BaseModel):
@@ -173,8 +170,6 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
             email=clean_email,
             hashed_password=hash_password(req.password),
             full_name=req.name.strip(),
-            organization=req.organization or "Security Operations Center",
-            role=req.role or "SOC Analyst",
         )
         db.add(new_user)
         db.commit()
@@ -182,8 +177,6 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
 
         user_id = str(new_user.id)
         user_name = new_user.full_name
-        user_org = new_user.organization
-        user_role = new_user.role
 
     except HTTPException:
         raise
@@ -200,16 +193,12 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
             "email": clean_email,
             "hashed_password": hash_password(req.password),
             "full_name": req.name.strip(),
-            "organization": req.organization or "Security Operations Center",
-            "role": req.role or "SOC Analyst",
             "reset_token": None,
             "reset_token_expires": None,
         }
         user_name = req.name.strip()
-        user_org = req.organization or "Security Operations Center"
-        user_role = req.role or "SOC Analyst"
 
-    token = create_access_token(user_id, clean_email, user_role, user_name)
+    token = create_access_token(user_id, clean_email, user_name)
 
     return AuthResponse(
         access_token=token,
@@ -218,8 +207,6 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
             id=user_id,
             name=user_name,
             email=clean_email,
-            organization=user_org,
-            role=user_role,
         ),
     )
 
@@ -243,8 +230,6 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
             )
         user_id = str(user_record.id)
         user_name = user_record.full_name
-        user_org = user_record.organization or "Security Operations Center"
-        user_role = user_record.role or "SOC Analyst"
     elif clean_email in _MEM_USERS:
         mem_user = _MEM_USERS[clean_email]
         if not verify_password(req.password, mem_user["hashed_password"]):
@@ -254,15 +239,13 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
             )
         user_id = mem_user["id"]
         user_name = mem_user["full_name"]
-        user_org = mem_user["organization"]
-        user_role = mem_user["role"]
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Operator account not found. Please verify your credentials or register.",
         )
 
-    token = create_access_token(user_id, clean_email, user_role, user_name)
+    token = create_access_token(user_id, clean_email, user_name)
 
     return AuthResponse(
         access_token=token,
@@ -271,8 +254,6 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
             id=user_id,
             name=user_name,
             email=clean_email,
-            organization=user_org,
-            role=user_role,
         ),
     )
 
@@ -353,6 +334,49 @@ def reset_password(req: ResetPasswordRequest, db: Session = Depends(get_db)):
     }
 
 
+def get_current_user_obj(
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+) -> UserDB:
+    """
+    FastAPI dependency to retrieve the authenticated UserDB model instance.
+    Extracts the user from the Bearer JWT token.
+    Falls back to the seed analyst account if no header is provided (for dev/local test mode).
+    """
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization.split(" ")[1]
+        try:
+            payload = decode_access_token(token)
+            user_id = payload.get("sub")
+            if user_id:
+                user = db.query(UserDB).filter(UserDB.id == user_id).first()
+                if user:
+                    return user
+        except HTTPException:
+            raise
+        except Exception as exc:
+            logger.warning(f"Invalid token provided: {exc}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired access token.",
+            )
+
+    # Fallback to seed analyst account if authorization header was not passed
+    # (e.g., local dev or background test invocation)
+    fallback_user = db.query(UserDB).filter(UserDB.email == "analyst@sentinelforge.mil").first()
+    if fallback_user:
+        return fallback_user
+
+    first_user = db.query(UserDB).first()
+    if first_user:
+        return first_user
+
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Authentication required. Please log in.",
+    )
+
+
 @router.get("/me", response_model=UserResponse)
 def get_current_user(authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
     """Validate bearer access token and return current operator profile."""
@@ -372,6 +396,5 @@ def get_current_user(authorization: Optional[str] = Header(None), db: Session = 
         id=user_id or "default-operator-id",
         name=payload.get("name", "Chief SOC Analyst"),
         email=email or "analyst@sentinelforge.mil",
-        organization="Sentinel Defense Command",
-        role=payload.get("role", "SOC Analyst"),
     )
+

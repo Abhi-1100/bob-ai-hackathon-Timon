@@ -92,6 +92,69 @@ def _grounded_fallback_answer(question: str, retrieved_docs: List[Dict[str, Any]
 
     q_lower = question.lower()
 
+    # Specific response for MITRE techniques
+    if "mitre" in q_lower or "technique" in q_lower or "ttp" in q_lower:
+        technique_counts = {}
+        technique_chains = {}
+        for d in retrieved_docs:
+            c_id = d.get("chain_id", "Unknown")
+            for t in d.get("mitre", []):
+                technique_counts[t] = technique_counts.get(t, 0) + 1
+                technique_chains.setdefault(t, set()).add(c_id)
+
+        technique_names = {
+            "T1110": "Brute Force (Credential Access)",
+            "T1003": "OS Credential Dumping (Credential Access)",
+            "T1059": "Command and Scripting Interpreter (Execution)",
+            "T1078": "Valid Accounts (Defense Evasion / Initial Access)",
+            "T1021": "Remote Services (Lateral Movement)",
+            "T1046": "Network Service Discovery (Discovery)",
+            "T1071": "Application Layer Protocol (Command & Control)",
+            "T1190": "Exploit Public-Facing Application (Initial Access)",
+            "T1486": "Data Encrypted for Impact (Impact)",
+            "T1566": "Phishing (Initial Access)",
+        }
+
+        if technique_counts:
+            lines = [
+                "### Detected MITRE ATT&CK Techniques Across Ingested Telemetry",
+                f"The correlation engine identified **{len(technique_counts)} distinct MITRE techniques** across the active attack chains:\n",
+            ]
+            for tech, count in sorted(technique_counts.items(), key=lambda x: x[1], reverse=True):
+                desc = technique_names.get(tech.upper(), "Adversary TTP")
+                chain_list = ", ".join(sorted(list(technique_chains.get(tech, [])))[:3])
+                lines.append(f"- **{tech}** — *{desc}*: Correlated in {count} incident chain(s) (e.g. {chain_list})")
+            lines.extend([
+                "",
+                "### Tactical Defense Recommendations",
+                "- Apply Multi-Factor Authentication (MFA) and enforce rate-limiting on external authentication endpoints.",
+                "- Deploy behavioral analytics to catch credential harvesting and unexpected privilege elevation.",
+                "- Inspect process command-line arguments for suspicious script executions (`powershell.exe`, `cmd.exe`).",
+            ])
+            return "\n".join(lines)
+
+    # Specific response for tactical remediation playbooks
+    if "recommend" in q_lower or "playbook" in q_lower or "remediation" in q_lower or "action" in q_lower:
+        lines = [
+            "### Tactical Remediation Playbooks for Critical Threat Incidents",
+            "Based on the correlated multi-stage attack chains, execute the following phased response actions:\n",
+            "#### Phase 1: Immediate Containment (0–30 Minutes)",
+            "- **Isolate Affected Endpoints**: Sever network connectivity for compromised source and destination hosts.",
+            "- **Revoke Active Tokens**: Invalidate Kerberos tickets, OAuth bearer tokens, and active directory session tokens.",
+            "- **Perimeter Block Rules**: Inject temporary firewall block rules for identified external adversary source IPs.",
+            "",
+            "#### Phase 2: Threat Eradication (1–4 Hours)",
+            "- **Terminate Malicious Processes**: Terminate spawned child shells and kill unauthorized remote execution tasks.",
+            "- **Credential Rotation**: Force password changes on administrative and service accounts targeted in the progression.",
+            "- **Artifact Sanitization**: Remove staged persistence scripts, scheduled tasks, and drop directory artifacts.",
+            "",
+            "#### Phase 3: System Recovery & Hardening (24 Hours)",
+            "- **Restore from Verified Backup**: Reimage compromised systems using verified immutable golden images.",
+            "- **Apply Targeted Patches**: Remediate underlying CVEs exploited during the initial access phase.",
+            "- **Validate Detection Rules**: Ensure SIEM/EDR alert rules are tuned to catch secondary technique variations.",
+        ]
+        return "\n".join(lines)
+
     # Specific response for highest risk
     if "highest" in q_lower or "critical" in q_lower:
         top_doc = max(retrieved_docs, key=lambda d: risk_rank.get(d.get("risk", "Low"), 0))
@@ -99,11 +162,29 @@ def _grounded_fallback_answer(question: str, retrieved_docs: List[Dict[str, Any]
         r_level = top_doc.get("risk", "Critical")
         summ = top_doc.get("summary", "")
         return (
-            f"Attack Chain {c_id} has the highest risk score ({r_level}). "
-            f"{summ}\n"
-            f"Relevant MITRE Techniques: {', '.join(top_doc.get('mitre', [])) or 'None'}.\n"
-            f"Recommended Action: Immediate host isolation and credential revocation."
+            f"### Highest Risk Incident: {c_id} ({r_level})\n\n"
+            f"{summ}\n\n"
+            f"**Relevant MITRE Techniques**: {', '.join(top_doc.get('mitre', [])) or 'None'}\n\n"
+            f"**Immediate Containment**: Quarantine the host, invalidate target credentials, and block outbound C2 traffic."
         )
+
+    # Specific response for attack chains / incidents summary
+    if "chain" in q_lower or "incident" in q_lower or "target" in q_lower or "summary" in q_lower:
+        lines = [
+            "### Correlated Attack Chains & Active Threat Incidents",
+            f"The detection engine has synthesized **{len(retrieved_docs)} priority attack chain(s)** from the ingested telemetry:\n",
+        ]
+        for i, d in enumerate(retrieved_docs[:4], 1):
+            c_id = d.get("chain_id", "AC001")
+            r_level = d.get("risk", "High")
+            summ = d.get("summary", "")
+            mitre_str = ", ".join(d.get("mitre", [])) or "None"
+            lines.append(f"**{i}. Attack Chain {c_id} [{r_level} Risk]**\n- {summ}\n- *Techniques*: `{mitre_str}`\n")
+        lines.extend([
+            "### Posture Evaluation",
+            f"Current operational threat posture indicates **{highest_risk}** triage urgency. Review the highest risk chains first.",
+        ])
+        return "\n".join(lines)
 
     # Specific response for credential theft / credential dumping
     if "credential" in q_lower:
@@ -117,27 +198,30 @@ def _grounded_fallback_answer(question: str, retrieved_docs: List[Dict[str, Any]
             c_names = [d.get("chain_id", "") for d in cred_chains]
             lead = cred_chains[0]
             return (
-                f"{len(cred_chains)} attack chain(s) involved credential access behavior: {', '.join(c_names)}. "
-                f"The most significant was {lead.get('chain_id')}, mapped to MITRE "
-                f"{', '.join(lead.get('mitre', []))}. {lead.get('summary')}"
+                f"### Credential Access Analysis\n\n"
+                f"{len(cred_chains)} attack chain(s) involved credential access behavior: **{', '.join(c_names)}**.\n\n"
+                f"The most critical was **{lead.get('chain_id')}**, mapped to MITRE "
+                f"`{', '.join(lead.get('mitre', []))}`.\n\n"
+                f"{lead.get('summary')}\n\n"
+                f"**Mitigation**: Enforce MFA, reset compromised credentials, and monitor for unauthorized lateral authentication."
             )
 
     # General grounded synthesis
     response_lines = [
-        "### Threat Summary",
-        f"Retrieved intelligence indicates activity across {len(retrieved_docs)} relevant records.",
+        "### Threat Intelligence Summary",
+        f"Correlated intelligence analysis evaluated **{len(retrieved_docs)} active security records** from telemetry logs:\n",
         "\n".join(f"- {s}" for s in chain_summaries[:3]),
         "",
         "### Risk Assessment",
         f"Overall evaluated threat posture is **{highest_risk}**.",
         "",
-        "### Relevant MITRE Techniques",
-        f"{mitre_display}",
+        "### Relevant MITRE ATT&CK Techniques",
+        f"`{mitre_display}`",
         "",
         "### Recommended Actions",
-        "- Enforce strict network segmentation on identified source and destination nodes.",
-        "- Invalidate credentials and reset authentication tokens for targeted accounts.",
-        "- Review endpoint process telemetry for secondary execution stages.",
+        "- Enforce network isolation on identified source and destination IP addresses.",
+        "- Invalidate active credentials and cycle authentication keys for targeted users.",
+        "- Review telemetry process logs for secondary lateral movement and persistence mechanisms.",
     ]
     return "\n".join(response_lines)
 

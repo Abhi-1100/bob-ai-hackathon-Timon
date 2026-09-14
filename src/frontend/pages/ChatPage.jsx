@@ -1,327 +1,267 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  MessageSquare,
+  Sparkles,
+  RotateCcw,
   Send,
   Bot,
   User,
-  Sparkles,
-  Plus,
+  Copy,
+  Check,
   Shield,
-  Layers,
-  Database,
-  ExternalLink,
-  ChevronRight,
-  ArrowRight
+  TrendingUp,
+  AlertTriangle,
+  Activity,
+  FileText,
+  ExternalLink
 } from 'lucide-react';
-import { api, listFrom } from '../services/api';
-export function ChatPage({ onOpenChain }) {
-  const [sessions, setSessions] = useState([
-    { id: 'session-live', title: 'Live Ingested Telemetry Analysis', updated: 'Active' }
-  ]);
-  const [activeSessionId, setActiveSessionId] = useState('session-live');
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      message: 'Threat Intelligence Correlation & Alert Prioritisation Assistant initialized. Grounded dynamically in your uploaded CSV logs and correlated attack chains. Ask me about detected adversary techniques, critical incidents, or remediation playbooks.',
-      sources: ['PostgreSQL Telemetry DB', 'Deterministic Correlation Engine', 'MITRE ATT&CK Matrix']
-    }
-  ]);
-  const [input, setInput] = useState('');
-  const [busy, setBusy] = useState(false);
-  const scrollRef = useRef(null);
+import { useChatStore } from '../store/chatStore';
 
+export function ChatPage({ onOpenChain }) {
+  const {
+    messages,
+    inputDraft,
+    busy,
+    setInputDraft,
+    sendMessage,
+    startNewChat
+  } = useChatStore();
+
+  const [copiedId, setCopiedId] = useState(null);
+  const scrollRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Auto scroll to latest message
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, busy]);
 
-  const quickQuestions = [
-    'What is the highest risk attack?',
-    'Which incidents involved credential theft?',
-    'Show attacks mapped to T1110.',
-    'Summarize today\'s critical incidents.'
-  ];
-
-  const handleSend = async (textToSend = input) => {
-    const query = textToSend.trim();
-    if (!query || busy) return;
-
-    setInput('');
-    setMessages(prev => [...prev, { role: 'user', message: query }]);
-    setBusy(true);
-
-    try {
-      const response = await api('/api/v1/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          session_id: activeSessionId,
-          message: query,
-          question: query
-        })
-      });
-
-      const reply = response.answer || response.message || response.content || 'Intelligence query processed.';
-      const sources = response.sources || response.sources_used || ['Qdrant Vector Database', 'Attack Chain Corpus'];
-      const references = response.references || (response.chain_id ? [response.chain_id] : []);
-
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          message: reply,
-          sources: sources,
-          references: references
-        }
-      ]);
-    } catch (err) {
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          message: `Analyst query encountered an issue: ${err.message}. Showing local correlated intelligence.`,
-          sources: ['Local Fallback Corpus']
-        }
-      ]);
-    } finally {
-      setBusy(false);
-    }
+  const handleCopy = (id, text) => {
+    navigator.clipboard?.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => {
+      setCopiedId(null);
+    }, 2000);
   };
 
-  const startNewSession = () => {
-    const newId = `sess-${Date.now().toString(36)}`;
-    const newSession = {
-      id: newId,
-      title: 'New Threat Investigation',
-      time: 'Just now',
-      count: 0
-    };
-    setSessions(prev => [newSession, ...prev]);
-    setActiveSessionId(newId);
-    setMessages([
-      {
-        role: 'assistant',
-        message: 'New investigation session opened. What would you like to investigate across our threat feeds?',
-        sources: ['Qdrant Threat Store']
-      }
-    ]);
+  const suggestions = [
+    { label: 'Active Incidents', query: 'What are the current active high-risk incidents?', icon: Shield },
+    { label: 'MITRE TTPs', query: 'Which MITRE ATT&CK techniques were detected across the logs?', icon: TrendingUp },
+    { label: 'Top Risk Targets', query: 'Which destination assets and IP addresses are under active attack?', icon: AlertTriangle },
+    { label: 'Attack Chain Summary', query: 'Provide a structured summary of the detected multi-stage attack chains.', icon: Activity },
+    { label: 'Response Playbooks', query: 'What are the immediate tactical remediation recommendations for critical alerts?', icon: FileText },
+  ];
+
+  const handleSubmit = (e) => {
+    e?.preventDefault();
+    if (!inputDraft.trim() || busy) return;
+    sendMessage(inputDraft);
+  };
+
+  const handleSuggestionClick = (query) => {
+    if (busy) return;
+    sendMessage(query);
   };
 
   return (
-    <div className="chat-container">
-      {/* Left History Sidebar */}
-      <div className="chat-history-sidebar">
-        <div style={{ padding: 16, borderBottom: '1px solid var(--card-border)' }}>
-          <button
-            className="btn btn-primary"
-            onClick={startNewSession}
-            style={{ width: '100%', fontSize: 13 }}
-          >
-            <Plus size={16} />
-            <span>New Investigation</span>
-          </button>
-        </div>
-
-        <div style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-          PREVIOUS INVESTIGATIONS
-        </div>
-
-        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2, padding: '0 8px' }}>
-          {sessions.map(s => (
-            <button
-              key={s.id}
-              onClick={() => setActiveSessionId(s.id)}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3,
-                padding: '10px 12px',
-                borderRadius: 8,
-                border: '1px solid',
-                borderColor: activeSessionId === s.id ? 'var(--blue)' : 'transparent',
-                background: activeSessionId === s.id ? 'rgba(37, 99, 235, 0.1)' : 'transparent',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'all 0.15s'
-              }}
-            >
-              <div style={{
-                fontSize: 12.5,
-                fontWeight: 600,
-                color: activeSessionId === s.id ? 'var(--blue)' : 'var(--text-secondary)',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}>
-                {s.title}
-              </div>
-              <span style={{ fontSize: 10.5, color: 'var(--text-muted)' }}>{s.time}</span>
-            </button>
-          ))}
-        </div>
-
-        <div style={{ padding: 16, borderTop: '1px solid var(--card-border)', background: 'var(--bg-tertiary)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, color: 'var(--blue)' }}>
-            <Sparkles size={14} />
-            <span>Grounded RAG via Qdrant</span>
+    <div className="ai-assistant-wrapper">
+      {/* Top Header Card */}
+      <div className="ai-assistant-header">
+        <div className="ai-header-left">
+          <div className="ai-logo-box">
+            <Sparkles size={20} className="ai-logo-icon" />
+            <span className="ai-status-dot" title="Model is operational" />
           </div>
+          <div className="ai-title-block">
+            <div className="ai-title-row">
+              <span className="ai-title">ThreatSense AI Assistant</span>
+              <span className="ai-live-badge">LIVE MODEL</span>
+            </div>
+            <p className="ai-subtitle">
+              Autonomous threat intelligence queries across attack chains, risks, MITRE tactics & telemetry
+            </p>
+          </div>
+        </div>
+
+        <div className="ai-header-right">
+          <button
+            type="button"
+            className="ai-new-chat-btn"
+            onClick={startNewChat}
+            title="Start a fresh conversation"
+          >
+            <RotateCcw size={15} />
+            <span>New Chat</span>
+          </button>
         </div>
       </div>
 
-      {/* Right Conversation Window */}
-      <div className="chat-main">
-        {/* Messages Stream */}
-        <div className="chat-messages">
-          {messages.map((m, idx) => {
-            const isUser = m.role === 'user';
+      {/* Messages Stream */}
+      <div className="ai-messages-container">
+        {messages.map((m) => {
+          const isUser = m.role === 'user';
+
+          if (isUser) {
             return (
-              <div key={idx} className={`chat-msg ${isUser ? 'user' : 'ai'}`}>
-                <div className={`chat-avatar ${isUser ? 'user' : 'ai'}`}>
-                  {isUser ? <User size={18} /> : <Bot size={18} />}
-                </div>
-
-                <div className="chat-bubble">
-                  {!isUser && (
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: 'var(--cyan-bright)',
-                      marginBottom: 6,
-                      letterSpacing: '0.04em'
-                    }}>
-                      <Shield size={12} />
-                      <span>THREAT INTEL COPILOT</span>
-                    </div>
-                  )}
-
-                  <div style={{ fontSize: 13.5, lineHeight: 1.6, whiteSpace: 'pre-line' }}>
-                    {m.message}
+              <div key={m.id || m.timestamp} className="ai-msg-row user">
+                <div className="ai-msg-bubble user">
+                  <div className="ai-msg-text">{m.message}</div>
+                  <div className="ai-msg-footer user">
+                    <span>{m.timestamp || 'Just now'}</span>
                   </div>
-
-                  {/* Grounding Sources & References */}
-                  {m.sources && m.sources.length > 0 && (
-                    <div style={{
-                      marginTop: 12,
-                      paddingTop: 10,
-                      borderTop: '1px solid var(--card-border)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 6
-                    }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                        GROUNDED SOURCES & CITATIONS
-                      </span>
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        {m.sources.map((src, sIdx) => (
-                          <span
-                            key={sIdx}
-                            style={{
-                              fontSize: 10.5,
-                              padding: '2px 8px',
-                              background: 'var(--bg-tertiary)',
-                              border: '1px solid var(--card-border)',
-                              borderRadius: 4,
-                              color: 'var(--blue)',
-                              fontWeight: 600
-                            }}
-                          >
-                            {src}
-                          </span>
-                        ))}
-                      </div>
-
-                      {m.references && m.references.length > 0 && (
-                        <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginTop: 4 }}>
-                          <span style={{ fontSize: 10.5, color: 'var(--text-muted)' }}>Quick Pivot:</span>
-                          {m.references.map((ref, rIdx) => (
-                            <button
-                              key={rIdx}
-                              onClick={() => onOpenChain && onOpenChain(ref)}
-                              style={{
-                                background: 'var(--critical-bg)',
-                                border: '1px solid var(--critical-border)',
-                                borderRadius: 4,
-                                color: 'var(--critical-text)',
-                                fontSize: 11,
-                                padding: '2px 8px',
-                                fontFamily: 'var(--font-mono)',
-                                cursor: 'pointer',
-                                fontWeight: 700
-                              }}
-                            >
-                              Inspect {ref} →
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                </div>
+                <div className="ai-avatar user">
+                  <User size={18} />
                 </div>
               </div>
             );
-          })}
+          }
 
-          {busy && (
-            <div className="chat-msg ai">
-              <div className="chat-avatar ai">
-                <Bot size={18} />
+          // Assistant Message
+          return (
+            <div key={m.id || m.timestamp} className="ai-msg-row bot">
+              <div className="ai-avatar bot">
+                <Bot size={20} />
               </div>
-              <div className="chat-bubble" style={{ color: 'var(--text-muted)', fontStyle: 'italic', fontSize: 13 }}>
-                Searching vector index and evaluating attack chains…
+
+              <div className="ai-msg-card bot">
+                {/* Message Body */}
+                <div className="ai-msg-text">
+                  {m.message.split('\n\n').map((paragraph, pIdx) => (
+                    <p key={pIdx} style={{ margin: pIdx === 0 ? '0 0 12px 0' : '12px 0' }}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Knowledge Sources & References Divider */}
+                {((m.sources && m.sources.length > 0) || (m.references && m.references.length > 0)) && (
+                  <>
+                    <div className="ai-card-divider" />
+                    <div className="ai-sources-section">
+                      {m.sources && m.sources.length > 0 && (
+                        <div className="ai-sources-row">
+                          <span className="ai-sources-label">Knowledge Sources:</span>
+                          <div className="ai-sources-pills">
+                            {m.sources.map((source, sIdx) => (
+                              <span key={sIdx} className="ai-source-pill">
+                                {source}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Quick Pivot References */}
+                      {m.references && m.references.length > 0 && (
+                        <div className="ai-references-row">
+                          <span className="ai-sources-label">Pivots:</span>
+                          <div className="ai-sources-pills">
+                            {m.references.map((ref, rIdx) => (
+                              <button
+                                key={rIdx}
+                                type="button"
+                                className="ai-pivot-btn"
+                                onClick={() => onOpenChain && onOpenChain(ref)}
+                              >
+                                <span>Inspect {ref}</span>
+                                <ExternalLink size={12} />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* Card Timestamp and Copy Action */}
+                <div className="ai-card-meta">
+                  <span className="ai-timestamp">{m.timestamp || 'Just now'}</span>
+                  <button
+                    type="button"
+                    className="ai-copy-btn"
+                    onClick={() => handleCopy(m.id, m.message)}
+                    title="Copy response to clipboard"
+                  >
+                    {copiedId === m.id ? (
+                      <>
+                        <Check size={14} className="text-success" />
+                        <span style={{ color: 'var(--success-text, #10B981)', fontSize: 11, fontWeight: 600 }}>Copied</span>
+                      </>
+                    ) : (
+                      <Copy size={14} />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          )}
+          );
+        })}
 
-          <div ref={scrollRef} />
+        {/* Loading / Searching State */}
+        {busy && (
+          <div className="ai-msg-row bot">
+            <div className="ai-avatar bot">
+              <Bot size={20} />
+            </div>
+            <div className="ai-msg-card bot ai-msg-loading">
+              <div className="ai-typing-indicator">
+                <span />
+                <span />
+                <span />
+              </div>
+              <span className="ai-loading-text">
+                Analyzing threat telemetry, evaluating attack vectors & querying vector embeddings...
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div ref={scrollRef} />
+      </div>
+
+      {/* Bottom Suggestions & Input Section */}
+      <div className="ai-bottom-section">
+        {/* Suggestion Pills */}
+        <div className="ai-suggestions-bar">
+          <span className="ai-suggestions-label">SUGGESTIONS:</span>
+          <div className="ai-suggestions-list">
+            {suggestions.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  className="ai-suggestion-pill"
+                  onClick={() => handleSuggestionClick(item.query)}
+                  disabled={busy}
+                >
+                  <Icon size={14} className="ai-suggestion-icon" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Quick Suggestion Pills */}
-        <div style={{
-          padding: '8px 24px',
-          display: 'flex',
-          gap: 8,
-          overflowX: 'auto',
-          borderTop: '1px solid var(--card-border)',
-          background: 'var(--bg-secondary)'
-        }}>
-          {quickQuestions.map((q, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleSend(q)}
-              disabled={busy}
-              style={{
-                padding: '5px 12px',
-                borderRadius: 9999,
-                background: 'var(--bg-tertiary)',
-                border: '1px solid var(--card-border)',
-                color: 'var(--text-secondary)',
-                fontSize: 11.5,
-                fontWeight: 500,
-                whiteSpace: 'nowrap',
-                cursor: 'pointer',
-                transition: 'all 0.15s'
-              }}
-            >
-              {q}
-            </button>
-          ))}
-        </div>
-
-        {/* Input Bar */}
-        <form onSubmit={e => { e.preventDefault(); handleSend(); }} className="chat-input-row">
+        {/* Prompt Input Row */}
+        <form onSubmit={handleSubmit} className="ai-input-wrapper">
           <input
+            ref={inputRef}
             type="text"
-            className="chat-input"
-            placeholder="Ask the AI Analyst (e.g., 'What is the highest risk attack?')"
-            value={input}
-            onChange={e => setInput(e.target.value)}
+            className="ai-chat-input"
+            placeholder="Ask about active attack chains, MITRE techniques, or incident risks... (Press Enter)"
+            value={inputDraft}
+            onChange={(e) => setInputDraft(e.target.value)}
             disabled={busy}
           />
-          <button type="submit" className="btn btn-primary" disabled={busy || !input.trim()}>
-            <Send size={16} />
-            <span>Send</span>
+          <button
+            type="submit"
+            className="ai-ask-btn"
+            disabled={busy || !inputDraft.trim()}
+          >
+            <span>Ask AI</span>
+            <Send size={15} />
           </button>
         </form>
       </div>

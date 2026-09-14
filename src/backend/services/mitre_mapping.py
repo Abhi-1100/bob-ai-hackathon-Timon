@@ -362,21 +362,21 @@ class MitreMappingService:
             message="MITRE mapping completed successfully",
         )
 
-    def map_all_chains(self) -> MitreBulkMappingResponse:
-        """Map and persist MITRE techniques for ALL stored attack chains.
-
-        Returns:
-            MitreBulkMappingResponse with aggregated results.
-        """
+    def map_all_chains(self, user_id: Optional[UUID] = None) -> MitreBulkMappingResponse:
+        """Map and persist MITRE techniques for stored attack chains, optionally scoped to a user."""
         start_ts = time.perf_counter()
-        logger.info("MITRE bulk mapping started for all attack chains")
+        logger.info(f"MITRE bulk mapping started for attack chains (user_id={user_id})")
 
-        chains = self.db.query(AttackChainDB).order_by(AttackChainDB.chain_id).all()
+        query = self.db.query(AttackChainDB)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
+        chains = query.order_by(AttackChainDB.chain_id).all()
         if not chains:
             raise MitreMappingError("No attack chains found in the database")
 
-        # Clear all existing mappings
-        self.repo.delete_all_mappings()
+        # Clear existing mappings for these specific chains
+        chain_ids = [c.id for c in chains]
+        self.db.query(MitreMappingDB).filter(MitreMappingDB.attack_chain_id.in_(chain_ids)).delete(synchronize_session=False)
 
         all_mappings: List[MitreChainMapping] = []
         all_db_records: List[MitreMappingDB] = []

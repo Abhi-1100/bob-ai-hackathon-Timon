@@ -29,21 +29,12 @@ class AttackChainRepository:
         alert_count: int,
         start_time,
         end_time,
+        user_id: Optional[UUID] = None,
         commit: bool = True,
     ) -> AttackChainDB:
-        """Create and persist a new attack chain record.
-
-        Args:
-            chain_id: Human-readable identifier (e.g. AC001).
-            source_ip: Common source IP for the chain.
-            destination_ips: Comma-separated destination IPs.
-            events: Comma-separated event progression.
-            alert_count: Total alerts in this chain.
-            start_time: Earliest alert timestamp.
-            end_time: Latest alert timestamp.
-            commit: Whether to commit immediately (False for bulk batching).
-        """
+        """Create and persist a new attack chain record."""
         chain = AttackChainDB(
+            user_id=user_id,
             chain_id=chain_id,
             source_ip=source_ip,
             destination_ips=destination_ips,
@@ -57,7 +48,7 @@ class AttackChainRepository:
             try:
                 self.db.commit()
                 self.db.refresh(chain)
-                logger.info(f"Attack chain '{chain_id}' created with {alert_count} alerts")
+                logger.info(f"Attack chain '{chain_id}' created with {alert_count} alerts (user_id={user_id})")
             except SQLAlchemyError as exc:
                 self.db.rollback()
                 raise RuntimeError(f"Failed to create attack chain '{chain_id}': {exc}")
@@ -84,37 +75,37 @@ class AttackChainRepository:
                 raise RuntimeError(f"Failed to bulk-link alerts to chain {chain_db_id}: {exc}")
         return len(events)
 
-    def get_chain(self, chain_id: str) -> Optional[AttackChainDB]:
-        """Retrieve an attack chain by its human-readable chain_id (e.g. AC001)."""
-        return (
-            self.db.query(AttackChainDB)
-            .filter(AttackChainDB.chain_id == chain_id)
-            .first()
-        )
+    def get_chain(self, chain_id: str, user_id: Optional[UUID] = None) -> Optional[AttackChainDB]:
+        """Retrieve an attack chain by its human-readable chain_id (e.g. AC001), optionally scoped to a user."""
+        query = self.db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
+        return query.first()
 
     get_by_chain_id = get_chain
 
-    def get_chain_by_uuid(self, chain_uuid: UUID) -> Optional[AttackChainDB]:
+    def get_chain_by_uuid(self, chain_uuid: UUID, user_id: Optional[UUID] = None) -> Optional[AttackChainDB]:
         """Retrieve an attack chain by its database UUID primary key."""
-        return self.db.get(AttackChainDB, chain_uuid)
+        query = self.db.query(AttackChainDB).filter(AttackChainDB.id == chain_uuid)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
+        return query.first()
 
-    def get_all_chains(self, limit: int = 200, offset: int = 0) -> List[AttackChainDB]:
-        """Return all attack chains ordered by start_time, paginated."""
+    def get_all_chains(self, limit: int = 200, offset: int = 0, user_id: Optional[UUID] = None) -> List[AttackChainDB]:
+        """Return all attack chains ordered by start_time, paginated, optionally scoped to a user."""
+        query = self.db.query(AttackChainDB)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
         return (
-            self.db.query(AttackChainDB)
-            .order_by(AttackChainDB.start_time.desc())
+            query.order_by(AttackChainDB.start_time.desc())
             .limit(limit)
             .offset(offset)
             .all()
         )
 
-    def delete_chain(self, chain_id: str) -> None:
-        """Delete an attack chain and cascade-delete its event links.
-
-        Raises:
-            ValueError: If the chain does not exist.
-        """
-        chain = self.get_chain(chain_id)
+    def delete_chain(self, chain_id: str, user_id: Optional[UUID] = None) -> None:
+        """Delete an attack chain and cascade-delete its event links."""
+        chain = self.get_chain(chain_id, user_id=user_id)
         if not chain:
             raise ValueError(f"Attack chain '{chain_id}' not found")
         self.db.delete(chain)
@@ -125,19 +116,28 @@ class AttackChainRepository:
             self.db.rollback()
             raise RuntimeError(f"Failed to delete attack chain '{chain_id}': {exc}")
 
-    def delete_all_chains(self) -> int:
-        """Delete all attack chains and their event links. Returns count deleted."""
-        count = self.db.query(AttackChainDB).count()
-        self.db.query(AttackChainEventDB).delete()
-        self.db.query(AttackChainDB).delete()
+    def delete_all_chains(self, user_id: Optional[UUID] = None) -> int:
+        """Delete attack chains. If user_id is provided, deletes only that user's chains."""
+        query = self.db.query(AttackChainDB)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
+        chains = query.all()
+        chain_ids = [c.id for c in chains]
+        if not chain_ids:
+            return 0
+        self.db.query(AttackChainEventDB).filter(AttackChainEventDB.chain_id.in_(chain_ids)).delete(synchronize_session=False)
+        count = query.delete(synchronize_session=False)
         try:
             self.db.commit()
-            logger.info(f"Deleted all {count} attack chains")
+            logger.info(f"Deleted {count} attack chains (user_id={user_id})")
         except SQLAlchemyError as exc:
             self.db.rollback()
-            raise RuntimeError(f"Failed to delete all attack chains: {exc}")
+            raise RuntimeError(f"Failed to delete attack chains: {exc}")
         return count
 
-    def count_chains(self) -> int:
-        """Return total number of attack chains stored."""
-        return self.db.query(AttackChainDB).count()
+    def count_chains(self, user_id: Optional[UUID] = None) -> int:
+        """Return total number of attack chains stored, optionally scoped to a user."""
+        query = self.db.query(AttackChainDB)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
+        return query.count()

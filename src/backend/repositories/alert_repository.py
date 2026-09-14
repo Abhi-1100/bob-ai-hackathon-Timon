@@ -27,14 +27,15 @@ class AlertRepository:
     # ---------------------------------------------------------------------
     # Upload operations
     # ---------------------------------------------------------------------
-    def create_upload(self, file_name: str, file_path: str) -> Upload:
+    def create_upload(self, file_name: str, file_path: str, user_id: Optional[UUID] = None) -> Upload:
         """Create a new ``Upload`` record and return the persisted instance.
 
         Args:
             file_name: Original filename supplied by the user.
             file_path: Relative path on the server where the file is stored.
+            user_id: Owner user account UUID.
         """
-        new_upload = Upload(file_name=file_name, file_path=file_path)
+        new_upload = Upload(file_name=file_name, file_path=file_path, user_id=user_id)
         self.db.add(new_upload)
         try:
             self.db.commit()
@@ -67,19 +68,25 @@ class AlertRepository:
     # ---------------------------------------------------------------------
     # Alert operations
     # ---------------------------------------------------------------------
-    def bulk_insert_alerts(self, upload_id: UUID, alerts: List[Alert]) -> int:
+    def bulk_insert_alerts(self, upload_id: UUID, alerts: List[Alert], user_id: Optional[UUID] = None) -> int:
         """Bulk‑insert a list of ``Alert`` objects linked to *upload_id*.
 
         The method validates that the parent ``Upload`` exists before insertion.
         Returns the number of rows inserted.
         """
         # Ensure parent upload exists
-        if not self.db.get(Upload, upload_id):
+        parent = self.db.get(Upload, upload_id)
+        if not parent:
             raise ValueError(f"Upload with id {upload_id} not found for bulk insert")
 
-        # Attach foreign key to each alert instance (in‑place mutation)
+        uid = user_id or getattr(parent, "user_id", None)
+
+        # Attach foreign keys to each alert instance (in‑place mutation)
         for alert in alerts:
             alert.upload_id = upload_id
+            if uid and not getattr(alert, "user_id", None):
+                alert.user_id = uid
+
         # Use SQLAlchemy's bulk_save_objects for performance
         self.db.bulk_save_objects(alerts)
         try:

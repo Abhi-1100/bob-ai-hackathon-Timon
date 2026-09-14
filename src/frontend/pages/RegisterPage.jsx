@@ -18,8 +18,6 @@ const registerSchema = z
   .object({
     name: z.string().min(2, 'Full name is required (min 2 characters)'),
     email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
-    organization: z.string().optional(),
-    role: z.string().default('Security Analyst'),
     password: z.string().min(8, 'Password must contain at least 8 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
     acceptTerms: z.boolean().refine((val) => val === true, {
@@ -43,10 +41,8 @@ export function RegisterPage({ navigate, theme, toggleTheme }) {
   } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: 'Alex Vance',
-      email: 'alex.vance@company.com',
-      organization: 'Vance Security',
-      role: 'Security Analyst',
+      name: '',
+      email: '',
       password: '',
       confirmPassword: '',
       acceptTerms: true,

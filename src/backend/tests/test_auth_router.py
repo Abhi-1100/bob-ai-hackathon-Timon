@@ -13,9 +13,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from main import app
 
+import uuid
+
 client = TestClient(app)
 
-TEST_USER_EMAIL = "soc.lead@threatintel.defense"
+TEST_USER_EMAIL = f"soc.lead.{uuid.uuid4().hex[:6]}@threatintel.defense"
 TEST_USER_PASS = "EnterprisePass#2026"
 TEST_USER_NAME = "Commander Shepard"
 
@@ -26,8 +28,6 @@ def test_auth_register_success():
         "name": TEST_USER_NAME,
         "email": TEST_USER_EMAIL,
         "password": TEST_USER_PASS,
-        "organization": "Alliance SOC Fleet",
-        "role": "Chief Intelligence Officer",
     }
     response = client.post("/api/v1/auth/register", json=payload)
     assert response.status_code == 201
@@ -36,7 +36,6 @@ def test_auth_register_success():
     assert data["token_type"] == "bearer"
     assert data["user"]["email"] == TEST_USER_EMAIL
     assert data["user"]["name"] == TEST_USER_NAME
-    assert data["user"]["role"] == "Chief Intelligence Officer"
 
 
 def test_auth_register_duplicate_email():

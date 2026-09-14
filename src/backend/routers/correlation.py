@@ -11,7 +11,11 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from database.session import get_db
-from database.models import AttackChainDB, Alert as AlertDB, MitreMappingDB, RiskScoreDB, ReportDB, RecommendationDB
+from database.models import (
+    AttackChainDB, Alert as AlertDB, MitreMappingDB, RiskScoreDB,
+    ReportDB, RecommendationDB, UserDB
+)
+from routers.auth import get_current_user_obj
 from schemas.attack_chain import CorrelationResult
 from schemas.upload import ErrorResponse
 from services.alert_correlation import AlertCorrelationEngine, CorrelationError
@@ -24,15 +28,35 @@ router = APIRouter(
 )
 
 
+from services.cache_service import cache
+from sqlalchemy.orm import joinedload, selectinload
+
 @router.get(
     "",
     status_code=status.HTTP_200_OK,
     summary="Get All Correlated Attack Chains",
     description="Returns all persisted attack chains from the database, or empty list if no alerts have been ingested."
 )
-def get_attack_chains(db: Session = Depends(get_db)):
+def get_attack_chains(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Fetch all attack chains from the database without re-running correlation."""
-    chains = db.query(AttackChainDB).order_by(AttackChainDB.start_time.desc()).all()
+    cache_key = f"all_attack_chains_{current_user.id}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    chains = (
+        db.query(AttackChainDB)
+        .filter(AttackChainDB.user_id == current_user.id)
+        .options(
+            joinedload(AttackChainDB.risk_score),
+            selectinload(AttackChainDB.mitre_mappings),
+        )
+        .order_by(AttackChainDB.start_time.desc())
+        .all()
+    )
     results = []
 
     for c in chains:
@@ -71,10 +95,12 @@ def get_attack_chains(db: Session = Depends(get_db)):
             "mitre_techniques": mitre_list,
         })
 
-    return {
+    payload = {
         "chains": results,
         "count": len(results),
     }
+    cache.set(cache_key, payload, ttl=300.0)
+    return payload
 
 
 @router.get(
@@ -83,11 +109,15 @@ def get_attack_chains(db: Session = Depends(get_db)):
     summary="Generate Attack Chains",
     description="Runs rule-based correlation on all stored alerts and persists new attack chains."
 )
-def generate_attack_chains(db: Session = Depends(get_db)):
+def generate_attack_chains(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Run correlation pipeline and return chains."""
     try:
         engine = AlertCorrelationEngine(db=db)
-        result = engine.correlate(persist=True)
+        result = engine.correlate(user_id=current_user.id, persist=True)
+        cache.delete(f"all_attack_chains_{current_user.id}")
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=result.model_dump(mode="json"),
@@ -115,9 +145,17 @@ def generate_attack_chains(db: Session = Depends(get_db)):
     summary="Get Attack Chain by ID",
     description="Returns detailed attack chain records with full event progression and telemetry."
 )
-def get_attack_chain_by_id(chain_id: str, db: Session = Depends(get_db)):
+def get_attack_chain_by_id(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve full details of an attack chain."""
-    chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id).first()
+    chain = (
+        db.query(AttackChainDB)
+        .filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id)
+        .first()
+    )
     if not chain:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Attack chain '{chain_id}' not found")
 
@@ -216,3 +254,4 @@ def get_attack_chain_by_id(chain_id: str, db: Session = Depends(get_db)):
         "report": report_obj,
         "status": "Active",
     }
+

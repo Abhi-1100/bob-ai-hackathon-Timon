@@ -49,12 +49,21 @@ def _get_engine():
         _engine = create_engine(
             db_url,
             poolclass=QueuePool,
-            pool_pre_ping=True,
-            pool_size=10,
-            max_overflow=20,
+            pool_pre_ping=False,
+            pool_recycle=300,
+            pool_size=15,
+            max_overflow=25,
+            pool_timeout=30,
+            connect_args={
+                "connect_timeout": 10,
+                "keepalives": 1,
+                "keepalives_idle": 30,
+                "keepalives_interval": 10,
+                "keepalives_count": 5,
+            },
             future=True,
         )
-        logger.info("Database engine created successfully")
+        logger.info("High-performance database engine created successfully")
     return _engine
 
 
@@ -84,7 +93,6 @@ def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
         yield db
-        db.commit()
     except Exception:
         db.rollback()
         raise

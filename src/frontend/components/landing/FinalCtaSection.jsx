@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, ShieldCheck, Play, Lock, CheckCircle2 } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 export function FinalCtaSection({ navigate, onRequestDemo }) {
+  const { isAuthenticated } = useAuthStore();
   return (
     <section className="landing-final-cta-section">
       <div className="cta-cyber-grid-bg" />
@@ -38,9 +40,18 @@ export function FinalCtaSection({ navigate, onRequestDemo }) {
               <ArrowRight size={16} />
             </button>
 
-            <button onClick={() => navigate('/dashboard')} className="btn btn-secondary cta-btn-large">
+            <button
+              onClick={() => {
+                if (isAuthenticated) {
+                  navigate('/dashboard');
+                } else {
+                  navigate('/signup');
+                }
+              }}
+              className="btn btn-secondary cta-btn-large"
+            >
               <Play size={15} />
-              <span>Get Started with Live Sandbox</span>
+              <span>{isAuthenticated ? 'Open Threat Intelligence Console' : 'Get Started with Enterprise SOC'}</span>
             </button>
           </div>
 

@@ -12,18 +12,20 @@ from sqlalchemy.orm import Session
 
 try:
     from database.session import get_db
-    from database.models import Alert as AlertDB
+    from database.models import Alert as AlertDB, UserDB
     from schemas.upload import UploadResponse, ErrorResponse, IngestResponse
     from services.file_storage import FileStorageService, StorageValidationError, BASE_DIR
     from services.csv_parser import CSVParser, CSVParserError
     from repositories.alert_repository import AlertRepository
+    from routers.auth import get_current_user_obj
 except ImportError:
     from backend.database.session import get_db
-    from backend.database.models import Alert as AlertDB
+    from backend.database.models import Alert as AlertDB, UserDB
     from backend.schemas.upload import UploadResponse, ErrorResponse, IngestResponse
     from backend.services.file_storage import FileStorageService, StorageValidationError, BASE_DIR
     from backend.services.csv_parser import CSVParser, CSVParserError
     from backend.repositories.alert_repository import AlertRepository
+    from backend.routers.auth import get_current_user_obj
 
 logger = logging.getLogger(__name__)
 
@@ -172,13 +174,15 @@ async def upload_alerts_csv(
 )
 async def upload_and_ingest_alerts(
     file: UploadFile = File(..., description="CSV file with columns: timestamp, src_ip, dst_ip, event, severity"),
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
 ):
     """
-    End-to-end ingestion:
+    End-to-end ingestion scoped to the authenticated user:
     1. Disk storage
     2. CSV parsing and validation
-    3. PostgreSQL storage in uploads and alerts tables
+    3. PostgreSQL storage in uploads and alerts tables with user_id
+    4. Auto-correlate, MITRE map, and risk score for this user's data
     """
     if not file or not file.filename:
         return JSONResponse(
@@ -208,17 +212,22 @@ async def upload_and_ingest_alerts(
                 ).model_dump(),
             )
 
-        # 3. Create upload record in DB
+        # 3. Create upload record in DB with user_id
         alert_repo = AlertRepository(db)
-        upload_rec = alert_repo.create_upload(file_name=file_name, file_path=file_path)
+        upload_rec = alert_repo.create_upload(
+            file_name=file_name,
+            file_path=file_path,
+            user_id=current_user.id,
+        )
 
-        # 4. Convert schemas.alert.Alert to database.models.Alert
+        # 4. Convert schemas.alert.Alert to database.models.Alert with user_id
         orm_alerts = []
         for a in parsed_alerts:
             sev = a.severity.value if hasattr(a.severity, "value") else str(a.severity)
             orm_alerts.append(
                 AlertDB(
                     id=uuid.uuid4(),
+                    user_id=current_user.id,
                     upload_id=upload_rec.id,
                     timestamp=a.timestamp,
                     src_ip=a.src_ip,
@@ -228,11 +237,15 @@ async def upload_and_ingest_alerts(
                 )
             )
 
-        # 5. Bulk insert alerts
-        count = alert_repo.bulk_insert_alerts(upload_id=upload_rec.id, alerts=orm_alerts)
-        logger.info("Successfully ingested %d alerts from file %s", count, file_name)
+        # 5. Bulk insert alerts with user_id
+        count = alert_repo.bulk_insert_alerts(
+            upload_id=upload_rec.id,
+            alerts=orm_alerts,
+            user_id=current_user.id,
+        )
+        logger.info("Successfully ingested %d alerts for user %s from file %s", count, current_user.id, file_name)
 
-        # 6. Trigger automated correlation, MITRE mapping, and risk scoring pipeline
+        # 6. Trigger automated correlation, MITRE mapping, and risk scoring pipeline scoped to current_user
         chains_count = 0
         mitre_count = 0
         scored_count = 0
@@ -242,23 +255,30 @@ async def upload_and_ingest_alerts(
             from services.risk_scoring import RiskScoringEngine
 
             corr_engine = AlertCorrelationEngine(db=db)
-            corr_result = corr_engine.correlate(persist=True)
+            corr_result = corr_engine.correlate(user_id=current_user.id, persist=True)
             chains_count = len(corr_result.chains)
 
             mitre_service = MitreMappingService(db=db)
-            mitre_res = mitre_service.map_all_chains()
+            mitre_res = mitre_service.map_all_chains(user_id=current_user.id)
             mitre_count = mitre_res.total_techniques
 
             risk_engine = RiskScoringEngine(db=db)
-            risk_scores = risk_engine.score_all_chains()
+            risk_scores = risk_engine.score_all_chains(user_id=current_user.id)
             scored_count = len(risk_scores)
 
             logger.info(
-                f"Auto-pipeline executed successfully: {chains_count} chains correlated, "
+                f"Auto-pipeline executed for user {current_user.id}: {chains_count} chains correlated, "
                 f"{mitre_count} MITRE techniques mapped, {scored_count} risk-scored"
             )
         except Exception as pipe_err:
             logger.warning(f"Correlation pipeline post-ingest warning: {pipe_err}")
+
+        # Clear cached aggregations so all pages receive fresh ingested telemetry
+        try:
+            from services.cache_service import cache
+            cache.clear()
+        except Exception:
+            pass
 
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
@@ -290,4 +310,5 @@ async def upload_and_ingest_alerts(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=ErrorResponse(success=False, message=f"Ingestion failed: {str(exc)}").model_dump(),
         )
+
 

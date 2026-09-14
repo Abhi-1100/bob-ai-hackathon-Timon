@@ -9,6 +9,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from database.session import get_db
+from database.models import UserDB, AttackChainDB
+from routers.auth import get_current_user_obj
 from schemas.risk_score import RiskScore, RiskScoreResponse, RiskBulkResponse, RiskDistribution
 from schemas.upload import ErrorResponse
 from services.risk_scoring import RiskScoringEngine, ChainNotFoundError, RiskScoringError
@@ -37,9 +39,19 @@ router = APIRouter(
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def calculate_chain_risk(chain_id: str, db: Session = Depends(get_db)):
+def calculate_chain_risk(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Calculate and store risk score for a single attack chain."""
     try:
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(success=False, message=f"Attack chain '{chain_id}' not found.").model_dump(),
+            )
         engine = RiskScoringEngine(db=db)
         score_obj = engine.calculate_and_store_for_chain(chain_id)
         return JSONResponse(
@@ -84,9 +96,23 @@ def calculate_chain_risk(chain_id: str, db: Session = Depends(get_db)):
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def get_chain_risk(chain_id: str, db: Session = Depends(get_db)):
+def get_chain_risk(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve existing stored risk score for an attack chain."""
     try:
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(
+                    success=False,
+                    message=f"No risk score found for chain '{chain_id}'. Run POST /calculate/{chain_id} first.",
+                ).model_dump(),
+            )
+
         engine = RiskScoringEngine(db=db)
         score_obj = engine.get_stored_score(chain_id)
 
@@ -132,13 +158,16 @@ def get_chain_risk(chain_id: str, db: Session = Depends(get_db)):
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def calculate_all_risk(db: Session = Depends(get_db)):
+def calculate_all_risk(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Bulk-calculate and prioritize risk scores for all attack chains."""
     import time
     start_time = time.perf_counter()
     try:
         engine = RiskScoringEngine(db=db)
-        scores = engine.score_all_chains()
+        scores = engine.score_all_chains(user_id=current_user.id)
         elapsed_ms = (time.perf_counter() - start_time) * 1000
 
         return JSONResponse(
@@ -169,11 +198,14 @@ def calculate_all_risk(db: Session = Depends(get_db)):
     summary="Get Risk Severity Distribution Summary",
     description="Returns aggregate counts of attack chains categorized into Critical, High, Medium, and Low risk.",
 )
-def get_risk_distribution(db: Session = Depends(get_db)):
+def get_risk_distribution(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve distribution of attack chains across risk levels."""
     try:
         engine = RiskScoringEngine(db=db)
-        distribution = engine.get_risk_distribution()
+        distribution = engine.get_risk_distribution(user_id=current_user.id)
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=distribution.model_dump(),
@@ -187,3 +219,4 @@ def get_risk_distribution(db: Session = Depends(get_db)):
                 message=f"Failed to retrieve risk distribution: {str(exc)}",
             ).model_dump(),
         )
+

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   LayoutDashboard,
-  UploadCloud,
   Network,
   ShieldAlert,
   Flame,
@@ -13,7 +12,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   LogOut,
-  Globe,
   Lock
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
@@ -25,16 +23,15 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed, hasUp
   const { showToast } = useToast();
   const displayName = user?.name || 'Security Analyst';
   const displayRole = user?.role || 'SOC Analyst';
-  const initials = displayName
+  const initials = (displayName || 'SA')
     .split(' ')
+    .filter(Boolean)
     .map((n) => n[0])
     .join('')
     .substring(0, 2)
-    .toUpperCase();
+    .toUpperCase() || 'SA';
   const navItems = [
-    { route: '/', label: 'Product Landing', icon: Globe, requiresUpload: false },
     { route: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, requiresUpload: true },
-    { route: '/upload', label: 'Upload Alerts', icon: UploadCloud, requiresUpload: false },
     { route: '/attack-chains', label: 'Attack Chains', icon: Network, requiresUpload: true },
     { route: '/mitre', label: 'MITRE Analysis', icon: ShieldAlert, requiresUpload: true },
     { route: '/risk', label: 'Risk Prioritization', icon: Flame, requiresUpload: true },

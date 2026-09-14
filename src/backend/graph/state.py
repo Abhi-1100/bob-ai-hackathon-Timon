@@ -21,6 +21,7 @@ class ThreatWorkflowState(TypedDict, total=False):
     timestamp: str
     execution_metadata: Optional[Dict[str, Any]]
     _db: Optional[Any]                  # Active SQLAlchemy Session reference
+    _user_id: Optional[Any]             # Scoped tenant/user UUID
 
 
 class ChatState(TypedDict, total=False):

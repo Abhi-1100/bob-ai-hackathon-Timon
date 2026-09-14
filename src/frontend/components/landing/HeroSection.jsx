@@ -14,8 +14,10 @@ import {
   Cpu,
   Bot
 } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 export function HeroSection({ navigate, onRequestDemo }) {
+  const { isAuthenticated } = useAuthStore();
   return (
     <section className="landing-hero-section">
       {/* Background Ambient Glows */}
@@ -56,9 +58,18 @@ export function HeroSection({ navigate, onRequestDemo }) {
               <ArrowRight size={16} />
             </button>
 
-            <button onClick={() => navigate('/dashboard')} className="btn btn-secondary hero-btn-secondary">
+            <button
+              onClick={() => {
+                if (isAuthenticated) {
+                  navigate('/dashboard');
+                } else {
+                  navigate('/signup');
+                }
+              }}
+              className="btn btn-secondary hero-btn-secondary"
+            >
               <Play size={15} />
-              <span>View Platform Live Sandbox</span>
+              <span>{isAuthenticated ? 'Open Threat Console' : 'Get Started with Live Platform'}</span>
             </button>
           </div>
 

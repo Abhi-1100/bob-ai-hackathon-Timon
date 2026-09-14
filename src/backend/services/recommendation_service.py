@@ -34,8 +34,9 @@ class RecommendationService:
     caching, and database persistence.
     """
 
-    def __init__(self, db: Session, agent: Optional[RecommendationAgent] = None):
+    def __init__(self, db: Session, agent: Optional[RecommendationAgent] = None, user_id: Optional[Any] = None):
         self.db = db
+        self.user_id = user_id
         self.chain_repo = AttackChainRepository(db)
         self.mitre_repo = MitreRepository(db)
         self.risk_repo = RiskRepository(db)
@@ -94,7 +95,7 @@ class RecommendationService:
 
     def get_recommendation(self, chain_id_str: str) -> Optional[RecommendationOutput]:
         """Retrieve existing recommendation from database cache."""
-        chain = self.chain_repo.get_chain(chain_id_str)
+        chain = self.chain_repo.get_chain(chain_id_str, user_id=self.user_id)
         if not chain:
             raise ChainNotFoundError(f"Attack chain '{chain_id_str}' not found")
 
@@ -121,7 +122,7 @@ class RecommendationService:
         start_time = time.perf_counter()
         logger.info(f"Recommendation requested for chain {chain_id_str} (force_refresh={force_refresh})")
 
-        chain = self.chain_repo.get_chain(chain_id_str)
+        chain = self.chain_repo.get_chain(chain_id_str, user_id=self.user_id)
         if not chain:
             raise ChainNotFoundError(f"Attack chain '{chain_id_str}' not found")
 
@@ -191,10 +192,10 @@ class RecommendationService:
         self, force_refresh: bool = False
     ) -> List[Tuple[RecommendationOutput, bool]]:
         """
-        Generate recommendations for all attack chains in database.
+        Generate recommendations for all attack chains in database, optionally scoped to a user.
         Returns list of tuples: (RecommendationOutput, is_cached)
         """
-        chains = self.chain_repo.get_all_chains()
+        chains = self.chain_repo.get_all_chains(user_id=self.user_id)
         results: List[Tuple[RecommendationOutput, bool]] = []
         for c in chains:
             res, cached = self.generate_recommendation(c.chain_id, force_refresh=force_refresh)

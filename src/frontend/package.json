@@ -17,6 +17,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.88.0",
+    "recharts": "^3.10.1",
     "vite": "latest",
     "zod": "^4.6.4",
     "zustand": "^5.0.15"

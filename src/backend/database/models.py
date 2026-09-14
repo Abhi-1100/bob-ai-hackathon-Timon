@@ -34,12 +34,14 @@ class Upload(Base):
     __tablename__ = "uploads"
 
     id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
     file_name = Column(String(255), nullable=False)
     file_path = Column(Text, nullable=False)
     uploaded_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-    # Relationship to alerts – one upload can have many alerts
+    # Relationships
+    user = relationship("UserDB", lazy="joined")
     alerts = relationship(
         "Alert",
         back_populates="upload",
@@ -48,12 +50,13 @@ class Upload(Base):
     )
 
     __table_args__ = (
+        Index("ix_uploads_user_id", "user_id"),
         Index("ix_uploads_file_name", "file_name"),
         Index("ix_uploads_uploaded_at", "uploaded_at"),
     )
 
     def __repr__(self) -> str:
-        return f"<Upload id={self.id} file_name={self.file_name}>"
+        return f"<Upload id={self.id} user_id={self.user_id} file_name={self.file_name}>"
 
 
 # ---------------------------------------------------------------------------
@@ -63,6 +66,7 @@ class Alert(Base):
     __tablename__ = "alerts"
 
     id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
     upload_id = Column(PG_UUID(as_uuid=True), ForeignKey("uploads.id", ondelete="CASCADE"), nullable=False)
     timestamp = Column(DateTime(timezone=True), nullable=False)
     src_ip = Column(String(100), nullable=False)
@@ -78,6 +82,7 @@ class Alert(Base):
     chain_events = relationship("AttackChainEventDB", back_populates="alert", cascade="all, delete-orphan")
 
     __table_args__ = (
+        Index("ix_alerts_user_id", "user_id"),
         Index("ix_alerts_src_ip", "src_ip"),
         Index("ix_alerts_dst_ip", "dst_ip"),
         Index("ix_alerts_timestamp", "timestamp"),
@@ -100,7 +105,8 @@ class AttackChainDB(Base):
     __tablename__ = "attack_chains"
 
     id = UUIDColumn()
-    chain_id = Column(String(50), nullable=False, unique=True)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    chain_id = Column(String(50), nullable=False)
     source_ip = Column(String(100), nullable=False)
     destination_ips = Column(Text, nullable=True)       # Comma-separated list
     events = Column(Text, nullable=True)                # Comma-separated event progression
@@ -153,13 +159,15 @@ class AttackChainDB(Base):
     )
 
     __table_args__ = (
+        Index("ix_attack_chains_user_id", "user_id"),
+        Index("ix_attack_chains_user_chain", "user_id", "chain_id", unique=True),
         Index("ix_attack_chains_chain_id", "chain_id"),
         Index("ix_attack_chains_source_ip", "source_ip"),
         Index("ix_attack_chains_start_time", "start_time"),
     )
 
     def __repr__(self) -> str:
-        return f"<AttackChainDB chain_id={self.chain_id} source_ip={self.source_ip} alerts={self.alert_count}>"
+        return f"<AttackChainDB user_id={self.user_id} chain_id={self.chain_id} source_ip={self.source_ip} alerts={self.alert_count}>"
 
 
 # ---------------------------------------------------------------------------
@@ -338,42 +346,38 @@ class ChatHistoryDB(Base):
     __tablename__ = "chat_history"
 
     id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
     session_id = Column(PG_UUID(as_uuid=True), nullable=False)
     role = Column(String(50), nullable=False)  # 'user', 'assistant', 'system'
     message = Column(Text, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     __table_args__ = (
+        Index("ix_chat_history_user_id", "user_id"),
         Index("ix_chat_history_session_id", "session_id"),
         Index("ix_chat_history_created_at", "created_at"),
     )
 
     def __repr__(self) -> str:
-        return f"<ChatHistoryDB id={self.id} session_id={self.session_id} role={self.role}>"
+        return f"<ChatHistoryDB id={self.id} user_id={self.user_id} session_id={self.session_id} role={self.role}>"
 
 
 # ---------------------------------------------------------------------------
 # User (Enterprise Authentication)
 # ---------------------------------------------------------------------------
 class UserDB(Base):
-    """Stores operator and analyst accounts for authentication and role-based access control."""
+    """Stores operator and analyst accounts for authentication."""
     __tablename__ = "users"
 
     id = UUIDColumn()
     email = Column(String(255), unique=True, nullable=False, index=True)
     hashed_password = Column(Text, nullable=False)
     full_name = Column(String(255), nullable=False)
-    organization = Column(String(255), nullable=True, default="Security Operations Center")
-    role = Column(String(100), nullable=False, default="SOC Analyst")
     reset_token = Column(String(255), nullable=True)
     reset_token_expires = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-    __table_args__ = (
-        Index("ix_users_role", "role"),
-    )
-
     def __repr__(self) -> str:
-        return f"<UserDB id={self.id} email={self.email} role={self.role}>"
+        return f"<UserDB id={self.id} email={self.email}>"
 
 

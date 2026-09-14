@@ -36,8 +36,9 @@ class ReportService:
     caching, and database persistence.
     """
 
-    def __init__(self, db: Session, agent: Optional[BlufReportAgent] = None):
+    def __init__(self, db: Session, agent: Optional[BlufReportAgent] = None, user_id: Optional[UUID] = None):
         self.db = db
+        self.user_id = user_id
         self.chain_repo = AttackChainRepository(db)
         self.mitre_repo = MitreRepository(db)
         self.risk_repo = RiskRepository(db)
@@ -102,7 +103,7 @@ class ReportService:
 
     def get_report(self, chain_id_str: str) -> Optional[BlufReportOutput]:
         """Retrieve existing report from database cache."""
-        chain = self.chain_repo.get_chain(chain_id_str)
+        chain = self.chain_repo.get_chain(chain_id_str, user_id=self.user_id)
         if not chain:
             raise ChainNotFoundError(f"Attack chain '{chain_id_str}' not found")
 
@@ -127,7 +128,9 @@ class ReportService:
         records = self.report_repo.get_all_reports(limit=limit, offset=offset)
         results: List[BlufReportOutput] = []
         for r in records:
-            chain = self.chain_repo.get_chain_by_uuid(r.attack_chain_id)
+            chain = self.chain_repo.get_chain_by_uuid(r.attack_chain_id, user_id=self.user_id)
+            if not chain and self.user_id:
+                continue
             chain_id_val = chain.chain_id if chain else str(r.attack_chain_id)
             results.append(
                 BlufReportOutput(
@@ -154,7 +157,7 @@ class ReportService:
         start_time = time.perf_counter()
         logger.info(f"BLUF report requested for chain {chain_id_str} (force_refresh={force_refresh})")
 
-        chain = self.chain_repo.get_chain(chain_id_str)
+        chain = self.chain_repo.get_chain(chain_id_str, user_id=self.user_id)
         if not chain:
             raise ChainNotFoundError(f"Attack chain '{chain_id_str}' not found")
 

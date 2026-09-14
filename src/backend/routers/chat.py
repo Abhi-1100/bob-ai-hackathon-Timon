@@ -16,6 +16,8 @@ from sqlalchemy.orm import Session
 
 try:
     from database.session import get_db
+    from database.models import UserDB
+    from routers.auth import get_current_user_obj
     from schemas.chat import (
         ChatRequest,
         ChatResponse,
@@ -25,6 +27,8 @@ try:
     from chat.analyst_chat import AnalystChatService
 except ImportError:
     from backend.database.session import get_db
+    from backend.database.models import UserDB
+    from backend.routers.auth import get_current_user_obj
     from backend.schemas.chat import (
         ChatRequest,
         ChatResponse,
@@ -58,6 +62,7 @@ def get_chat_service() -> AnalystChatService:
 )
 def ask_analyst(
     payload: ChatRequest,
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
     chat_service: AnalystChatService = Depends(get_chat_service),
 ):
@@ -105,6 +110,7 @@ def create_session(
 )
 def get_session_history(
     session_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
     chat_service: AnalystChatService = Depends(get_chat_service),
 ):
@@ -148,3 +154,4 @@ def sync_knowledge(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Knowledge synchronization failed: {str(e)}",
         )
+

@@ -10,6 +10,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from database.session import get_db
+from database.models import UserDB
+from routers.auth import get_current_user_obj
 from graph.threat_workflow import ThreatWorkflowRunner
 from repositories.attack_chain_repository import AttackChainRepository
 from repositories.mitre_repository import MitreRepository
@@ -46,10 +48,14 @@ router = APIRouter(
         500: {"description": "Workflow execution failed", "model": ErrorResponse},
     },
 )
-def run_workflow(chain_id: str, db: Session = Depends(get_db)):
+def run_workflow(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Run end-to-end LangGraph workflow for an attack chain."""
     try:
-        runner = ThreatWorkflowRunner(db=db)
+        runner = ThreatWorkflowRunner(db=db, user_id=current_user.id)
         state = runner.run(chain_id)
 
         workflow_status = state.get("status", "completed")
@@ -121,10 +127,14 @@ def run_workflow(chain_id: str, db: Session = Depends(get_db)):
         404: {"description": "Attack chain not found", "model": ErrorResponse},
     },
 )
-def get_workflow_status(chain_id: str, db: Session = Depends(get_db)):
+def get_workflow_status(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Check pipeline completion status across all modules for an attack chain."""
     chain_repo = AttackChainRepository(db)
-    chain = chain_repo.get_chain(chain_id)
+    chain = chain_repo.get_chain(chain_id, user_id=current_user.id)
 
     if not chain:
         return JSONResponse(
@@ -175,13 +185,16 @@ def get_workflow_status(chain_id: str, db: Session = Depends(get_db)):
     summary="Run Workflow for All Attack Chains",
     description="Batch executes the LangGraph workflow across all attack chains in the database.",
 )
-def run_all_workflows(db: Session = Depends(get_db)):
+def run_all_workflows(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Execute LangGraph workflow across all attack chains."""
     start_time = time.perf_counter()
     chain_repo = AttackChainRepository(db)
-    chains = chain_repo.get_all_chains()
+    chains = chain_repo.get_all_chains(user_id=current_user.id)
 
-    runner = ThreatWorkflowRunner(db=db)
+    runner = ThreatWorkflowRunner(db=db, user_id=current_user.id)
     results = []
     completed_count = 0
     failed_count = 0
@@ -211,3 +224,4 @@ def run_all_workflows(db: Session = Depends(get_db)):
             results=results,
         ).model_dump(),
     )
+

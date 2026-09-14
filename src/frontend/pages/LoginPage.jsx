@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Mail, ArrowRight, KeyRound, Shield, CheckCircle2 } from 'lucide-react';
+import { Mail, ArrowRight, KeyRound, Shield } from 'lucide-react';
 import { AuthLayout } from '../components/auth/AuthLayout';
 import { AuthCard } from '../components/auth/AuthCard';
 import { AuthHeader } from '../components/auth/AuthHeader';
@@ -20,7 +20,7 @@ const loginSchema = z.object({
 });
 
 export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
-  const { login, loginAsEvaluator, loading, authError, clearError } = useAuthStore();
+  const { login, loading, authError, clearError } = useAuthStore();
   const { showToast } = useToast();
   const [rememberMe, setRememberMe] = useState(true);
 
@@ -32,8 +32,8 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
   } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: 'analyst@sentinelforge.mil',
-      password: 'SentinelForge#2026',
+      email: '',
+      password: '',
     },
   });
 
@@ -53,14 +53,8 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
     }
   };
 
-  const handleEvaluatorBypass = () => {
-    try {
-      localStorage.setItem('d2_has_uploaded', 'true');
-    } catch {}
-    const user = loginAsEvaluator();
-    showToast(`Logged in as ${user.name}`, 'success');
-    if (onLogin) onLogin('/dashboard');
-    else if (navigate) navigate('/dashboard');
+  const handleSsoClick = (provider) => {
+    showToast(`${provider} enterprise SSO requires domain enrollment. Please register or sign in with your credentials.`, 'info');
   };
 
   return (
@@ -76,7 +70,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
           <button
             type="button"
-            onClick={handleEvaluatorBypass}
+            onClick={() => handleSsoClick('Okta')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -99,7 +93,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
 
           <button
             type="button"
-            onClick={handleEvaluatorBypass}
+            onClick={() => handleSsoClick('Microsoft Entra')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -188,44 +182,6 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
             Sign In
           </AuthButton>
         </form>
-
-        {/* Hackathon Evaluator Fast Entry */}
-        <div
-          style={{
-            marginTop: 10,
-            padding: 8,
-            borderRadius: 8,
-            background: 'rgba(37, 99, 235, 0.05)',
-            border: '1px dashed rgba(37, 99, 235, 0.35)',
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--blue)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 4 }}>
-            ⚡ Quick Demo Access
-          </div>
-          <button
-            type="button"
-            onClick={handleEvaluatorBypass}
-            style={{
-              width: '100%',
-              padding: '6px 10px',
-              borderRadius: 6,
-              background: 'var(--card)',
-              border: '1px solid var(--card-border)',
-              color: 'var(--text-primary)',
-              fontSize: 12,
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-              cursor: 'pointer',
-            }}
-          >
-            <CheckCircle2 size={14} color="#16A34A" />
-            <span>1-Click Demo Login</span>
-          </button>
-        </div>
 
         <AuthFooter mode="login" navigate={navigate} />
       </AuthCard>

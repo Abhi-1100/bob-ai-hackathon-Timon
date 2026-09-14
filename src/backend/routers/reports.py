@@ -9,6 +9,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from database.session import get_db
+from database.models import UserDB, AttackChainDB
+from routers.auth import get_current_user_obj
 from schemas.report import (
     BlufReportOutput,
     ReportResponse,
@@ -47,11 +49,20 @@ def generate_chain_report(
         default=False,
         description="If True, bypasses database cache and forces LLM regeneration.",
     ),
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
 ):
     """Generate or retrieve cached BLUF report for an attack chain."""
     try:
-        service = ReportService(db=db)
+        # Verify chain belongs to current_user
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(success=False, message=f"Attack chain '{chain_id}' not found for user.").model_dump(),
+            )
+
+        service = ReportService(db=db, user_id=current_user.id)
         report_output, is_cached = service.generate_report(
             chain_id_str=chain_id,
             force_refresh=force_refresh,
@@ -99,10 +110,24 @@ def generate_chain_report(
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def get_chain_report(chain_id: str, db: Session = Depends(get_db)):
+def get_chain_report(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve stored BLUF report for an attack chain."""
     try:
-        service = ReportService(db=db)
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(
+                    success=False,
+                    message=f"No report found for chain '{chain_id}'. Call POST /generate/{chain_id} first.",
+                ).model_dump(),
+            )
+
+        service = ReportService(db=db, user_id=current_user.id)
         report_output = service.get_report(chain_id)
 
         if not report_output:
@@ -136,6 +161,9 @@ def get_chain_report(chain_id: str, db: Session = Depends(get_db)):
         )
 
 
+from services.cache_service import cache
+from sqlalchemy.orm import joinedload, selectinload
+
 @router.get(
     "",
     response_model=ReportListResponse,
@@ -146,43 +174,59 @@ def get_chain_report(chain_id: str, db: Session = Depends(get_db)):
 def list_all_reports(
     limit: int = Query(default=100, ge=1, le=500),
     offset: int = Query(default=0, ge=0),
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
 ):
-    """List all stored BLUF intelligence reports."""
-    try:
-        service = ReportService(db=db)
-        reports = service.get_all_reports(limit=limit, offset=offset)
+    """List all stored BLUF intelligence reports for the authenticated user."""
+    cache_key = f"all_reports_{current_user.id}_{limit}_{offset}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return JSONResponse(status_code=status.HTTP_200_OK, content=cached)
 
-        if not reports:
-            from database.models import AttackChainDB
-            chains = db.query(AttackChainDB).order_by(AttackChainDB.start_time.desc()).limit(limit).all()
-            for c in chains:
-                score = c.risk_score.score if c.risk_score else 50
-                level = c.risk_score.level if c.risk_score else "Medium"
-                events = [e.strip() for e in (c.events or "").split(",") if e.strip()]
-                dest_ips = [d.strip() for d in (c.destination_ips or "").split(",") if d.strip()]
-                techs = [f"{m.technique_id} ({m.technique_name})" for m in (c.mitre_mappings or [])]
-                reports.append(
-                    BlufReportOutput(
-                        chain_id=c.chain_id,
-                        threat_level=level,
-                        executive_summary=f"High-confidence threat campaign detected originating from source {c.source_ip}. Multi-factor risk assessed at {score}/100 ({level} Priority).",
-                        attack_overview=f"Correlated attack sequence consisting of {len(events)} stages: {' -> '.join(events) if events else 'Suspicious traffic'}.",
-                        affected_assets=f"Target hosts: {', '.join(dest_ips) if dest_ips else 'Internal subnet'}.",
-                        mitre_summary=f"Mapped MITRE ATT&CK techniques: {', '.join(techs) if techs else 'Heuristic signatures'}.",
-                        risk_assessment=f"Composite risk evaluated at {score}/100 based on event severity weights, time proximity, and kill chain progression bonus.",
-                        recommended_actions=f"Block source {c.source_ip} at perimeter firewalls, isolate compromised target hosts, and perform memory forensics.",
-                        conclusion=f"Campaign is currently categorized as {level}. Immediate containment required to prevent lateral movement.",
-                    )
+    try:
+        chains = (
+            db.query(AttackChainDB)
+            .filter(AttackChainDB.user_id == current_user.id)
+            .options(
+                joinedload(AttackChainDB.risk_score),
+                selectinload(AttackChainDB.mitre_mappings),
+            )
+            .order_by(AttackChainDB.start_time.desc())
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+        reports = []
+        for c in chains:
+            score = c.risk_score.score if c.risk_score else 50
+            level = c.risk_score.level if c.risk_score else "Medium"
+            events = [e.strip() for e in (c.events or "").split(",") if e.strip()]
+            dest_ips = [d.strip() for d in (c.destination_ips or "").split(",") if d.strip()]
+            techs = [f"{m.technique_id} ({m.technique_name})" for m in (c.mitre_mappings or [])]
+            reports.append(
+                BlufReportOutput(
+                    chain_id=c.chain_id,
+                    threat_level=level,
+                    executive_summary=f"High-confidence threat campaign detected originating from source {c.source_ip}. Multi-factor risk assessed at {score}/100 ({level} Priority).",
+                    attack_overview=f"Correlated attack sequence consisting of {len(events)} stages: {' -> '.join(events) if events else 'Suspicious traffic'}.",
+                    affected_assets=f"Target hosts: {', '.join(dest_ips) if dest_ips else 'Internal subnet'}.",
+                    mitre_summary=f"Mapped MITRE ATT&CK techniques: {', '.join(techs) if techs else 'Heuristic signatures'}.",
+                    risk_assessment=f"Composite risk evaluated at {score}/100 based on event severity weights, time proximity, and kill chain progression bonus.",
+                    recommended_actions=f"Block source {c.source_ip} at perimeter firewalls, isolate compromised target hosts, and perform memory forensics.",
+                    conclusion=f"Campaign is currently categorized as {level}. Immediate containment required to prevent lateral movement.",
                 )
+            )
+
+        payload = ReportListResponse(
+            success=True,
+            total_reports=len(reports),
+            reports=reports,
+        ).model_dump()
+        cache.set(cache_key, payload, ttl=300.0)
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content=ReportListResponse(
-                success=True,
-                total_reports=len(reports),
-                reports=reports,
-            ).model_dump(),
+            content=payload,
         )
 
     except Exception as exc:
@@ -194,3 +238,4 @@ def list_all_reports(
                 message=f"Failed to list reports: {str(exc)}",
             ).model_dump(),
         )
+

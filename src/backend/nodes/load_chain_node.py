@@ -30,7 +30,7 @@ def load_chain_node(state: ThreatWorkflowState, config: Optional[RunnableConfig]
 
     try:
         repo = AttackChainRepository(db)
-        chain = repo.get_chain(chain_id)
+        chain = repo.get_chain(chain_id, user_id=state.get("_user_id"))
 
         if not chain:
             error_msg = f"Attack chain '{chain_id}' not found in database."

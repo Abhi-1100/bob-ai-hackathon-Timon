@@ -100,8 +100,9 @@ class ThreatWorkflowRunner:
     session management, execution timing, and structured error reporting.
     """
 
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id: Optional[Any] = None):
         self.db = db
+        self.user_id = user_id
         self.graph = compiled_threat_workflow
 
     def run(self, chain_id: str) -> ThreatWorkflowState:
@@ -123,6 +124,7 @@ class ThreatWorkflowRunner:
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metadata": {"start_time": start_time},
             "_db": self.db,
+            "_user_id": self.user_id,
         }
 
         # Provide db session through LangGraph RunnableConfig as well

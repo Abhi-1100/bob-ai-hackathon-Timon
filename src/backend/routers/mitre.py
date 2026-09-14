@@ -8,6 +8,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from database.session import get_db
+from database.models import UserDB, AttackChainDB, MitreMappingDB
+from routers.auth import get_current_user_obj
 from schemas.mitre import MitreChainMapping, MitreMappingResponse, MitreBulkMappingResponse
 from schemas.upload import ErrorResponse
 from services.mitre_mapping import MitreMappingService, MitreMappingError
@@ -20,19 +22,47 @@ router = APIRouter(
 )
 
 
+from services.cache_service import cache
+from sqlalchemy.orm import joinedload
+
 @router.get(
     "/overview",
     status_code=status.HTTP_200_OK,
     summary="Get Dynamic MITRE ATT&CK Matrix & Technique Breakdown",
     description="Returns dynamic MITRE tactics and techniques aggregated strictly from database attack chains.",
 )
-def get_mitre_overview(db: Session = Depends(get_db)):
+def get_mitre_overview(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve dynamic MITRE ATT&CK enterprise matrix and technique frequencies."""
+    cache_key = f"mitre_overview_{current_user.id}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
-        from database.models import MitreMappingDB, AttackChainDB
         from collections import defaultdict
 
-        mappings = db.query(MitreMappingDB).all()
+        # Eager load attack_chain and its risk_score in 1 single query, strictly scoped to current user
+        mappings = (
+            db.query(MitreMappingDB)
+            .join(AttackChainDB, MitreMappingDB.attack_chain_id == AttackChainDB.id)
+            .filter(AttackChainDB.user_id == current_user.id)
+            .options(
+                joinedload(MitreMappingDB.attack_chain).joinedload(AttackChainDB.risk_score)
+            )
+            .all()
+        )
+
+        if not mappings:
+            empty_payload = {
+                "total_detected": 0,
+                "techniques": [],
+                "matrix": [],
+            }
+            cache.set(cache_key, empty_payload, ttl=300.0)
+            return empty_payload
 
         # Group by technique_id
         tech_map = defaultdict(lambda: {
@@ -96,11 +126,13 @@ def get_mitre_overview(db: Session = Depends(get_db)):
                 "techniques": techs,
             })
 
-        return {
+        payload = {
             "total_detected": len(flat_techniques),
             "techniques": flat_techniques,
             "matrix": matrix,
         }
+        cache.set(cache_key, payload, ttl=300.0)
+        return payload
 
     except Exception as exc:
         logger.error(f"Error generating MITRE overview: {exc}", exc_info=True)
@@ -126,11 +158,22 @@ def get_mitre_overview(db: Session = Depends(get_db)):
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def map_chain_to_mitre(chain_id: str, db: Session = Depends(get_db)):
+def map_chain_to_mitre(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Map a single attack chain to MITRE ATT&CK techniques."""
     try:
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(success=False, message=f"Attack chain '{chain_id}' not found.").model_dump(),
+            )
         service = MitreMappingService(db=db)
         result = service.map_single_chain(chain_id)
+        cache.delete(f"mitre_overview_{current_user.id}")
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=result.model_dump(),
@@ -169,11 +212,15 @@ def map_chain_to_mitre(chain_id: str, db: Session = Depends(get_db)):
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def map_all_chains_to_mitre(db: Session = Depends(get_db)):
+def map_all_chains_to_mitre(
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Map all attack chains to MITRE ATT&CK techniques."""
     try:
         service = MitreMappingService(db=db)
-        result = service.map_all_chains()
+        result = service.map_all_chains(user_id=current_user.id)
+        cache.delete(f"mitre_overview_{current_user.id}")
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=result.model_dump(),
@@ -209,9 +256,19 @@ def map_all_chains_to_mitre(db: Session = Depends(get_db)):
         500: {"description": "Internal server error", "model": ErrorResponse},
     },
 )
-def get_chain_mitre_mappings(chain_id: str, db: Session = Depends(get_db)):
+def get_chain_mitre_mappings(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
     """Retrieve MITRE ATT&CK mappings for a specific attack chain."""
     try:
+        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        if not chain:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content=ErrorResponse(success=False, message=f"Attack chain '{chain_id}' not found.").model_dump(),
+            )
         service = MitreMappingService(db=db)
         result = service.get_chain_mappings(chain_id)
         return JSONResponse(
@@ -235,3 +292,4 @@ def get_chain_mitre_mappings(chain_id: str, db: Session = Depends(get_db)):
                 message="An unexpected error occurred retrieving MITRE mappings",
             ).model_dump(),
         )
+

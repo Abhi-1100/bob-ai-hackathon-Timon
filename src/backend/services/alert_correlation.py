@@ -89,14 +89,13 @@ class AlertCorrelationEngine:
     # ------------------------------------------------------------------
     # Step 1 – Fetch alerts
     # ------------------------------------------------------------------
-    def _fetch_alerts(self) -> List[AlertDB]:
-        """Fetch all alerts from the database ordered by timestamp."""
-        alerts = (
-            self.db.query(AlertDB)
-            .order_by(AlertDB.timestamp.asc())
-            .all()
-        )
-        logger.info(f"Fetched {len(alerts)} alerts from database")
+    def _fetch_alerts(self, user_id: Optional[UUID] = None) -> List[AlertDB]:
+        """Fetch alerts from the database ordered by timestamp, optionally scoped to a user."""
+        query = self.db.query(AlertDB)
+        if user_id:
+            query = query.filter(AlertDB.user_id == user_id)
+        alerts = query.order_by(AlertDB.timestamp.asc()).all()
+        logger.info(f"Fetched {len(alerts)} alerts from database (user_id={user_id})")
         return alerts
 
     # ------------------------------------------------------------------
@@ -214,24 +213,24 @@ class AlertCorrelationEngine:
     # ------------------------------------------------------------------
     # Public API – run full pipeline
     # ------------------------------------------------------------------
-    def correlate(self, persist: bool = True) -> CorrelationResult:
+    def correlate(self, user_id: Optional[UUID] = None, persist: bool = True) -> CorrelationResult:
         """
         Execute the full correlation pipeline:
-          1. Fetch alerts from DB.
+          1. Fetch alerts from DB (scoped to user_id if provided).
           2. Group by source IP.
           3. Split by time window.
           4. Build AttackChain objects.
-          5. Optionally persist to DB.
+          5. Optionally persist to DB with user_id attached.
           6. Return CorrelationResult.
 
         Raises:
             CorrelationError: If no alerts exist or a critical failure occurs.
         """
         start_ts = time.perf_counter()
-        logger.info("Correlation started")
+        logger.info(f"Correlation started (user_id={user_id})")
 
         # 1. Fetch
-        alerts = self._fetch_alerts()
+        alerts = self._fetch_alerts(user_id=user_id)
         if not alerts:
             raise CorrelationError("No alerts found in the database to correlate")
 
@@ -257,13 +256,13 @@ class AlertCorrelationEngine:
                 all_chains.append(chain)
                 all_alert_groups.append(sub_alerts)
 
-        logger.info(f"Chains generated: {len(all_chains)} from {total_alerts} alerts")
+        logger.info(f"Chains generated: {len(all_chains)} from {total_alerts} alerts (user_id={user_id})")
 
         # 5. Persist
         if persist:
-            # Clear previous chains to avoid duplicates on re-run
+            # Clear previous chains for this user to avoid duplicates on re-run
             try:
-                self.chain_repo.delete_all_chains()
+                self.chain_repo.delete_all_chains(user_id=user_id)
             except Exception:
                 pass  # first run – nothing to delete
 
@@ -276,6 +275,7 @@ class AlertCorrelationEngine:
                 chain_records.append(
                     AttackChainDB(
                         id=chain_uuid,
+                        user_id=user_id,
                         chain_id=chain.chain_id,
                         source_ip=chain.source_ip,
                         destination_ips=",".join(chain.destination_ips),

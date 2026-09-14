@@ -6,7 +6,13 @@ const USER_KEY = 'd2_user_profile';
 
 const getInitialToken = () => {
   try {
-    return localStorage.getItem(TOKEN_KEY) || null;
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token || token.includes('demo-evaluator-token')) {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      return null;
+    }
+    return token;
   } catch {
     return null;
   }
@@ -14,6 +20,10 @@ const getInitialToken = () => {
 
 const getInitialUser = () => {
   try {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token || token.includes('demo-evaluator-token')) {
+      return null;
+    }
     const raw = localStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
@@ -93,15 +103,13 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  register: async ({ name, email, password, organization, role }) => {
+  register: async ({ name, email, password }) => {
     set({ loading: true, authError: null });
     try {
       const response = await api.post('/api/v1/auth/register', {
         name,
         email,
         password,
-        organization: organization || 'Security Operations Center',
-        role: role || 'SOC Analyst',
       });
       const { access_token, user } = response.data;
 
@@ -153,34 +161,6 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  loginAsEvaluator: () => {
-    const demoUser = {
-      id: 'demo-evaluator-soc-l3',
-      name: 'Hackathon Evaluator',
-      email: 'evaluator@sentinelforge.mil',
-      organization: 'Judge Evaluation Station',
-      role: 'Chief Security Officer (Level 3 Clearance)',
-    };
-    const demoToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo-evaluator-token-2026';
-
-    try {
-      localStorage.setItem(TOKEN_KEY, demoToken);
-      localStorage.setItem(USER_KEY, JSON.stringify(demoUser));
-    } catch (e) {
-      console.warn('localStorage error', e);
-    }
-
-    set({
-      accessToken: demoToken,
-      user: demoUser,
-      isAuthenticated: true,
-      loading: false,
-      authError: null,
-    });
-
-    return demoUser;
-  },
-
   logout: () => {
     try {
       localStorage.removeItem(TOKEN_KEY);
@@ -199,19 +179,20 @@ export const useAuthStore = create((set, get) => ({
 
   checkAuth: async () => {
     const token = get().accessToken;
-    if (!token) {
-      set({ isAuthenticated: false, user: null });
+    if (!token || token.includes('demo-evaluator-token')) {
+      get().logout();
       return false;
     }
     try {
       const response = await api.get('/api/v1/auth/me');
-      set({ user: response.data, isAuthenticated: true });
-      return true;
-    } catch (err) {
-      // If unauthorized, clean up
-      if (err.response?.status === 401) {
-        get().logout();
+      if (response && response.data && response.data.id) {
+        set({ user: response.data, isAuthenticated: true });
+        return true;
       }
+      get().logout();
+      return false;
+    } catch (err) {
+      get().logout();
       return false;
     }
   },
