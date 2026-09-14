@@ -147,6 +147,7 @@ export function LoginPage({ navigate, onLogin, theme, toggleTheme }) {
           <PasswordInput
             label="Password"
             value={passwordVal}
+            placeholder="enter password"
             error={errors.password?.message}
             {...register('password')}
           />

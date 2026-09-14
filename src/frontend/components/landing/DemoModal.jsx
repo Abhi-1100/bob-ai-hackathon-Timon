@@ -39,7 +39,7 @@ export function DemoModal({ isOpen, onClose, navigate }) {
               </div>
               <h3 className="modal-title">Request Enterprise Demo</h3>
               <p className="modal-sub">
-                See how D2 correlates 10,000+ alerts into high-priority attack chains in real-time.
+                See how THREATINTEL correlates 10,000+ alerts into high-priority attack chains in real-time.
               </p>
             </div>
 

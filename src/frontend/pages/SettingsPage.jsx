@@ -36,7 +36,6 @@ export function SettingsPage() {
   const [name, setName] = useState(user?.name || 'Security Analyst');
   const [email, setEmail] = useState(user?.email || 'analyst@sentinelforge.mil');
   const [organization, setOrganization] = useState(user?.organization || 'Security Operations Center');
-  const [role, setRole] = useState(user?.role || 'Security Analyst');
 
   // Password Update State
   const [currentPassword, setCurrentPassword] = useState('');
@@ -78,7 +77,6 @@ export function SettingsPage() {
       if (user.name) setName(user.name);
       if (user.email) setEmail(user.email);
       if (user.organization) setOrganization(user.organization);
-      if (user.role) setRole(user.role);
     }
   }, [user]);
 
@@ -131,8 +129,7 @@ export function SettingsPage() {
     updateProfile({
       name,
       email,
-      organization,
-      role
+      organization
     });
     triggerSuccess('Personal profile updated successfully!');
   };
@@ -434,7 +431,7 @@ export function SettingsPage() {
                   </span>
                 </div>
                 <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
-                  {email} · <span style={{ color: 'var(--blue)', fontWeight: 600 }}>{role}</span> · {organization}
+                  {email} · {organization}
                 </div>
               </div>
             </div>
@@ -510,21 +507,6 @@ export function SettingsPage() {
                       style={{ ...inputStyle, paddingLeft: 38 }}
                     />
                   </div>
-                </div>
-
-                <div>
-                  <label style={labelStyle}>Your Role</label>
-                  <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    style={inputStyle}
-                  >
-                    <option value="Security Analyst">Security Analyst</option>
-                    <option value="Threat Intelligence Analyst">Threat Intelligence Analyst</option>
-                    <option value="Incident Responder">Incident Responder</option>
-                    <option value="Security Operations Manager">Security Operations Manager</option>
-                    <option value="CISO / Security Director">CISO / Security Director</option>
-                  </select>
                 </div>
               </div>
 

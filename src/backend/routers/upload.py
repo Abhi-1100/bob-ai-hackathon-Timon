@@ -298,10 +298,12 @@ async def upload_and_ingest_alerts(
         except Exception as pipe_err:
             logger.warning(f"Correlation pipeline post-ingest warning: {pipe_err}")
 
-        # Clear cached aggregations so all pages receive fresh ingested telemetry
+        # Clear cached aggregations for this user so all pages receive fresh ingested telemetry
         try:
             from services.cache_service import cache
-            cache.clear()
+            cache.delete(f"dashboard_stats_{current_user.id}")
+            cache.delete(f"analytics_overview_{current_user.id}")
+            cache.delete(f"all_attack_chains_{current_user.id}")
         except Exception:
             pass
 

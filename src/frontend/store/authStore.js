@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import api from '../services/api';
+import api, { clearApiClientCache } from '../services/api';
 
 const TOKEN_KEY = 'd2_access_token';
 const USER_KEY = 'd2_user_profile';
@@ -80,6 +80,7 @@ export const useAuthStore = create((set, get) => ({
 
   login: async ({ email, password }) => {
     set({ loading: true, authError: null });
+    clearApiClientCache();
     try {
       const response = await api.post('/api/v1/auth/login', { email, password });
       const { access_token, user } = response.data;
@@ -105,6 +106,7 @@ export const useAuthStore = create((set, get) => ({
 
   register: async ({ name, email, password }) => {
     set({ loading: true, authError: null });
+    clearApiClientCache();
     try {
       const response = await api.post('/api/v1/auth/register', {
         name,
@@ -168,6 +170,7 @@ export const useAuthStore = create((set, get) => ({
     } catch (e) {
       console.warn('localStorage error', e);
     }
+    clearApiClientCache();
     set({
       accessToken: null,
       user: null,

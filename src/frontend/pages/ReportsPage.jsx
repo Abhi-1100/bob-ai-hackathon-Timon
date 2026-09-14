@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FileText,
   Printer,
@@ -192,7 +192,7 @@ function ReportDetail({ report, onBack }) {
 
         {/* Footer */}
         <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: 16, marginTop: 8, display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-muted)' }}>
-          <span>Sentinel Forge SOC Intelligence Platform</span>
+          <span>THREATINTEL Platform</span>
           <span className="mono">{report.chain_id} Â· AUTO-GENERATED Â· DO NOT DISTRIBUTE EXTERNALLY</span>
         </div>
       </article>

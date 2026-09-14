@@ -11,7 +11,6 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
-  LogOut,
   Lock
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
@@ -22,7 +21,6 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed, hasUp
   const { user } = useAuthStore();
   const { showToast } = useToast();
   const displayName = user?.name || 'Security Analyst';
-  const displayRole = user?.role || 'SOC Analyst';
   const initials = (displayName || 'SA')
     .split(' ')
     .filter(Boolean)
@@ -128,19 +126,9 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed, hasUp
           {!collapsed && (
             <div className="operator-meta">
               <div className="operator-name">{displayName}</div>
-              <div className="operator-role">{displayRole}</div>
             </div>
           )}
         </div>
-        <button
-          className="nav-item"
-          onClick={() => navigate('/login')}
-          style={{ color: '#94A3B8' }}
-          title={collapsed ? 'Sign Out' : undefined}
-        >
-          <LogOut size={16} />
-          <span className="nav-text">Sign Out</span>
-        </button>
       </div>
     </aside>
   );

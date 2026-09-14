@@ -19,7 +19,7 @@ export function LandingFooter({ navigate }) {
               </div>
               <div>
                 <div className="brand-title">
-                  D2 <span>THREAT INTEL</span>
+                  THREAT<span>INTEL</span>
                 </div>
                 <span className="brand-subtitle">CORRELATION & PRIORITISATION</span>
               </div>
@@ -94,7 +94,7 @@ export function LandingFooter({ navigate }) {
         {/* Footer Bottom Strip */}
         <div className="footer-bottom-strip">
           <div className="footer-copyright">
-            © {new Date().getFullYear()} D2 Threat Intelligence Correlation & Alert Prioritisation Assistant. All rights reserved.
+            © {new Date().getFullYear()} THREATINTEL Correlation & Alert Prioritisation Assistant. All rights reserved.
           </div>
           <div className="footer-compliance-tags">
             <span>TLP:AMBER Protocol</span>

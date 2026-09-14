@@ -75,7 +75,7 @@ export function ChatShowcaseSection({ navigate }) {
                 <Bot size={18} />
               </div>
               <div>
-                <strong style={{ fontSize: 13.5, color: 'var(--text-primary)' }}>D2 Threat Intelligence Copilot</strong>
+                <strong style={{ fontSize: 13.5, color: 'var(--text-primary)' }}>THREATINTEL Intelligence Copilot</strong>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Grounded via Qdrant Vector Engine & LLaMA 3.3 70B</div>
               </div>
             </div>

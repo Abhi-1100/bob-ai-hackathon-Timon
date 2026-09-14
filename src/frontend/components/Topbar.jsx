@@ -36,7 +36,6 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
 
   const displayName = user?.name || 'User';
   const displayEmail = user?.email || '';
-  const displayRole = user?.role || null;
 
   const initials = (displayName || 'U')
     .split(' ')
@@ -197,25 +196,6 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
                 {displayEmail && (
                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2, wordBreak: 'break-all' }}>
                     {displayEmail}
-                  </div>
-                )}
-                {displayRole && (
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 4,
-                      marginTop: 6,
-                      padding: '2px 8px',
-                      borderRadius: 9999,
-                      background: 'rgba(37, 99, 235, 0.08)',
-                      fontSize: 10.5,
-                      fontWeight: 600,
-                      color: 'var(--blue)',
-                    }}
-                  >
-                    <Shield size={11} />
-                    <span>{displayRole}</span>
                   </div>
                 )}
               </div>

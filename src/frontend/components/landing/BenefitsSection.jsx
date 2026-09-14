@@ -61,7 +61,7 @@ export function BenefitsSection() {
       <div className="landing-container">
         <div className="section-header-center">
           <span className="section-eyebrow">MEASURABLE IMPACT</span>
-          <h2 className="section-title">Why Teams Choose D2</h2>
+          <h2 className="section-title">Why Teams Choose THREATINTEL</h2>
           <p className="section-description">
             Engineered from the ground up to supercharge SOC efficiency, accelerate threat containment, and protect enterprise infrastructure.
           </p>

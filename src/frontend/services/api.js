@@ -57,23 +57,45 @@ const CLIENT_CACHE_TTL_MS = 300000; // 5 minutes — matches backend Redis TTL
 
 export function clearApiClientCache() {
   _clientCache.clear();
+  _inFlightRequests.clear();
+}
+
+/**
+ * Get a user-scoped cache key by prefixing the path with the current user's ID.
+ * This ensures each authenticated user has isolated cache entries,
+ * preventing cross-user data leakage in the same browser session.
+ */
+function _getUserCacheKey(path) {
+  try {
+    const token = localStorage.getItem('d2_access_token');
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.sub) {
+        return `${payload.sub}::${path}`;
+      }
+    }
+  } catch {
+    // Token parse failure — fall through to un-scoped key
+  }
+  return path;
 }
 
 // 2. Dual-mode callable API function for backward-compatibility with existing pages
 export async function api(path, options = {}) {
   const method = (options.method || 'GET').toUpperCase();
   const isGet = method === 'GET';
+  const cacheKey = _getUserCacheKey(path);
 
   // Return cached result if available and fresh
   if (isGet) {
-    const cached = _clientCache.get(path);
+    const cached = _clientCache.get(cacheKey);
     if (cached && Date.now() < cached.expiresAt) {
       return cached.data;
     }
 
     // Deduplicate in-flight concurrent requests for the same URL
-    if (_inFlightRequests.has(path)) {
-      return _inFlightRequests.get(path);
+    if (_inFlightRequests.has(cacheKey)) {
+      return _inFlightRequests.get(cacheKey);
     }
   } else {
     // Non-GET requests (mutations) invalidate the client cache
@@ -114,24 +136,24 @@ export async function api(path, options = {}) {
       const data = await response.json();
 
       if (isGet) {
-        _clientCache.set(path, {
+        _clientCache.set(cacheKey, {
           data,
           expiresAt: Date.now() + CLIENT_CACHE_TTL_MS,
         });
       }
       return data;
     } catch (err) {
-      console.warn(`[Sentinel Forge API] Fetch failed for ${path} (${err.message}). Returning zero-state dynamic fallback.`);
+      console.warn(`[THREATINTEL API] Fetch failed for ${path} (${err.message}). Returning zero-state dynamic fallback.`);
       return getFallbackData(path, options);
     } finally {
       if (isGet) {
-        _inFlightRequests.delete(path);
+        _inFlightRequests.delete(cacheKey);
       }
     }
   })();
 
   if (isGet) {
-    _inFlightRequests.set(path, fetchPromise);
+    _inFlightRequests.set(cacheKey, fetchPromise);
   }
 
   return fetchPromise;

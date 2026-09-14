@@ -48,7 +48,7 @@ export function ProblemSection() {
           <span className="section-eyebrow" style={{ color: 'var(--critical)' }}>THE SOC CHALLENGE</span>
           <h2 className="section-title">Security Teams Are Drowning In Alerts</h2>
           <p className="section-description">
-            Traditional SIEM and EDR rules dump raw notifications onto overworked analysts. D2 flips the paradigm by turning isolated logs into actionable campaigns.
+            Traditional SIEM and EDR rules dump raw notifications onto overworked analysts. THREATINTEL flips the paradigm by turning isolated logs into actionable campaigns.
           </p>
         </div>
 
@@ -115,13 +115,13 @@ export function ProblemSection() {
               <div className="arrow-circle">
                 <ArrowRight size={20} />
               </div>
-              <span className="arrow-sub">D2 Engine</span>
+              <span className="arrow-sub">THREATINTEL Engine</span>
             </div>
 
             {/* After Card */}
             <div className="comparison-side after-side">
               <div className="side-label after-tag">
-                <CheckCircle2 size={13} /> AFTER: D2 PRIORITISED ATTACK CHAINS
+                <CheckCircle2 size={13} /> AFTER: THREATINTEL PRIORITISED ATTACK CHAINS
               </div>
               <div className="side-metric">
                 <strong style={{ color: 'var(--blue)' }}>12</strong>

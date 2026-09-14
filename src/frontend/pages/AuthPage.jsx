@@ -39,7 +39,6 @@ export function AuthPage({
   const [signupName, setSignupName] = useState('Alex Vance');
   const [signupEmail, setSignupEmail] = useState('alex.vance@sentinelforge.mil');
   const [signupOrg, setSignupOrg] = useState('Vance Cyber Defense Lab');
-  const [signupRole, setSignupRole] = useState('Threat Intelligence Analyst');
   const [signupPassword, setSignupPassword] = useState('');
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(true);
@@ -113,7 +112,7 @@ export function AuthPage({
               </div>
               <div>
                 <div className="auth-brand-title">
-                  D2 <span>THREATINTEL</span>
+                  THREAT<span>INTEL</span>
                 </div>
               </div>
             </div>
@@ -153,7 +152,7 @@ export function AuthPage({
             {/* Testimonial Quote */}
             <div className="auth-quote-card">
               <p className="auth-quote-text">
-                "D2 compressed our 10,000+ daily raw SIEM alerts into 12 actionable attack chains.
+                "THREATINTEL compressed our 10,000+ daily raw SIEM alerts into 12 actionable attack chains.
                 Our SOC Mean-Time-To-Detect plummeted by 84% in our very first shift."
               </p>
               <div className="auth-quote-author">
@@ -400,22 +399,6 @@ export function AuthPage({
                       className="auth-input"
                     />
                   </div>
-                </div>
-
-                <div className="auth-input-group">
-                  <label className="auth-label">Operational Role</label>
-                  <select
-                    value={signupRole}
-                    onChange={(e) => setSignupRole(e.target.value)}
-                    className="auth-input"
-                    style={{ paddingLeft: 14 }}
-                  >
-                    <option value="Tier 2/3 SOC Analyst">Tier 2/3 SOC Analyst</option>
-                    <option value="Threat Intelligence Analyst">Threat Intelligence Analyst</option>
-                    <option value="Incident Response Lead">Incident Response Lead</option>
-                    <option value="CISO / Security Director">CISO / Security Director</option>
-                    <option value="Security Operations Manager">Security Operations Manager</option>
-                  </select>
                 </div>
 
                 <div className="auth-input-group">
