@@ -71,7 +71,7 @@ def ask_analyst(
     Executes LangGraph workflow: Retrieve Node -> Answer Node -> Memory Node.
     """
     try:
-        response = chat_service.ask(request=payload, db=db)
+        response = chat_service.ask(request=payload, db=db, user_id=current_user.id)
         return response
     except ValueError as e:
         logger.warning("Bad request in chat endpoint: %s", str(e))
@@ -137,12 +137,13 @@ def get_session_history(
     description="Indexes existing Attack Chains, BLUF Reports, and Recommendations from PostgreSQL into Qdrant.",
 )
 def sync_knowledge(
+    current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
     chat_service: AnalystChatService = Depends(get_chat_service),
 ):
-    """Populates Qdrant vector collection from existing database records."""
+    """Populates Qdrant vector collection from existing database records scoped to current user."""
     try:
-        indexed_count = chat_service.sync_knowledge_base(db=db)
+        indexed_count = chat_service.sync_knowledge_base(db=db, user_id=current_user.id)
         return {
             "status": "success",
             "message": f"Successfully synchronized {indexed_count} threat intelligence documents into Qdrant.",

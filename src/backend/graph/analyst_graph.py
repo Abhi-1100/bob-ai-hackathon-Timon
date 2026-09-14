@@ -42,6 +42,7 @@ class ChatState(TypedDict, total=False):
     filter_risk: Optional[str]
     filter_mitre: Optional[str]
     top_k: Optional[int]
+    user_id: Optional[Any]
     _db: Optional[Any]
     _qdrant_service: Optional[Any]
 

@@ -26,6 +26,7 @@ from database.models import (
     RecommendationDB,
     ReportDB,
     ChatHistoryDB,
+    UserDB,
 )
 from database.session import get_db
 from main import app
@@ -77,6 +78,9 @@ def test_qdrant():
     return svc
 
 
+TEST_USER_ID = uuid.UUID("11111111-1111-1111-1111-111111111111")
+
+
 @pytest.fixture
 def populated_qdrant(test_qdrant):
     """Seed test Qdrant collection with representative threat intelligence documents."""
@@ -87,6 +91,7 @@ def populated_qdrant(test_qdrant):
             "summary": "Attack Chain AC001 has the highest risk score of 92 (Critical). The chain involved PortScan, BruteForce, CredentialDumping and Malware activity.",
             "mitre": ["T1110", "T1003"],
             "doc_type": "attack_chain",
+            "user_id": TEST_USER_ID,
             "metadata": {"score": 92.0},
         },
         {
@@ -95,6 +100,7 @@ def populated_qdrant(test_qdrant):
             "summary": "Attack Chain AC002 executed SQL Injection followed by Command Execution and Data Exfiltration.",
             "mitre": ["T1190", "T1059"],
             "doc_type": "attack_chain",
+            "user_id": TEST_USER_ID,
             "metadata": {"score": 78.5},
         },
         {
@@ -103,6 +109,7 @@ def populated_qdrant(test_qdrant):
             "summary": "Attack Chain AC003 demonstrated lateral movement using credential access via Kerberoasting.",
             "mitre": ["T1558", "T1003"],
             "doc_type": "attack_chain",
+            "user_id": TEST_USER_ID,
             "metadata": {"score": 55.0},
         },
     ]
@@ -118,9 +125,22 @@ def test_chat_service(populated_qdrant):
 
 @pytest.fixture
 def client(db_session, test_chat_service):
-    """FastAPI TestClient with overridden DB and ChatService dependencies."""
+    """FastAPI TestClient with overridden DB, ChatService, and Auth dependencies."""
+    from routers.auth import get_current_user_obj
+    from database.models import UserDB
+
+    dummy_user = UserDB(
+        id=TEST_USER_ID,
+        email="analyst@sentinelforge.mil",
+        full_name="Lead SOC Analyst",
+        hashed_password="hashed_password_mock",
+    )
+    db_session.add(dummy_user)
+    db_session.commit()
+
     app.dependency_overrides[get_db] = lambda: db_session
     app.dependency_overrides[get_chat_service] = lambda: test_chat_service
+    app.dependency_overrides[get_current_user_obj] = lambda: dummy_user
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
@@ -169,6 +189,45 @@ class TestQdrantService:
         results = populated_qdrant.search(query="attack", top_k=5, filter_mitre="T1190")
         assert len(results) >= 1
         assert "T1190" in results[0].mitre
+
+    def test_filtered_search_by_user_id(self, test_qdrant):
+        user_a = str(uuid.uuid4())
+        user_b = str(uuid.uuid4())
+
+        doc_a = {
+            "chain_id": "AC_A",
+            "risk": "Critical",
+            "summary": "User A confidential threat intelligence on finance database 10.1.1.5.",
+            "mitre": ["T1003"],
+            "user_id": user_a,
+        }
+        doc_b = {
+            "chain_id": "AC_B",
+            "risk": "Low",
+            "summary": "User B routine port scan log on 192.168.1.1.",
+            "mitre": ["T1046"],
+            "user_id": user_b,
+        }
+        test_qdrant.upsert_documents([doc_a, doc_b])
+
+        # Search as User A
+        results_a = test_qdrant.search(query="threat database", filter_user_id=user_a)
+        assert len(results_a) == 1
+        assert results_a[0].chain_id == "AC_A"
+        assert str(results_a[0].user_id) == user_a
+
+        # Search as User B (even for query that matches User A)
+        results_b = test_qdrant.search(query="threat database", filter_user_id=user_b)
+        # All returned results must belong to User B only, never User A
+        for r in results_b:
+            assert str(r.user_id) == user_b
+            assert r.chain_id != "AC_A"
+
+        # Search as User A (must never return User B's doc)
+        results_a_port = test_qdrant.search(query="port scan", filter_user_id=user_a)
+        for r in results_a_port:
+            assert str(r.user_id) == user_a
+            assert r.chain_id != "AC_B"
 
 
 # ---------------------------------------------------------------------------
@@ -362,8 +421,10 @@ class TestChatEndpoints:
 
     def test_sync_knowledge_endpoint(self, client, db_session):
         # Seed an attack chain in DB
+        user = db_session.query(UserDB).first()
         chain = AttackChainDB(
             id=uuid.uuid4(),
+            user_id=user.id if user else None,
             chain_id="AC_SYNC_01",
             source_ip="192.168.1.100",
             destination_ips="10.0.0.5",

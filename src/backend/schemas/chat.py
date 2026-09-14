@@ -27,6 +27,7 @@ class ThreatDocSchema(BaseModel):
     mitre: List[str] = Field(default_factory=list, description="Associated MITRE ATT&CK technique IDs")
     doc_type: str = Field(default="threat_analysis", description="Document type: attack_chain, bluf_report, recommendation, mitre_summary")
     score: Optional[float] = Field(None, description="Vector similarity search score")
+    user_id: Optional[Any] = Field(None, description="Tenant user ID owning this document")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional context metadata")
 
 

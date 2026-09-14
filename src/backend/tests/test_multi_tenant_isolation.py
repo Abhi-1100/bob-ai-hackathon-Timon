@@ -97,7 +97,35 @@ def test_multi_tenant_isolation_end_to_end():
         assert chains_b_after.json()["count"] >= 1
         assert chains_b_after.json()["chains"][0]["source_ip"] == "198.51.100.55"
 
-        # 5. Verify User A's data was NOT corrupted or modified by User B's actions
+        # 5. Verify AI Chat / Qdrant Multi-Tenant Isolation
+        # User B queries their own newly ingested attack chain
+        sess_b = client.post("/api/v1/chat/new-session", headers=headers_b).json()["session_id"]
+        chat_b = client.post(
+            "/api/v1/chat",
+            json={"session_id": sess_b, "question": "What is the attack chain from 198.51.100.55?"},
+            headers=headers_b,
+        )
+        assert chat_b.status_code == 200
+        data_chat_b = chat_b.json()
+        assert len(data_chat_b["retrieved_documents"]) >= 1
+        assert "198.51.100.55" in data_chat_b["retrieved_documents"][0]["summary"]
+
+        # User A queries for User B's IP 198.51.100.55 -> must NEVER see User B's data!
+        from routers.auth import create_access_token
+        token_a = create_access_token(str(seed_user.id), seed_user.email, seed_user.full_name)
+        headers_a = {"Authorization": f"Bearer {token_a}"}
+        sess_a = client.post("/api/v1/chat/new-session", headers=headers_a).json()["session_id"]
+        chat_a = client.post(
+            "/api/v1/chat",
+            json={"session_id": sess_a, "question": "What is the attack chain from 198.51.100.55?"},
+            headers=headers_a,
+        )
+        assert chat_a.status_code == 200
+        data_chat_a = chat_a.json()
+        for doc in data_chat_a["retrieved_documents"]:
+            assert "198.51.100.55" not in doc["summary"], "Cross-tenant leakage! User A saw User B's IP in chat!"
+
+        # 6. Verify User A's data was NOT corrupted or modified by User B's actions
         user_a_alerts_after = db.query(Alert).filter(Alert.user_id == seed_user.id).count()
         user_a_chains_after = db.query(AttackChainDB).filter(AttackChainDB.user_id == seed_user.id).count()
         assert user_a_alerts_after == user_a_alerts_count, "User A alerts count changed!"

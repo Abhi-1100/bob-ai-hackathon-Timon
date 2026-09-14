@@ -28,14 +28,16 @@ def retrieve_node(state: Dict[str, Any]) -> Dict[str, Any]:
     filter_chain_id = state.get("filter_chain_id")
     filter_risk = state.get("filter_risk")
     filter_mitre = state.get("filter_mitre")
+    user_id = state.get("user_id")
 
     logger.info("Question received: '%s'", question)
     logger.info(
-        "Retrieval started - top_k: %d, filters: (chain=%s, risk=%s, mitre=%s)",
+        "Retrieval started - top_k: %d, filters: (chain=%s, risk=%s, mitre=%s, user_id=%s)",
         top_k,
         filter_chain_id,
         filter_risk,
         filter_mitre,
+        user_id,
     )
 
     if not question:
@@ -53,6 +55,7 @@ def retrieve_node(state: Dict[str, Any]) -> Dict[str, Any]:
             filter_chain_id=filter_chain_id,
             filter_risk=filter_risk,
             filter_mitre=filter_mitre,
+            filter_user_id=user_id,
         )
         logger.info("Qdrant documents retrieved: %d (in %.3fs)", len(docs), time.time() - start_time)
         state["retrieved_documents"] = [d.model_dump() if hasattr(d, "model_dump") else d for d in docs]
@@ -72,9 +75,11 @@ def retrieve_node(state: Dict[str, Any]) -> Dict[str, Any]:
                 except ImportError:
                     from backend.database.models import AttackChainDB, MitreMappingDB, RiskScoreDB
 
-                logger.info("Executing fast relational database threat retrieval...")
+                logger.info("Executing fast relational database threat retrieval for user_id=%s...", user_id)
                 q_lower = question.lower()
                 query = select(AttackChainDB)
+                if user_id is not None:
+                    query = query.where(AttackChainDB.user_id == user_id)
 
                 # Explicit chain filter or regex match
                 matched_chain = filter_chain_id
@@ -83,8 +88,16 @@ def retrieve_node(state: Dict[str, Any]) -> Dict[str, Any]:
                     if m:
                         matched_chain = m.group(1).upper()
 
+                # Check for IP address in query
+                ip_match = re.search(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", question)
+
                 if matched_chain:
                     query = query.where(AttackChainDB.chain_id == matched_chain)
+                elif ip_match:
+                    ip_str = ip_match.group(0)
+                    query = query.where(
+                        (AttackChainDB.source_ip == ip_str) | (AttackChainDB.destination_ips.ilike(f"%{ip_str}%"))
+                    )
                 elif filter_risk:
                     query = query.join(AttackChainDB.risk_score).where(RiskScoreDB.level.ilike(f"%{filter_risk}%"))
                 elif "critical" in q_lower or "highest" in q_lower or "severe" in q_lower:
@@ -123,6 +136,7 @@ def retrieve_node(state: Dict[str, Any]) -> Dict[str, Any]:
                         "mitre": mitre_ids,
                         "doc_type": "attack_chain",
                         "score": 0.92,
+                        "user_id": getattr(chain, "user_id", None),
                         "metadata": {
                             "source_ip": chain.source_ip,
                             "destination_ips": chain.destination_ips,

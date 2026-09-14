@@ -55,7 +55,7 @@ class AnalystChatService:
         logger.info("Generated new analyst chat session: %s", new_id)
         return NewSessionResponse(session_id=new_id)
 
-    def ask(self, request: ChatRequest, db: Session) -> ChatResponse:
+    def ask(self, request: ChatRequest, db: Session, user_id: Optional[Any] = None) -> ChatResponse:
         """
         Process a user question through the LangGraph RAG workflow:
         1. Fetch conversation history from PostgreSQL
@@ -63,13 +63,18 @@ class AnalystChatService:
         3. Return grounded response with explainability metadata
         """
         start_time = time.time()
-        logger.info("Incoming analyst chat question for session %s: '%s'", request.session_id, request.question)
+        logger.info(
+            "Incoming analyst chat question for session %s (user_id=%s): '%s'",
+            request.session_id,
+            user_id,
+            request.question,
+        )
 
-        # Validate or normalize session UUID format
+        # Validate session UUID format
         try:
             session_uuid = uuid.UUID(str(request.session_id))
         except (ValueError, TypeError, AttributeError):
-            session_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, str(request.session_id or "default-threat-session"))
+            raise ValueError(f"Invalid session UUID format: {request.session_id}")
 
         # 1. Fetch recent conversation history
         chat_repo = ChatRepository(db)
@@ -95,6 +100,7 @@ class AnalystChatService:
             "filter_risk": request.filter_risk,
             "filter_mitre": request.filter_mitre,
             "top_k": request.top_k,
+            "user_id": user_id,
             "_db": db,
             "_qdrant_service": self.qdrant_service,
         }
@@ -146,9 +152,9 @@ class AnalystChatService:
             history=messages,
         )
 
-    def sync_knowledge_base(self, db: Session) -> int:
+    def sync_knowledge_base(self, db: Session, user_id: Optional[Any] = None) -> int:
         """Harvest current database attack chains and reports into Qdrant."""
-        logger.info("Syncing relational threat intelligence data into Qdrant collection")
-        count = self.qdrant_service.sync_from_database(db)
+        logger.info("Syncing relational threat intelligence data into Qdrant collection (user_id=%s)", user_id)
+        count = self.qdrant_service.sync_from_database(db, user_id=user_id)
         logger.info("Sync complete. %d intelligence documents indexed.", count)
         return count

@@ -270,6 +270,17 @@ async def upload_and_ingest_alerts(
                 f"Auto-pipeline executed for user {current_user.id}: {chains_count} chains correlated, "
                 f"{mitre_count} MITRE techniques mapped, {scored_count} risk-scored"
             )
+
+            # Auto-sync newly correlated threat intelligence into Qdrant vector index for this user
+            try:
+                try:
+                    from services.qdrant_service import QdrantService
+                except ImportError:
+                    from backend.services.qdrant_service import QdrantService
+                q_svc = QdrantService.get_instance()
+                q_svc.sync_from_database(db=db, user_id=current_user.id)
+            except Exception as q_err:
+                logger.warning(f"Qdrant auto-sync post-ingest warning: {q_err}")
         except Exception as pipe_err:
             logger.warning(f"Correlation pipeline post-ingest warning: {pipe_err}")
 

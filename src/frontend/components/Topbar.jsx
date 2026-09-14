@@ -34,17 +34,17 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
     if (navigate) navigate('/login');
   };
 
-  const displayName = user?.name || 'Chief SOC Analyst';
-  const displayEmail = user?.email || 'analyst@sentinelforge.mil';
-  const displayRole = user?.role || 'Tier 3 Incident Responder';
+  const displayName = user?.name || 'User';
+  const displayEmail = user?.email || '';
+  const displayRole = user?.role || null;
 
-  const initials = (displayName || 'SA')
+  const initials = (displayName || 'U')
     .split(' ')
     .filter(Boolean)
     .map((n) => n[0])
     .join('')
     .substring(0, 2)
-    .toUpperCase() || 'SA';
+    .toUpperCase() || 'U';
 
   return (
     <header className="topbar">
@@ -144,7 +144,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
               color: 'var(--text-primary)',
               transition: 'border-color 0.15s, background 0.15s',
             }}
-            title="Operator Profile & Station Clearance"
+            title="User Profile"
           >
             <div
               style={{
@@ -163,10 +163,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
             >
               {initials}
             </div>
-            <div style={{ textAlign: 'left', display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.1 }}>{displayName}</span>
-              <span style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.1 }}>{displayRole}</span>
-            </div>
+            <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-primary)' }}>{displayName}</span>
             <ChevronDown size={13} color="var(--text-muted)" />
           </button>
 
@@ -177,7 +174,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
                 position: 'absolute',
                 top: 'calc(100% + 8px)',
                 right: 0,
-                width: 240,
+                width: 220,
                 background: 'var(--card)',
                 border: '1px solid var(--card-border)',
                 borderRadius: 12,
@@ -197,26 +194,30 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                   {displayName}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2, wordBreak: 'break-all' }}>
-                  {displayEmail}
-                </div>
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 4,
-                    marginTop: 6,
-                    padding: '2px 8px',
-                    borderRadius: 9999,
-                    background: 'rgba(37, 99, 235, 0.08)',
-                    fontSize: 10.5,
-                    fontWeight: 600,
-                    color: 'var(--blue)',
-                  }}
-                >
-                  <Shield size={11} />
-                  <span>{displayRole}</span>
-                </div>
+                {displayEmail && (
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2, wordBreak: 'break-all' }}>
+                    {displayEmail}
+                  </div>
+                )}
+                {displayRole && (
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 4,
+                      marginTop: 6,
+                      padding: '2px 8px',
+                      borderRadius: 9999,
+                      background: 'rgba(37, 99, 235, 0.08)',
+                      fontSize: 10.5,
+                      fontWeight: 600,
+                      color: 'var(--blue)',
+                    }}
+                  >
+                    <Shield size={11} />
+                    <span>{displayRole}</span>
+                  </div>
+                )}
               </div>
 
               <button
@@ -244,7 +245,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
               >
                 <User size={14} />
-                <span>Station Profile</span>
+                <span>Profile</span>
               </button>
 
               <button
@@ -272,7 +273,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
               >
                 <Settings size={14} />
-                <span>Console Settings</span>
+                <span>Settings</span>
               </button>
 
               <div style={{ height: 1, background: 'var(--card-border)', margin: '4px 0' }} />
@@ -299,7 +300,7 @@ export function Topbar({ title, breadcrumb = 'OPERATIONS', onRefresh, navigate, 
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
               >
                 <LogOut size={14} />
-                <span>Sign Out of Station</span>
+                <span>Sign Out</span>
               </button>
             </div>
           )}

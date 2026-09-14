@@ -74,6 +74,16 @@ class QdrantService:
                         distance=qmodels.Distance.COSINE,
                     ),
                 )
+            # Ensure payload indices exist for filtered query fields
+            for field in ["user_id", "chain_id", "risk", "mitre"]:
+                try:
+                    self.client.create_payload_index(
+                        collection_name=self.collection_name,
+                        field_name=field,
+                        field_schema=qmodels.PayloadSchemaType.KEYWORD,
+                    )
+                except Exception:
+                    pass
         except Exception as e:
             logger.error("Failed to ensure collection '%s': %s", self.collection_name, str(e))
             raise
@@ -120,6 +130,7 @@ class QdrantService:
         """
         Upsert a single threat intelligence document into Qdrant.
         Required payload fields: chain_id, risk, summary, mitre (list).
+        Optional tenant field: user_id.
         """
         point_id = doc_id or str(uuid.uuid4())
         summary_text = doc.get("summary", "")
@@ -127,6 +138,7 @@ class QdrantService:
         risk = doc.get("risk", "Medium")
         mitre = doc.get("mitre", [])
         doc_type = doc.get("doc_type", "threat_analysis")
+        user_id = doc.get("user_id")
 
         # Rich text representation for embedding semantic richness
         embed_input = f"Attack Chain: {chain_id}. Risk: {risk}. MITRE: {', '.join(mitre)}. Summary: {summary_text}"
@@ -138,6 +150,7 @@ class QdrantService:
             "summary": summary_text,
             "mitre": mitre,
             "doc_type": doc_type,
+            "user_id": str(user_id) if user_id is not None else None,
             "metadata": doc.get("metadata", {}),
         }
 
@@ -180,6 +193,7 @@ class QdrantService:
                         "summary": doc.get("summary", ""),
                         "mitre": doc.get("mitre", []),
                         "doc_type": doc.get("doc_type", "threat_analysis"),
+                        "user_id": str(doc.get("user_id")) if doc.get("user_id") is not None else None,
                         "metadata": doc.get("metadata", {}),
                     },
                 )
@@ -198,10 +212,11 @@ class QdrantService:
         filter_chain_id: Optional[str] = None,
         filter_risk: Optional[str] = None,
         filter_mitre: Optional[str] = None,
+        filter_user_id: Optional[Any] = None,
     ) -> List[ThreatDocSchema]:
         """
         Execute vector similarity search with optional Qdrant metadata filters.
-        Filters supported: risk level, chain id, MITRE technique.
+        Filters supported: risk level, chain id, MITRE technique, user_id (tenant isolation).
         """
         query_vector = self.get_embedding(query)
 
@@ -225,6 +240,13 @@ class QdrantService:
                 qmodels.FieldCondition(
                     key="mitre",
                     match=qmodels.MatchValue(value=filter_mitre.strip().upper()),
+                )
+            )
+        if filter_user_id is not None:
+            filter_conditions.append(
+                qmodels.FieldCondition(
+                    key="user_id",
+                    match=qmodels.MatchValue(value=str(filter_user_id)),
                 )
             )
 
@@ -262,16 +284,18 @@ class QdrantService:
                     mitre=payload.get("mitre", []),
                     doc_type=payload.get("doc_type", "threat_analysis"),
                     score=hit.score if hasattr(hit, "score") else None,
+                    user_id=payload.get("user_id"),
                     metadata=payload.get("metadata", {}),
                 )
             )
 
         return results
 
-    def sync_from_database(self, db) -> int:
+    def sync_from_database(self, db, user_id: Optional[Any] = None) -> int:
         """
         Harvest all correlated attack chains, MITRE mappings, risk scores,
         recommendations, and BLUF reports from relational DB into Qdrant.
+        Optionally filter by user_id for strict multi-tenant isolation.
         """
         import json
         from sqlalchemy import select
@@ -294,8 +318,12 @@ class QdrantService:
 
         docs_to_index: List[Dict[str, Any]] = []
 
-        # 1. Fetch attack chains with related data
-        chains = db.scalars(select(AttackChainDB)).all()
+        # 1. Fetch attack chains with related data (filtered by user_id if provided)
+        stmt = select(AttackChainDB)
+        if user_id is not None:
+            stmt = stmt.where(AttackChainDB.user_id == user_id)
+        chains = db.scalars(stmt).all()
+
         for chain in chains:
             # Gather associated MITRE techniques
             mitre_mappings = db.scalars(
@@ -318,7 +346,7 @@ class QdrantService:
                 or 50.0
             )
 
-            # Chain document
+            # Chain document with user_id tenant identifier
             chain_doc = {
                 "chain_id": chain.chain_id,
                 "risk": risk_level,
@@ -330,6 +358,7 @@ class QdrantService:
                 ),
                 "mitre": mitre_ids,
                 "doc_type": "attack_chain",
+                "user_id": str(chain.user_id) if chain.user_id is not None else None,
                 "metadata": {
                     "source_ip": chain.source_ip,
                     "alert_count": chain.alert_count,
@@ -375,6 +404,7 @@ class QdrantService:
                     ),
                     "mitre": mitre_ids,
                     "doc_type": "recommendation",
+                    "user_id": str(chain.user_id) if chain.user_id is not None else None,
                     "metadata": {"priority": getattr(rec, "priority", "High")},
                 }
                 docs_to_index.append(rec_doc)
@@ -398,10 +428,11 @@ class QdrantService:
                     ),
                     "mitre": mitre_ids,
                     "doc_type": "bluf_report",
+                    "user_id": str(chain.user_id) if chain.user_id is not None else None,
                     "metadata": {"affected_assets": report.affected_assets},
                 }
                 docs_to_index.append(report_doc)
 
         indexed_count = self.upsert_documents(docs_to_index)
-        logger.info("Synchronized %d threat documents into Qdrant", indexed_count)
+        logger.info("Synchronized %d threat documents into Qdrant (user_id=%s)", indexed_count, user_id)
         return indexed_count
