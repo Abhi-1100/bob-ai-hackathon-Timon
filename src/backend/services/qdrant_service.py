@@ -322,19 +322,17 @@ class QdrantService:
         stmt = select(AttackChainDB)
         if user_id is not None:
             stmt = stmt.where(AttackChainDB.user_id == user_id)
+        # Order by alert_count desc to index highest-priority chains first
+        stmt = stmt.order_by(AttackChainDB.alert_count.desc()).limit(50)
         chains = db.scalars(stmt).all()
 
         for chain in chains:
-            # Gather associated MITRE techniques
-            mitre_mappings = db.scalars(
-                select(MitreMappingDB).where(MitreMappingDB.attack_chain_id == chain.id)
-            ).all()
+            # Gather associated MITRE techniques from preloaded relationship
+            mitre_mappings = getattr(chain, "mitre_mappings", None) or []
             mitre_ids = [m.technique_id for m in mitre_mappings]
 
-            # Gather risk score
-            risk_score = db.scalar(
-                select(RiskScoreDB).where(RiskScoreDB.attack_chain_id == chain.id)
-            )
+            # Gather risk score from preloaded relationship
+            risk_score = getattr(chain, "risk_score", None)
             risk_level = (
                 getattr(risk_score, "level", None)
                 or getattr(risk_score, "severity", None)
@@ -368,10 +366,8 @@ class QdrantService:
             }
             docs_to_index.append(chain_doc)
 
-            # 2. Check Recommendations
-            rec = db.scalar(
-                select(RecommendationDB).where(RecommendationDB.attack_chain_id == chain.id)
-            )
+            # 2. Check Recommendations from preloaded relationship
+            rec = getattr(chain, "recommendation", None)
             if rec:
                 def _parse_actions(field_val):
                     if not field_val:
@@ -409,30 +405,31 @@ class QdrantService:
                 }
                 docs_to_index.append(rec_doc)
 
-            # 3. Check Executive BLUF Report
-            report = db.scalar(
-                select(ReportDB).where(ReportDB.attack_chain_id == chain.id)
-            )
+            # 3. Check Executive BLUF Report from preloaded relationship
+            report = getattr(chain, "report", None)
             if report:
                 report_doc = {
                     "chain_id": chain.chain_id,
                     "risk": report.threat_level,
                     "summary": (
-                        f"BLUF Executive Threat Report for {chain.chain_id}: "
+                        f"Executive BLUF Threat Report for Attack Chain {chain.chain_id}: "
                         f"Threat Level: {report.threat_level}. "
                         f"Executive Summary: {report.executive_summary}. "
                         f"Attack Overview: {report.attack_overview}. "
-                        f"MITRE Summary: {report.mitre_summary}. "
-                        f"Recommended Actions: {report.recommended_actions}. "
                         f"Conclusion: {report.conclusion}"
                     ),
                     "mitre": mitre_ids,
                     "doc_type": "bluf_report",
                     "user_id": str(chain.user_id) if chain.user_id is not None else None,
-                    "metadata": {"affected_assets": report.affected_assets},
+                    "metadata": {"threat_level": report.threat_level},
                 }
                 docs_to_index.append(report_doc)
 
-        indexed_count = self.upsert_documents(docs_to_index)
-        logger.info("Synchronized %d threat documents into Qdrant (user_id=%s)", indexed_count, user_id)
-        return indexed_count
+        if not docs_to_index:
+            logger.info("No threat intelligence documents found to sync into Qdrant.")
+            return 0
+
+        logger.info(f"Syncing {len(docs_to_index)} threat documents into Qdrant collection '{self.collection_name}'...")
+        count = self.upsert_documents(docs_to_index)
+        logger.info(f"Successfully synced {count} threat documents into Qdrant.")
+        return count

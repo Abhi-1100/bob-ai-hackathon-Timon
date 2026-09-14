@@ -81,6 +81,12 @@ def _get_session_factory():
     return _SessionLocal
 
 
+def SessionLocal() -> Session:
+    """Convenience helper to obtain a new SQLAlchemy session for background tasks."""
+    factory = _get_session_factory()
+    return factory()
+
+
 def get_db() -> Generator[Session, None, None]:
     """FastAPI dependency that yields a SQLAlchemy session per request.
 
@@ -89,7 +95,6 @@ def get_db() -> Generator[Session, None, None]:
         def endpoint(..., db: Session = Depends(get_db)):
             ...
     """
-    SessionLocal = _get_session_factory()
     db = SessionLocal()
     try:
         yield db

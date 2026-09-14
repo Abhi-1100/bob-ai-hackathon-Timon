@@ -6,7 +6,7 @@ Handles multipart CSV uploads, performs file-level validation, and stores files 
 import io
 import logging
 import uuid
-from fastapi import APIRouter, Depends, File, UploadFile, status
+from fastapi import APIRouter, BackgroundTasks, Depends, File, UploadFile, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
@@ -162,6 +162,24 @@ async def upload_alerts_csv(
         )
 
 
+def _bg_qdrant_sync(user_id: uuid.UUID) -> None:
+    """Background task to synchronize newly correlated threat intelligence into Qdrant vector index."""
+    try:
+        try:
+            from database.session import SessionLocal
+            from services.qdrant_service import QdrantService
+        except ImportError:
+            from backend.database.session import SessionLocal
+            from backend.services.qdrant_service import QdrantService
+
+        with SessionLocal() as bg_db:
+            q_svc = QdrantService.get_instance()
+            q_svc.sync_from_database(db=bg_db, user_id=user_id)
+        logger.info(f"Background Qdrant vector sync completed successfully for user {user_id}")
+    except Exception as q_err:
+        logger.warning(f"Background Qdrant vector sync warning: {q_err}")
+
+
 @router.post(
     "/upload/ingest",
     response_model=IngestResponse,
@@ -173,6 +191,7 @@ async def upload_alerts_csv(
     ),
 )
 async def upload_and_ingest_alerts(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(..., description="CSV file with columns: timestamp, src_ip, dst_ip, event, severity"),
     current_user: UserDB = Depends(get_current_user_obj),
     db: Session = Depends(get_db),
@@ -271,16 +290,11 @@ async def upload_and_ingest_alerts(
                 f"{mitre_count} MITRE techniques mapped, {scored_count} risk-scored"
             )
 
-            # Auto-sync newly correlated threat intelligence into Qdrant vector index for this user
-            try:
-                try:
-                    from services.qdrant_service import QdrantService
-                except ImportError:
-                    from backend.services.qdrant_service import QdrantService
-                q_svc = QdrantService.get_instance()
-                q_svc.sync_from_database(db=db, user_id=current_user.id)
-            except Exception as q_err:
-                logger.warning(f"Qdrant auto-sync post-ingest warning: {q_err}")
+            # Auto-sync newly correlated threat intelligence into Qdrant vector index in the background
+            if background_tasks:
+                background_tasks.add_task(_bg_qdrant_sync, current_user.id)
+            else:
+                _bg_qdrant_sync(current_user.id)
         except Exception as pipe_err:
             logger.warning(f"Correlation pipeline post-ingest warning: {pipe_err}")
 

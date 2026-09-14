@@ -244,22 +244,32 @@ api.uploadAndIngest = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('d2_access_token') : null;
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  try {
+    const response = await axiosClient.post('/api/v1/upload/ingest', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 120000,
+    });
 
-  const response = await fetch(`${API_BASE}/api/v1/upload/ingest`, {
-    method: 'POST',
-    headers,
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({ message: 'Upload failed' }));
-    throw new Error(err.message || `Upload failed with status ${response.status}`);
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    if (err.response?.data?.message) {
+      throw new Error(err.response.data.message);
+    }
+    if (err.response?.data?.detail) {
+      const d = err.response.data.detail;
+      throw new Error(typeof d === 'string' ? d : JSON.stringify(d));
+    }
+    if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+      throw new Error('Upload took longer than expected. Processing continues in the background.');
+    }
+    if (err.message === 'Network Error' || err.message?.includes('Network Error') || err.message?.includes('Failed to fetch')) {
+      throw new Error('Backend server is starting up or temporarily unreachable. Please wait 10 seconds and try again.');
+    }
+    throw err;
   }
-
-  clearApiClientCache();
-  return await response.json();
 };
 
 export function listFrom(obj, candidateKeys = ['items', 'results', 'data', 'chains', 'scores']) {

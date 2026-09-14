@@ -77,7 +77,12 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
         if (navigate) navigate('/dashboard');
       }, 1500);
     } catch (err) {
-      setError(err.message || 'Alert ingest failed. Please check CSV format and backend connection.');
+      const msg = err.response?.data?.message || err.message || 'Alert ingest failed. Please check CSV format and backend connection.';
+      if (typeof msg === 'string' && (msg.includes('Failed to fetch') || msg.includes('Network Error'))) {
+        setError('Backend server is starting up or temporarily unreachable. Please wait 10 seconds and try again.');
+      } else {
+        setError(typeof msg === 'string' ? msg : JSON.stringify(msg));
+      }
     } finally {
       setBusy(false);
       setCurrentStep('');
