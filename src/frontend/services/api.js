@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const rawBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const API_BASE = rawBase.replace(/\/+$/, '');
+const rawApiBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = rawApiBase.replace(/\/+$/, '');
 
 // 1. Axios Instance for Enterprise API and Auth Calls
 export const axiosClient = axios.create({
