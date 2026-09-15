@@ -31,7 +31,7 @@ export function AuthLayout({
               </div>
               <div>
                 <div className="auth-brand-title">
-                  THREAT<span>INTEL</span>
+                  SENTINEL <span>FORGE</span>
                 </div>
               </div>
             </div>
@@ -70,7 +70,7 @@ export function AuthLayout({
             {/* Testimonial Quote */}
             <div className="auth-quote-card">
               <p className="auth-quote-text">
-                "THREATINTEL transformed how our team handles security alerts. It connects related events and highlights what to fix first, saving us hours every day."
+                "Sentinel Forge transformed how our team handles security alerts. It connects related events and highlights what to fix first, saving us hours every day."
               </p>
               <div className="auth-quote-author">
                 <div className="auth-quote-avatar">JD</div>

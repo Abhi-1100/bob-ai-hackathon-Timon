@@ -19,13 +19,13 @@ export function LandingFooter({ navigate }) {
               </div>
               <div>
                 <div className="brand-title">
-                  THREAT<span>INTEL</span>
+                  SENTINEL <span>FORGE</span>
                 </div>
-                <span className="brand-subtitle">CORRELATION & PRIORITISATION</span>
+                <span className="brand-subtitle">THREAT INTELLIGENCE PLATFORM</span>
               </div>
             </div>
             <p className="footer-bio">
-              Next-generation Threat Intelligence Correlation & Alert Prioritisation Assistant built for modern SOC teams, incident responders, and threat hunters.
+              Next-generation threat intelligence and alert prioritisation built for modern SOC teams, incident responders, and threat hunters.
             </p>
             <div className="footer-badge-pill">
               <Shield size={13} color="var(--low)" />
