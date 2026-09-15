@@ -1,4 +1,4 @@
-# 🚀 TimonTrack — Sentinel Forge
+# 🚀 TimonTrack — ThreatIntel
 ### Threat Intelligence Correlation & Alert Prioritisation Assistant
 
 > **Track:** AI  
@@ -13,8 +13,8 @@
 |---|---|
 | **Team Name** | TimonTrack |
 | **Track** | AI |
-| **Team Lead** | Abhi Kakadiya — abhikakadiya1043@gmail.com |
-| **Members** | Jaimin, Digisha, Om |
+| **Team Lead** | Abhi Kakadiya — 24it035@charusat.edu.in |
+| **Members** | Jaimin Parmar (24ce073@charusat.edu.in), Digisha Savaliya (24it087@charusat.edu.in), Om Ghori (24dce43@charusat.edu.in) |
 
 ---
 
@@ -37,7 +37,7 @@ Security Operations Centers (SOCs) and defence analysts face severe **alert fati
 
 ## 💡 Solution
 
-**Sentinel Forge** is an end-to-end, AI-driven threat intelligence and alert prioritization platform built with **FastAPI**, **LangGraph**, **Qdrant Vector Database**, and **React 18 + Vite**.
+**ThreatIntel** is an end-to-end, AI-driven threat intelligence and alert prioritization platform built with **FastAPI**, **LangGraph**, **Qdrant Vector Database**, and **React 18 + Vite**.
 
 1. **Multi-Source Ingestion & Normalization:** Ingests heterogeneous alert streams into a canonical schema.
 2. **Correlation & Campaign Reconstruction:** Groups related alerts into Attack Chains across time windows and host relationships.
@@ -75,92 +75,107 @@ Security Operations Centers (SOCs) and defence analysts face severe **alert fati
 
 ## 📁 Repository Structure
 
-All project source code is organized inside `src/` following monorepo guidelines:
-
 ```
-├── src/
-│   ├── backend/              # FastAPI Application & AI Pipeline
-│   │   ├── agents/           # AI Agents (BLUF report & tactical recommendations)
-│   │   ├── chat/             # Analyst Chat service
-│   │   ├── database/         # Database models and session management
-│   │   ├── graph/            # LangGraph workflow definitions
-│   │   ├── migrations/       # Alembic migrations
-│   │   ├── nodes/            # Workflow processing nodes
-│   │   ├── repositories/     # Data access repositories
-│   │   ├── routers/          # FastAPI API routers
-│   │   ├── sample_data/      # Sample dataset & generator
-│   │   ├── schemas/          # Pydantic data schemas
-│   │   ├── services/         # Core business logic (correlation, MITRE, risk scoring, Qdrant)
-│   │   ├── tests/            # Test suite (106 unit & integration tests)
-│   │   ├── uploads/          # Alert CSV upload staging
-│   │   ├── main.py           # FastAPI entry point
-│   │   └── requirements.txt  # Backend dependencies
-│   │
-│   └── frontend/             # React 18 + Vite SOC Dashboard
-│       ├── services/         # API integration client
-│       ├── index.html        # Vite entry HTML
-│       ├── main.jsx          # SOC dashboard root application
-│       ├── package.json      # Node package manifest
-│       └── styles.css        # SOC glassmorphism UI styles
+bob-ai-hackathon-Timon/
 │
-├── demo/                     # Demo recordings & screenshots
-├── docs/                     # Full system architecture & setup guides
-├── presentation/             # Hackathon presentation slides
-├── sample_data/              # Enterprise threat alerts dataset (1,000 alerts)
-├── main.py                   # Root runner for backend
-├── package.json              # Root package runner for frontend
-├── index.html                # Root HTML template for Vite
-├── submission.yaml           # Hackathon submission metadata
-└── README.md                 # Project documentation
+├── submission.yaml          # Structured metadata — read by evaluators & validation CI
+├── README.md                # Project overview — human-readable entry point
+├── CONTRIBUTING.md          # Submission instructions & guidelines
+├── .gitignore               # Pre-configured gitignore
+│
+├── src/                     # All application source code
+│   ├── backend/             # FastAPI Application & LangGraph AI Pipeline
+│   │   ├── agents/          # AI Agents (BLUF report & tactical recommendations)
+│   │   ├── chat/            # Grounded RAG Analyst Chat service
+│   │   ├── database/        # Database models and session management
+│   │   ├── graph/           # LangGraph workflow definitions
+│   │   ├── nodes/           # Workflow processing nodes
+│   │   ├── repositories/    # Data access repositories
+│   │   ├── routers/         # FastAPI API routers
+│   │   ├── sample_data/     # Enterprise threat alerts datasets (1,000 alerts)
+│   │   ├── schemas/         # Pydantic data schemas
+│   │   ├── services/        # Core business logic (correlation, MITRE, risk, Qdrant)
+│   │   ├── tests/           # Comprehensive test suite (106 unit & integration tests)
+│   │   ├── main.py          # FastAPI application entry point
+│   │   └── requirements.txt # Python dependencies
+│   ├── frontend/            # React 18 + Vite SOC Dashboard
+│   │   ├── components/      # UI components & Attack Graph visualizers
+│   │   ├── pages/           # 12 SOC dashboard views
+│   │   ├── services/        # Backend API integration client
+│   │   ├── store/           # Zustand state management
+│   │   ├── package.json     # Node package manifest
+│   │   └── styles.css       # SOC glassmorphism UI styles
+│   ├── scripts/             # Telemetry generator and maintenance scripts
+│   ├── .env.example         # Template for environment variables
+│   └── README.md            # Brief note on src/ layout
+│
+├── docs/                    # Written documentation
+│   ├── problem-statement.md # Detailed problem context and pain points
+│   ├── solution-overview.md # Technical solution mechanism & design decisions
+│   ├── architecture.md      # Architecture diagrams & component interactions
+│   └── setup-guide.md       # Step-by-step local setup & deployment guide
+│
+├── demo/                    # Demo artifacts
+│   ├── demo-video-link.txt  # Link to 3-5 minute demonstration video
+│   ├── live-demo-url.txt    # Public URL to deployed live application
+│   └── screenshots/         # 10 platform screenshots + visual gallery
+│
+├── presentation/            # Slide deck
+│   ├── slides.pptx          # Hackathon presentation slide deck
+│   └── README.md            # Presentation guidelines
+│
+└── .github/
+    └── workflows/
+        └── validate.yml     # Automated submission validator
 ```
 
 ---
 
 ## ⚡ How to Run
 
-### 1. Backend Setup
+### 1. Backend Setup (FastAPI)
 
 ```bash
-# Clone the repository
-git clone https://github.com/Abhi-1100/bob-ai-hackathon-Timon.git
-cd bob-ai-hackathon-Timon
-
-# Install backend dependencies
-pip install -r src/backend/requirements.txt
+# Navigate to backend directory
+cd src/backend
 
 # Configure environment variables
-cp .env.example .env
+cp ../.env.example .env
 # Edit .env with your GROQ_API_KEY / WATSONX credentials
 
-# Run backend from root
-python main.py
-# Or run with uvicorn
-uvicorn main:app --reload
+# Install backend dependencies
+pip install -r requirements.txt
+
+# Run backend with uvicorn
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-- Backend API: `http://localhost:8000`
-- Swagger Docs: `http://localhost:8000/docs`
+- **Interactive API Documentation:** `http://127.0.0.1:8000/docs`
+- **Health Check:** `http://127.0.0.1:8000/health`
 
-### 2. Frontend Setup
+### 2. Frontend Setup (React + Vite)
 
 ```bash
-# From workspace root
-npm install
-npm run dev
-
-# Or directly in src/frontend
+# Navigate to frontend directory
 cd src/frontend
+
+# Install dependencies
 npm install
+
+# Run Vite development server
 npm run dev
 ```
 
-- Frontend SOC Dashboard: `http://localhost:5173`
+- **SOC Web Dashboard:** `http://localhost:5173`
 
 ### 3. Running Automated Tests
 
 ```bash
-# Run backend test suite
-python -m pytest src/backend/tests -v
+# Run backend test suite (106 unit & integration tests)
+pytest src/backend/tests/ -v
+
+# Test frontend production build
+npm --prefix src/frontend run build
 ```
 
 ---
@@ -170,7 +185,7 @@ python -m pytest src/backend/tests -v
 | Artifact | Link |
 |---|---|
 | 📹 Demo Video | [See demo/demo-video-link.txt](demo/demo-video-link.txt) |
-| 🌐 Live Demo | [See demo/live-demo-url.txt](demo/live-demo-url.txt) |
+| 🌐 Live Demo | [bob-ai-hackathon-timon-puce.vercel.app](https://bob-ai-hackathon-timon-puce.vercel.app/) |
 | 🖼️ Screenshots | [See demo/screenshots/](demo/screenshots/) |
 | 📊 Presentation | [See presentation/](presentation/) |
 
