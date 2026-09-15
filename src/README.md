@@ -59,3 +59,5 @@ npm run dev
 ```
 
 - **Dashboard UI:** `http://localhost:5173`
+
+> **Note:** Ensure you have configured the `.env` variables before running the application.
