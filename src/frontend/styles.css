@@ -2185,3 +2185,279 @@ a {
   font-family: var(--font-body);
   letter-spacing: 0.02em;
 }
+
+/* =============================================================================
+   RESPONSIVE APP LAYOUT
+   ============================================================================= */
+@media (max-width: 1024px) {
+  .sidebar,
+  .sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+  }
+
+  .sidebar-header {
+    padding: 0 10px;
+  }
+
+  .sidebar-header .brand-wrap {
+    gap: 0;
+  }
+
+  .sidebar-header .brand-wrap > div:not(.brand-icon),
+  .sidebar .sidebar-section-title,
+  .sidebar .nav-text,
+  .sidebar .nav-badge,
+  .sidebar .operator-meta {
+    display: none;
+  }
+
+  .sidebar-header .collapse-btn {
+    padding: 5px;
+  }
+
+  .sidebar .nav-item {
+    justify-content: center;
+    padding: 10px 8px;
+  }
+
+  .sidebar .operator-badge {
+    justify-content: center;
+    padding: 8px 4px;
+  }
+
+  .content-body {
+    padding: 20px 20px 40px;
+  }
+
+  .topbar {
+    padding: 0 20px;
+  }
+
+  .soc-card,
+  .kpi-card,
+  .ai-assistant-wrapper,
+  .topology-wrap {
+    min-width: 0;
+  }
+
+  .ai-assistant-wrapper {
+    min-height: 0;
+    height: calc(100vh - var(--topbar-height) - 40px);
+  }
+}
+
+@media (max-width: 768px) {
+  .content-body {
+    padding: 16px 14px 32px;
+  }
+
+  .topbar {
+    height: auto;
+    min-height: var(--topbar-height);
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .topbar-left {
+    min-width: 0;
+  }
+
+  .breadcrumbs {
+    font-size: 9px;
+  }
+
+  .topbar-title {
+    font-size: 16px;
+    line-height: 1.2;
+    max-width: 48vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar-right {
+    gap: 7px;
+    flex-shrink: 0;
+  }
+
+  .topbar-right > div:first-child {
+    padding: 4px 7px !important;
+  }
+
+  .topbar-right > div:first-child span:last-child {
+    display: none;
+  }
+
+  .soc-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .card-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-title {
+    font-size: 15px;
+  }
+
+  .btn {
+    max-width: 100%;
+  }
+
+  .ai-assistant-header {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .ai-header-left {
+    gap: 9px;
+    min-width: 0;
+  }
+
+  .ai-logo-box {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ai-title-row {
+    gap: 6px;
+  }
+
+  .ai-title {
+    font-size: 14px;
+  }
+
+  .ai-subtitle {
+    font-size: 11px;
+  }
+
+  .ai-live-badge {
+    display: none;
+  }
+
+  .ai-messages-container {
+    padding: 18px 14px;
+    gap: 14px;
+  }
+
+  .ai-msg-card.bot,
+  .ai-msg-bubble.user {
+    padding: 14px;
+  }
+
+  .ai-bottom-section {
+    padding: 10px 14px 14px;
+  }
+
+  .ai-ask-btn {
+    padding: 12px 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .sidebar,
+  .sidebar.collapsed {
+    width: 60px;
+  }
+
+  .sidebar-header {
+    padding: 0 6px;
+  }
+
+  .sidebar-header .collapse-btn {
+    display: none;
+  }
+
+  .sidebar .nav-list {
+    padding: 0 6px;
+  }
+
+  .sidebar .nav-item {
+    padding: 10px 5px;
+  }
+
+  .sidebar-footer {
+    padding: 10px 6px;
+  }
+
+  .content-body {
+    padding: 12px 10px 28px;
+  }
+
+  .topbar {
+    padding: 9px 10px;
+  }
+
+  .breadcrumbs {
+    display: none;
+  }
+
+  .topbar-title {
+    max-width: 44vw;
+    font-size: 14px;
+  }
+
+  .topbar-right > div:first-child,
+  .topbar-right > div:nth-child(2),
+  .topbar-right > div:nth-last-child(2) {
+    display: none !important;
+  }
+
+  .soc-card {
+    padding: 14px;
+  }
+
+  .kpi-grid {
+    gap: 10px;
+  }
+
+  .kpi-card {
+    min-height: 125px;
+    padding: 14px;
+  }
+
+  .kpi-value {
+    font-size: 22px;
+  }
+
+  .ai-assistant-header {
+    align-items: flex-start;
+  }
+
+  .ai-new-chat-btn {
+    padding: 7px;
+  }
+
+  .ai-new-chat-btn span {
+    display: none;
+  }
+
+  .ai-msg-row {
+    gap: 8px;
+  }
+
+  .ai-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .ai-input-wrapper {
+    gap: 6px;
+  }
+
+  .ai-chat-input {
+    min-width: 0;
+    padding: 11px 12px;
+  }
+
+  .ai-ask-btn {
+    padding: 11px;
+  }
+
+  .ai-ask-btn span {
+    display: none;
+  }
+}

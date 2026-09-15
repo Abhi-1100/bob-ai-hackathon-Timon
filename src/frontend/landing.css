@@ -7,6 +7,7 @@
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
+  padding-top: 90px;
   font-family: var(--font-sans);
   overflow-x: hidden;
   position: relative;
@@ -25,8 +26,9 @@
    NAVBAR
    ============================================================================= */
 .landing-navbar-wrapper {
-  position: sticky;
+  position: fixed;
   top: 16px;
+  left: 0;
   z-index: 100;
   width: 100%;
   padding: 0 24px;
@@ -415,6 +417,10 @@
   .landing-navbar-wrapper {
     padding: 0 12px;
     top: 10px;
+  }
+
+  .landing-page-root {
+    padding-top: 74px;
   }
 }
 
@@ -2881,6 +2887,11 @@
    RESPONSIVE MEDIA QUERIES
    ============================================================================= */
 @media (max-width: 1024px) {
+  .landing-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
   .hero-grid {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -2905,6 +2916,11 @@
 
   .workflow-detail-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .workflow-detail-card {
+    padding: 28px 24px;
   }
 
   .footer-top-grid {
@@ -2917,8 +2933,69 @@
 }
 
 @media (max-width: 768px) {
-  .landing-nav-links {
+  .landing-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .landing-hero-section {
+    padding: 48px 0 68px;
+  }
+
+  .landing-navbar-pill {
+    border-radius: 14px;
+    padding: 8px 12px;
+  }
+
+  .nav-brand-text {
+    font-size: 15px;
+  }
+
+  .nav-right-actions {
+    gap: 7px;
+  }
+
+  .nav-signin-btn {
     display: none;
+  }
+
+  .nav-get-started-btn {
+    padding: 8px 10px;
+  }
+
+  .section-header-center {
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  .section-description {
+    font-size: 14px;
+  }
+
+  .workflow-detail-card,
+  .chat-mockup-body {
+    padding: 22px 16px;
+  }
+
+  .arch-node-card {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .arch-node-center {
+    padding: 0;
+  }
+
+  .arch-tech-badge {
+    display: none;
+  }
+
+  .chat-mockup-input {
+    padding: 12px 14px;
   }
 
   .hero-title {
@@ -2948,5 +3025,101 @@
 
   .final-cta-card {
     padding: 36px 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .landing-navbar-wrapper {
+    padding: 0 8px;
+  }
+
+  .landing-navbar-pill {
+    padding: 7px 9px;
+  }
+
+  .nav-brand-simple {
+    gap: 7px;
+  }
+
+  .nav-brand-icon-box {
+    width: 32px;
+    height: 32px;
+  }
+
+  .nav-brand-text {
+    font-size: 13px;
+  }
+
+  .nav-get-started-btn span {
+    display: none;
+  }
+
+  .nav-get-started-btn {
+    padding: 8px;
+  }
+
+  .hero-title {
+    font-size: 29px;
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-ctas .btn {
+    width: 100%;
+  }
+
+  .hero-metrics-row {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .metric-divider {
+    display: none;
+  }
+
+  .dashboard-mockup-frame {
+    border-radius: 12px;
+  }
+
+  .mockup-dashboard-content {
+    padding: 12px;
+  }
+
+  .mockup-card-body {
+    padding: 12px;
+  }
+
+  .mockup-incident-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .workflow-headline {
+    font-size: 21px;
+  }
+
+  .chat-entry .bubble {
+    padding: 11px 13px;
+    font-size: 12.5px;
+  }
+
+  .infra-stats-card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .landing-architecture-section,
+  .landing-final-cta-section {
+    padding-top: 64px;
+    padding-bottom: 64px;
   }
 }
