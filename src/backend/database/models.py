@@ -432,6 +432,9 @@ class BehavioralAnalysisDB(Base):
     )
     anomaly_score = Column(Integer, nullable=False, default=0)
     anomaly_level = Column(String(50), nullable=False)
+    behavior_status = Column(String(50), nullable=True) # NORMAL, ANOMALOUS, SUSPICIOUS, HIGH RISK
+    context_tags = Column(Text, nullable=True) # JSON list of strings
+    analyst_disposition = Column(String(50), nullable=False, default="NEEDS_REVIEW", server_default="NEEDS_REVIEW")
     signals = Column(Text, nullable=True) # JSON list
     dimension_breakdown = Column(Text, nullable=True) # JSON dict
     why_prioritized = Column(Text, nullable=True)
@@ -443,6 +446,7 @@ class BehavioralAnalysisDB(Base):
     __table_args__ = (
         Index("ix_behavioral_analyses_chain_id", "attack_chain_id"),
         Index("ix_behavioral_analyses_level", "anomaly_level"),
+        Index("ix_behavioral_analyses_disposition", "analyst_disposition"),
     )
 
     def __repr__(self) -> str:
