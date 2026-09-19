@@ -1,6 +1,6 @@
-# Setup & Deployment Guide: Threat Intel
+# Setup & Deployment Guide: ThreatIntel
 
-> **This file is read by the automated evaluation pipeline and human judges. Follow these steps to run Threat Intel locally or deploy to cloud providers.**
+> **This file is read by the automated evaluation pipeline and human judges. Follow these steps to run ThreatIntel locally or deploy to cloud providers.**
 
 ---
 

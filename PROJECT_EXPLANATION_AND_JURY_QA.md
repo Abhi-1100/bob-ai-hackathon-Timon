@@ -1,4 +1,4 @@
-# 🛡️ ThreatIntel (Threat Intel) — Master Project Guide & Jury Q&A Prep
+# 🛡️ ThreatIntel — Master Project Guide & Jury Q&A Prep
 
 > **Team Name:** TimonTrack  
 > **Track:** AI Track (BOB AI Hackathon)  
@@ -13,7 +13,7 @@
 1. [30-Second Elevator Pitch (Memorize This)](#1-30-second-elevator-pitch-memorize-this)
 2. [2-Minute Formal Project Pitch (For Presentation Opening)](#2-2-minute-formal-project-pitch)
 3. [The Core Problem & Real-World Context](#3-the-core-problem--real-world-context)
-4. [What We Built: ThreatIntel (Threat Intel)](#4-what-we-built-threatintel)
+4. [What We Built: ThreatIntel](#4-what-we-built-threatintel)
 5. [System Architecture & Full Tech Stack](#5-system-architecture--full-tech-stack)
 6. [The 7-Stage End-to-End Operational Pipeline](#6-the-7-stage-end-to-end-operational-pipeline)
 7. [Mathematical & Algorithmic Deep Dive](#7-mathematical--algorithmic-deep-dive)
@@ -43,7 +43,7 @@
 >
 > *In cybersecurity, time is the adversary's greatest asset. Today, tier-1 SOC analysts waste up to 70% of their shifts triaging false positives and stitching together fragmented logs from firewalls, SIEMs, and endpoint telemetry. By the time a multi-stage intrusion is manually pieced together, data exfiltration has already happened.*
 >
-> *We built **ThreatIntel** (Threat Intel) to solve this exact bottleneck. Our platform features a multi-tiered pipeline:*
+> *We built **ThreatIntel** to solve this exact bottleneck. Our platform features a multi-tiered pipeline:*
 >
 > 1. *First, a **high-throughput ingestion engine** normalizes raw, heterogeneous security logs.*
 > 2. *Next, our **deterministic Alert Correlation Engine** groups isolated alerts into coherent, multi-stage **Attack Chains** using source IP affinity, 30-minute sliding time windows, and cyber kill-chain progression—instantly slashing alert noise by over 80%.*

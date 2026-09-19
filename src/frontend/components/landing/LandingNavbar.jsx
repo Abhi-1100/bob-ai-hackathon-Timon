@@ -40,7 +40,7 @@ export function LandingNavbar({ navigate, theme, toggleTheme, onRequestDemo }) {
           <div className="nav-brand-icon-box">
             <BrandLogo size={22} />
           </div>
-          <span className="nav-brand-text">Threat Intel</span>
+          <span className="nav-brand-text">ThreatIntel</span>
         </div>
 
         {/* Center: Navigation Links */}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-/** Shared Threat Intel logo used by the landing, auth, and app shells. */
+/** Shared ThreatIntel logo used by the landing, auth, and app shells. */
 export function BrandLogo({ size = 26, className = '' }) {
   return (
     <span

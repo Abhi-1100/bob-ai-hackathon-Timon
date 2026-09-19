@@ -28,7 +28,7 @@ export function ForgotPasswordPage({ navigate, theme, toggleTheme }) {
   } = useForm({
     resolver: zodResolver(forgotSchema),
     defaultValues: {
-      email: 'analyst@ThreatIntel.mil',
+      email: 'analyst@threatintel.mil',
     },
   });
 

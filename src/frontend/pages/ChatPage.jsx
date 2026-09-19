@@ -73,7 +73,7 @@ export function ChatPage({ onOpenChain }) {
           </div>
           <div className="ai-title-block">
             <div className="ai-title-row">
-              <span className="ai-title">ThreatSense AI Assistant</span>
+              <span className="ai-title">ThreatIntel AI Assistant</span>
               <span className="ai-live-badge">LIVE MODEL</span>
             </div>
             <p className="ai-subtitle">

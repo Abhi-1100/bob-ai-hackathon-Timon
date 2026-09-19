@@ -21,7 +21,7 @@ function isValidUUID(str) {
 const INITIAL_MESSAGE = {
   id: 'msg-welcome',
   role: 'assistant',
-  message: `Hello! I am your ThreatSense Intelligence Assistant. I have live access to correlated attack chains, MITRE ATT&CK mappings, real-time risk scores, and telemetry ingestion logs.\n\nHow can I assist your security operations today?`,
+  message: `Hello! I am your ThreatIntel Intelligence Assistant. I have live access to correlated attack chains, MITRE ATT&CK mappings, real-time risk scores, and telemetry ingestion logs.\n\nHow can I assist your security operations today?`,
   sources: ['Attack Chains', 'MITRE ATT&CK Matrix', 'Risk Engine', 'Telemetry Logs'],
   references: [],
   timestamp: 'Just now'
