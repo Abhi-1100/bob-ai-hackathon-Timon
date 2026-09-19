@@ -339,6 +339,16 @@ api.ingestUrl = async (url) => {
   }
 };
 
+api.startSimulation = async (limit = 300) => {
+  try {
+    const response = await axiosClient.post(`/api/v1/demo/start-simulation?limit=${limit}`, {}, { timeout: 120000 });
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || 'Simulation failed to start.');
+  }
+};
+
 export function listFrom(obj, candidateKeys = ['items', 'results', 'data', 'chains', 'scores']) {
   if (Array.isArray(obj)) return obj;
   if (!obj || typeof obj !== 'object') return [];
