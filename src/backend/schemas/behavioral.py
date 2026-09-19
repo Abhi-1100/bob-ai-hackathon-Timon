@@ -70,6 +70,22 @@ class BehavioralAnalysisResult(BaseModel):
         default_factory=list,
         description="Top contributing signals across all dimensions",
     )
+    behavior_status: str = Field(
+        default="NORMAL",
+        description="System behavioral status: NORMAL, ANOMALOUS, SUSPICIOUS, HIGH RISK",
+    )
+    context_tags: List[str] = Field(
+        default_factory=list,
+        description="Dynamic evidence-based context tags",
+    )
+    behavioral_reasons: List[str] = Field(
+        default_factory=list,
+        description="Structured reasons why this was flagged",
+    )
+    analyst_disposition: str = Field(
+        default="NEEDS_REVIEW",
+        description="Analyst disposition: NEEDS_REVIEW, BENIGN_ACTIVITY, AUTHORIZED_ACTIVITY, FALSE_POSITIVE, TRUE_POSITIVE, CONFIRMED_INCIDENT",
+    )
     dimension_breakdown: Dict[str, DimensionSignal] = Field(
         default_factory=dict,
         description="Per-dimension anomaly scores and signals",
@@ -91,6 +107,14 @@ class BehavioralAnalysisResult(BaseModel):
                 "chain_id": "AC001",
                 "anomaly_score": 72.0,
                 "anomaly_level": "High",
+                "behavior_status": "SUSPICIOUS",
+                "context_tags": ["UNKNOWN IP", "NEW TARGET", "HIGH VELOCITY", "UNUSUAL TIME"],
+                "behavioral_reasons": [
+                    "IP address observed for the first time",
+                    "High-velocity burst activity",
+                    "Activity outside normal business hours",
+                ],
+                "analyst_disposition": "NEEDS_REVIEW",
                 "signals": [
                     "Unknown source IP",
                     "High event velocity — 3x above baseline",
@@ -114,25 +138,25 @@ class BehavioralContext(BaseModel):
     """
     anomaly_score: float = Field(default=0.0, ge=0.0, le=100.0)
     anomaly_level: str = Field(default="Normal")
+    behavior_status: str = Field(default="NORMAL")
+    context_tags: List[str] = Field(default_factory=list)
+    behavioral_reasons: List[str] = Field(default_factory=list)
+    analyst_disposition: str = Field(default="NEEDS_REVIEW")
     signals: List[str] = Field(default_factory=list)
+    contributing_signals: List[str] = Field(default_factory=list)
     dimension_breakdown: Dict[str, Any] = Field(default_factory=dict)
     why_prioritized: str = Field(default="")
     entity_context: Dict[str, Any] = Field(default_factory=dict)
 
-    model_config = ConfigDict(
-        json_schema_extra={
-            "example": {
-                "anomaly_score": 72.0,
-                "anomaly_level": "High",
-                "signals": ["Unknown source IP", "High event velocity"],
-                "dimension_breakdown": {
-                    "identity": {"score": 0, "signals": ["Known user"], "available": True},
-                    "network": {"score": 55, "signals": ["Unknown external IP"], "available": True},
-                },
-                "why_prioritized": "Unknown origin and high velocity indicate elevated priority.",
-                "entity_context": {},
-            }
-        }
+
+# ---------------------------------------------------------------------------
+# Analyst Disposition Request Schema
+# ---------------------------------------------------------------------------
+class DispositionUpdateRequest(BaseModel):
+    """Payload to update an attack chain's analyst disposition."""
+    disposition: str = Field(
+        ...,
+        description="One of: NEEDS_REVIEW, BENIGN_ACTIVITY, AUTHORIZED_ACTIVITY, FALSE_POSITIVE, TRUE_POSITIVE, CONFIRMED_INCIDENT",
     )
 
 

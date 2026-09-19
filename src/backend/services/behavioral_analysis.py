@@ -297,7 +297,7 @@ class AnomalyScorer:
                 
         total_score = min(100.0, max(0.0, total_score))
         
-        # Determine level
+        # Determine human level and system behavior status
         if total_score >= 80:
             level = "Critical"
         elif total_score >= 60:
@@ -308,23 +308,37 @@ class AnomalyScorer:
             level = "Low"
         else:
             level = "Normal"
+
+        # System Behavioral Status (Requirement 1: NORMAL, ANOMALOUS, SUSPICIOUS, HIGH RISK)
+        if total_score >= 75:
+            behavior_status = "HIGH RISK"
+        elif total_score >= 50:
+            behavior_status = "SUSPICIOUS"
+        elif total_score >= 25:
+            behavior_status = "ANOMALOUS"
+        else:
+            behavior_status = "NORMAL"
             
-        # Select top signals (just taking first few for now, could be smarter)
-        top_signals = all_signals[:5]
+        # Top signals
+        top_signals = all_signals[:5] if all_signals else ["Activity is consistent with established normal baseline."]
         
-        # Generate generic explanation
-        reason = "Behavioral analysis found normal patterns."
-        if total_score >= 60:
+        # Generate explainable analyst intelligence reason (Requirement 3)
+        if total_score >= 75:
             if "High-velocity burst activity" in all_signals:
-                reason = "High velocity anomalous activity identified."
-            elif "External source IP" in all_signals and "First-time access to target resource(s)" in all_signals:
-                reason = "Novel external access to internal resources observed."
+                reason = "High velocity anomalous activity identified exceeding historical thresholds."
             else:
-                reason = "Multiple anomalous behavioral signals combined to elevate priority."
-        elif total_score >= 40:
+                reason = "Multiple high-severity contextual deviations require immediate investigation."
+        elif total_score >= 50:
+            if "External source IP" in all_signals and "First-time access to target resource(s)" in all_signals:
+                reason = "Novel external access to internal resources observed requiring investigation."
+            else:
+                reason = "Behavioral analysis identified multiple contextual deviations requiring investigation."
+        elif total_score >= 25:
             reason = "Some anomalous behavioral signals observed; warrants review."
+        else:
+            reason = "Behavioral analysis found behavior consistent with the observed baseline."
             
-        return total_score, level, top_signals, reason
+        return total_score, level, behavior_status, top_signals, all_signals, reason
 
 
 class BehavioralAnalysisEngine:
@@ -352,7 +366,6 @@ class BehavioralAnalysisEngine:
         if not chain:
             raise ValueError(f"Attack chain {chain_id_str} not found")
             
-        # In a real impl, we'd fetch actual alerts. The chain has enough summary info for now.
         alerts = [] 
         
         # 1. Extract Features
@@ -363,23 +376,89 @@ class BehavioralAnalysisEngine:
         
         # 3. Score Dimensions
         dimensions: Dict[str, DimensionSignal] = {
-            "identity": self.scorer.score_identity(features, context),
-            "device": self.scorer.score_device(features, context),
             "network": self.scorer.score_network(features, context),
             "target": self.scorer.score_target(features, context),
             "behavior": self.scorer.score_behavior(features, context),
             "time": self.scorer.score_time(features, context),
             "history": self.scorer.score_history(features, context),
             "relationship": self.scorer.score_relationship(features, context),
+            "identity": self.scorer.score_identity(features, context),
+            "device": self.scorer.score_device(features, context),
         }
         
-        # 4. Calculate Final Score
-        total_score, level, top_signals, reason = self.scorer.calculate_total_anomaly(dimensions)
-        
+        # 4. Calculate Final Score & Status
+        total_score, level, behavior_status, top_signals, all_signals, reason = self.scorer.calculate_total_anomaly(dimensions)
+
+        # 5. Generate Evidence-Based Context Tags (Requirement 5 & 13)
+        context_tags: List[str] = []
+        src_ip = features.get("source_ip", "")
+        is_internal = (
+            src_ip.startswith("10.") or
+            src_ip.startswith("192.168.") or
+            (src_ip.startswith("172.") and len(src_ip.split(".")) > 1 and src_ip.split(".")[1].isdigit() and 16 <= int(src_ip.split(".")[1]) <= 31)
+        )
+        if is_internal:
+            context_tags.append("INTERNAL NETWORK")
+        else:
+            context_tags.append("EXTERNAL NETWORK")
+
+        if context.get("is_first_seen_ip"):
+            context_tags.append("UNKNOWN IP")
+            context_tags.append("FIRST-SEEN BEHAVIOR")
+        else:
+            context_tags.append("KNOWN IP")
+
+        dest_ips = features.get("destination_ips", [])
+        if not context.get("is_known_target"):
+            context_tags.append("NEW TARGET")
+        else:
+            context_tags.append("KNOWN TARGET")
+
+        has_critical_target = any(
+            ip.endswith(".1") or ip.endswith(".10") or ip.endswith(".11") or ip.endswith(".20") or ip.endswith(".24")
+            for ip in dest_ips
+        )
+        if has_critical_target or len(dest_ips) > 2:
+            context_tags.append("CRITICAL ASSET")
+
+        if features.get("is_working_hours", True):
+            context_tags.append("NORMAL TIME")
+        else:
+            context_tags.append("UNUSUAL TIME")
+
+        vel = features.get("velocity_alerts_per_second", 0.0)
+        if vel > 10.0:
+            context_tags.append("HIGH VELOCITY")
+            context_tags.append("HIGH FREQUENCY")
+        elif vel > 2.0:
+            context_tags.append("HIGH FREQUENCY")
+        else:
+            context_tags.append("NORMAL BEHAVIOR")
+
+        if context.get("is_first_seen_ip") and not context.get("is_known_target"):
+            context_tags.append("NEW RELATIONSHIP")
+            context_tags.append("BASELINE DEVIATION")
+        elif total_score >= 40:
+            context_tags.append("BASELINE DEVIATION")
+
+        # Check existing record to preserve disposition if set
+        existing_disposition = "NEEDS_REVIEW"
+        existing = self.db.query(BehavioralAnalysisDB).filter(
+            BehavioralAnalysisDB.attack_chain_id == chain.id
+        ).first()
+        if existing and existing.analyst_disposition:
+            existing_disposition = existing.analyst_disposition
+
+        behavioral_reasons = all_signals if all_signals else ["Behavior consistent with baseline profile."]
+
         result = BehavioralAnalysisResult(
             chain_id=chain_id_str,
             anomaly_score=round(total_score, 2),
             anomaly_level=level,
+            behavior_status=behavior_status,
+            context_tags=context_tags,
+            behavioral_reasons=behavioral_reasons,
+            analyst_disposition=existing_disposition,
             signals=top_signals,
             dimension_breakdown=dimensions,
             why_prioritized=reason,
@@ -387,26 +466,31 @@ class BehavioralAnalysisEngine:
             entity_context=context
         )
 
-        # 5. Persist to DB if requested
+        # 6. Persist to DB if requested
         if persist:
-            existing = self.db.query(BehavioralAnalysisDB).filter(
-                BehavioralAnalysisDB.attack_chain_id == chain.id
-            ).first()
             signals_json = json.dumps(top_signals)
             dim_json = json.dumps({k: v.model_dump() for k, v in dimensions.items()})
+            tags_json = json.dumps(context_tags)
             int_score = int(round(total_score))
 
             if existing:
                 existing.anomaly_score = int_score
                 existing.anomaly_level = level
+                existing.behavior_status = behavior_status
+                existing.context_tags = tags_json
                 existing.signals = signals_json
                 existing.dimension_breakdown = dim_json
                 existing.why_prioritized = reason
+                if not existing.analyst_disposition:
+                    existing.analyst_disposition = existing_disposition
             else:
                 record = BehavioralAnalysisDB(
                     attack_chain_id=chain.id,
                     anomaly_score=int_score,
                     anomaly_level=level,
+                    behavior_status=behavior_status,
+                    context_tags=tags_json,
+                    analyst_disposition=existing_disposition,
                     signals=signals_json,
                     dimension_breakdown=dim_json,
                     why_prioritized=reason,
@@ -419,7 +503,7 @@ class BehavioralAnalysisEngine:
                 self.db.rollback()
                 logger.error(f"Failed to persist behavioral analysis for chain {chain_id_str}: {e}")
         
-        logger.info(f"Completed behavioral analysis for {chain_id_str}: Score {result.anomaly_score} ({level})")
+        logger.info(f"Completed behavioral analysis for {chain_id_str}: Score {result.anomaly_score} ({behavior_status})")
         return result
 
     def analyze_all_chains(

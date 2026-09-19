@@ -261,6 +261,12 @@ api.getMitreOverview = () => api('/api/v1/mitre/overview');
 api.getRecommendations = () => api('/api/v1/recommendations');
 api.getReports = () => api('/api/v1/reports');
 api.getReport = (id) => api(`/api/v1/reports/${id}`);
+api.updateAnalystDisposition = (id, disposition) => 
+  api(`/api/v1/chains/${id}/disposition`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ disposition })
+  });
 
 /**
  * Upload CSV file and trigger end-to-end correlation & scoring

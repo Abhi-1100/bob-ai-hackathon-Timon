@@ -18,6 +18,7 @@ from database.models import (
 from routers.auth import get_current_user_obj
 from schemas.attack_chain import CorrelationResult
 from schemas.upload import ErrorResponse
+from schemas.behavioral import DispositionUpdateRequest
 from services.alert_correlation import AlertCorrelationEngine, CorrelationError
 
 logger = logging.getLogger("correlation_router")
@@ -254,6 +255,10 @@ def get_attack_chain_by_id(
             "contributing_signals": signals_list,
             "dimension_breakdown": dim_breakdown,
             "why_prioritized": ba.why_prioritized,
+            "behavior_status": getattr(ba, 'behavior_status', 'NORMAL'),
+            "context_tags": json.loads(ba.context_tags) if isinstance(getattr(ba, 'context_tags', None), str) else (getattr(ba, 'context_tags', []) or []),
+            "analyst_disposition": getattr(ba, 'analyst_disposition', 'NEEDS_REVIEW'),
+            "behavioral_reasons": signals_list if signals_list else ["Behavior consistent with baseline profile."],
         }
 
     # Recommendations
@@ -334,4 +339,38 @@ def generate_behavioral_analysis(
     result = ba_engine.analyze_chain(chain.chain_id, user_id=chain.user_id, persist=True)
     cache.delete(f"all_attack_chains_{current_user.id}")
     return JSONResponse(status_code=status.HTTP_200_OK, content=result.model_dump(mode="json"))
+
+
+@router.post(
+    "/{chain_id}/disposition",
+    status_code=status.HTTP_200_OK,
+    summary="Update Analyst Disposition",
+    description="Updates the analyst disposition for a specific attack chain."
+)
+def update_analyst_disposition(
+    chain_id: str,
+    payload: DispositionUpdateRequest,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    chain = (
+        db.query(AttackChainDB)
+        .filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None))
+        )
+        .first()
+    )
+    if not chain:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Attack chain '{chain_id}' not found")
+    
+    ba = chain.behavioral_analysis
+    if not ba:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Behavioral analysis not found for chain '{chain_id}'")
+        
+    ba.analyst_disposition = payload.disposition
+    db.commit()
+    
+    return {"message": "Disposition updated successfully", "disposition": ba.analyst_disposition}
+
 
