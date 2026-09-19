@@ -30,6 +30,8 @@ class RiskRepository:
         event_score: int = 0,
         mitre_score: int = 0,
         chain_bonus: int = 0,
+        behavioral_score: Optional[int] = None,
+        behavioral_level: Optional[str] = None,
         commit: bool = True,
     ) -> RiskScoreDB:
         """
@@ -52,6 +54,10 @@ class RiskRepository:
                 existing.event_score = event_score
                 existing.mitre_score = mitre_score
                 existing.chain_bonus = chain_bonus
+                if behavioral_score is not None:
+                    existing.behavioral_score = behavioral_score
+                if behavioral_level is not None:
+                    existing.behavioral_level = behavioral_level
                 record = existing
             else:
                 record = RiskScoreDB(
@@ -62,6 +68,8 @@ class RiskRepository:
                     event_score=event_score,
                     mitre_score=mitre_score,
                     chain_bonus=chain_bonus,
+                    behavioral_score=behavioral_score,
+                    behavioral_level=behavioral_level,
                 )
                 self.db.add(record)
 

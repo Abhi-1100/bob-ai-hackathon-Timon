@@ -340,6 +340,7 @@ async def upload_and_ingest_alerts(
         try:
             from services.alert_correlation import AlertCorrelationEngine
             from services.mitre_mapping import MitreMappingService
+            from services.behavioral_analysis import BehavioralAnalysisEngine
             from services.risk_scoring import RiskScoringEngine
 
             corr_engine = AlertCorrelationEngine(db=db)
@@ -350,13 +351,17 @@ async def upload_and_ingest_alerts(
             mitre_res = mitre_service.map_all_chains(user_id=current_user.id)
             mitre_count = mitre_res.total_techniques
 
+            # Run behavioral anomaly analysis on all chains before risk scoring
+            behavioral_engine = BehavioralAnalysisEngine(db=db)
+            behavioral_engine.analyze_all_chains(user_id=current_user.id, persist=True)
+
             risk_engine = RiskScoringEngine(db=db)
             risk_scores = risk_engine.score_all_chains(user_id=current_user.id)
             scored_count = len(risk_scores)
 
             logger.info(
                 f"Auto-pipeline executed for user {current_user.id}: {chains_count} chains correlated, "
-                f"{mitre_count} MITRE techniques mapped, {scored_count} risk-scored"
+                f"{mitre_count} MITRE techniques mapped, behavioral analysis performed, {scored_count} risk-scored"
             )
 
             # Auto-sync newly correlated threat intelligence into Qdrant vector index in the background

@@ -18,6 +18,7 @@ from database.models import (
 from routers.auth import get_current_user_obj
 from schemas.attack_chain import CorrelationResult
 from schemas.upload import ErrorResponse
+from schemas.behavioral import DispositionUpdateRequest
 from services.alert_correlation import AlertCorrelationEngine, CorrelationError
 
 logger = logging.getLogger("correlation_router")
@@ -91,6 +92,8 @@ def get_attack_chains(
             "final_score": risk_score,
             "severity": severity,
             "risk_level": severity,
+            "behavioral_score": c.risk_score.behavioral_score if c.risk_score else None,
+            "behavioral_level": c.risk_score.behavioral_level if c.risk_score else None,
             "status": "Active",
             "mitre_techniques": mitre_list,
         })
@@ -203,12 +206,43 @@ def get_attack_chain_by_id(
     # Risk score breakdown
     score = chain.risk_score.score if chain.risk_score else 50
     sev = chain.risk_score.level if chain.risk_score else "Medium"
+    behavioral_score_val = chain.risk_score.behavioral_score if (chain.risk_score and chain.risk_score.behavioral_score is not None) else None
     breakdown = {
         "base_event_score": chain.risk_score.event_score if chain.risk_score else 25,
         "mitre_score": chain.risk_score.mitre_score if chain.risk_score else 15,
         "kill_chain_bonus": chain.risk_score.chain_bonus if chain.risk_score else 10,
+        "behavioral_score": behavioral_score_val,
         "final_score": score,
     }
+
+    # Contextual Behavioral Analysis
+    behavioral_context = None
+    if chain.behavioral_analysis:
+        ba = chain.behavioral_analysis
+        signals_list = []
+        if ba.signals:
+            try:
+                signals_list = json.loads(ba.signals) if isinstance(ba.signals, str) else ba.signals
+            except Exception:
+                pass
+        dim_breakdown = {}
+        if ba.dimension_breakdown:
+            try:
+                dim_breakdown = json.loads(ba.dimension_breakdown) if isinstance(ba.dimension_breakdown, str) else ba.dimension_breakdown
+            except Exception:
+                pass
+        behavioral_context = {
+            "anomaly_score": ba.anomaly_score,
+            "anomaly_level": ba.anomaly_level,
+            "signals": signals_list,
+            "contributing_signals": signals_list,
+            "dimension_breakdown": dim_breakdown,
+            "why_prioritized": ba.why_prioritized,
+            "behavior_status": getattr(ba, 'behavior_status', 'NORMAL'),
+            "context_tags": json.loads(ba.context_tags) if isinstance(getattr(ba, 'context_tags', None), str) else (getattr(ba, 'context_tags', []) or []),
+            "analyst_disposition": getattr(ba, 'analyst_disposition', 'NEEDS_REVIEW'),
+            "behavioral_reasons": signals_list if signals_list else ["Behavior consistent with baseline profile."],
+        }
 
     # Recommendations
     recs_obj = None
@@ -248,6 +282,9 @@ def get_attack_chain_by_id(
         "risk_level": sev,
         "risk_score": score,
         "final_score": score,
+        "behavioral_score": behavioral_score_val if behavioral_score_val is not None else (chain.behavioral_analysis.anomaly_score if chain.behavioral_analysis else None),
+        "behavioral_level": (chain.risk_score.behavioral_level if chain.risk_score and chain.risk_score.behavioral_level else (chain.behavioral_analysis.anomaly_level if chain.behavioral_analysis else None)),
+        "behavioral_context": behavioral_context,
         "score_breakdown": breakdown,
         "events": linked_alerts,
         "mitre_techniques": mitre_techniques,
@@ -255,4 +292,35 @@ def get_attack_chain_by_id(
         "report": report_obj,
         "status": "Active",
     }
+
+
+@router.post(
+    "/{chain_id}/disposition",
+    status_code=status.HTTP_200_OK,
+    summary="Update Analyst Disposition",
+    description="Updates the analyst disposition for a specific attack chain."
+)
+def update_analyst_disposition(
+    chain_id: str,
+    payload: DispositionUpdateRequest,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    chain = (
+        db.query(AttackChainDB)
+        .filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id)
+        .first()
+    )
+    if not chain:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Attack chain '{chain_id}' not found")
+    
+    ba = chain.behavioral_analysis
+    if not ba:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Behavioral analysis not found for chain '{chain_id}'")
+        
+    ba.analyst_disposition = payload.disposition
+    db.commit()
+    
+    return {"message": "Disposition updated successfully", "disposition": ba.analyst_disposition}
+
 
