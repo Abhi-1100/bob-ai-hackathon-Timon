@@ -345,7 +345,10 @@ class BehavioralAnalysisEngine:
         logger.info(f"Starting behavioral analysis for chain {chain_id_str}")
         
         # Fetch chain and alerts
-        chain = self.db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id_str).first()
+        chain_query = self.db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id_str)
+        if user_id is not None:
+            chain_query = chain_query.filter((AttackChainDB.user_id == user_id) | (AttackChainDB.user_id.is_(None)))
+        chain = chain_query.first()
         if not chain:
             raise ValueError(f"Attack chain {chain_id_str} not found")
             

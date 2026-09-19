@@ -256,6 +256,7 @@ api.resetDatabase = () =>
   });
 api.getChains = () => api('/api/v1/chains');
 api.getChain = (id) => api(`/api/v1/chains/${id}`);
+api.analyzeChainBehavior = (id) => axiosClient.post(`/api/v1/chains/${id}/behavioral`).then(r => r.data);
 api.getMitreOverview = () => api('/api/v1/mitre/overview');
 api.getRecommendations = () => api('/api/v1/recommendations');
 api.getReports = () => api('/api/v1/reports');
