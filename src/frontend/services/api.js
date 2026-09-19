@@ -33,17 +33,16 @@ axiosClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       const url = error.config?.url || '';
-      if (!url.includes('/api/v1/auth/login') && !url.includes('/api/v1/auth/register')) {
-        console.warn('[API] 401 Unauthorized. Redirecting to login.');
+      // Don't clear tokens for login/register/me — those handle auth themselves
+      if (!url.includes('/api/v1/auth/login') && !url.includes('/api/v1/auth/register') && !url.includes('/api/v1/auth/me')) {
+        console.warn('[API] 401 Unauthorized — clearing stored credentials.');
         try {
           localStorage.removeItem('d2_access_token');
           localStorage.removeItem('d2_user_profile');
         } catch (e) {
           // ignore
         }
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-          window.location.href = '/login?expired=true';
-        }
+        // Let React route guard handle the redirect instead of hard page reload
       }
     }
     return Promise.reject(error);
@@ -121,10 +120,12 @@ export async function api(path, options = {}) {
       clearTimeout(timeoutId);
 
       if (response.status === 401) {
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+        // Don't hard-redirect; let React auth route guard handle navigation
+        try {
           localStorage.removeItem('d2_access_token');
           localStorage.removeItem('d2_user_profile');
-          window.location.href = '/login?expired=true';
+        } catch (e) {
+          // ignore
         }
         throw new Error('Unauthorized');
       }

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Flame, ShieldAlert, ArrowUpRight, Filter, ChevronRight, Clock, AlertTriangle, Upload } from 'lucide-react';
+import { Flame, ShieldAlert, ArrowUpRight, Filter, ChevronRight, Clock, AlertTriangle, Upload, Brain } from 'lucide-react';
 import { SeverityBadge, RiskScoreGauge } from '../components/Common';
 import { api, listFrom } from '../services/api';
 
@@ -120,9 +120,26 @@ export function RiskPage({ onOpenChain, navigate }) {
 
                 {/* Campaign Identifiers */}
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                     <code style={{ fontSize: 14, fontWeight: 800, color: 'var(--cyan-bright)' }}>{id}</code>
                     <SeverityBadge value={sev} />
+                    {c.behavioral_score !== undefined && c.behavioral_score !== null && (
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        padding: '2px 8px',
+                        borderRadius: 12,
+                        fontSize: 11,
+                        fontWeight: 600,
+                        background: 'rgba(139, 92, 246, 0.12)',
+                        color: '#A78BFA',
+                        border: '1px solid rgba(139, 92, 246, 0.25)',
+                      }}>
+                        <Brain size={11} />
+                        Behavioral: {c.behavioral_score}/100 ({c.behavioral_level || 'Normal'})
+                      </span>
+                    )}
                   </div>
                   <div style={{ fontSize: 13, color: 'var(--text-primary)', marginTop: 4, fontWeight: 600 }}>
                     Attacker IP: <code>{c.source_ip}</code>

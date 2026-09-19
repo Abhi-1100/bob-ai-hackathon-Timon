@@ -29,6 +29,8 @@ from services.risk_scoring import (
 from repositories.risk_repository import RiskRepository
 
 
+TEST_USER_ID = uuid.UUID("a1b2c3d4-e5f6-4a8b-9c0d-1e2f3a4b5c6d")
+
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -51,6 +53,17 @@ def db_session():
     Base.metadata.create_all(bind=engine)
     Session = sessionmaker(bind=engine, autocommit=False, autoflush=False, expire_on_commit=False)
     session = Session()
+
+    from database.models import UserDB
+    user = UserDB(
+        id=TEST_USER_ID,
+        email="analyst@sentinelforge.mil",
+        full_name="Chief SOC Analyst",
+        hashed_password="mock_hashed_password",
+    )
+    session.add(user)
+    session.commit()
+
     try:
         yield session
     finally:
@@ -60,7 +73,12 @@ def db_session():
 
 @pytest.fixture
 def client(db_session):
-    """TestClient that uses the in-memory SQLite test session."""
+    """TestClient that uses the in-memory SQLite test session with mocked auth."""
+    from routers.auth import get_current_user_obj
+    from database.models import UserDB
+
+    user = db_session.query(UserDB).filter_by(id=TEST_USER_ID).first()
+
     def _override_get_db():
         try:
             yield db_session
@@ -68,15 +86,17 @@ def client(db_session):
             pass
 
     app.dependency_overrides[get_db] = _override_get_db
+    app.dependency_overrides[get_current_user_obj] = lambda: user
     test_client = TestClient(app)
     yield test_client
     app.dependency_overrides.clear()
 
 
-def _create_chain(session, chain_id: str, events: str, source_ip: str = "10.0.0.1") -> AttackChainDB:
+def _create_chain(session, chain_id: str, events: str, source_ip: str = "10.0.0.1", user_id: uuid.UUID = TEST_USER_ID) -> AttackChainDB:
     """Helper to seed an attack chain record."""
     chain = AttackChainDB(
         id=uuid.uuid4(),
+        user_id=user_id,
         chain_id=chain_id,
         source_ip=source_ip,
         destination_ips="10.0.0.5",

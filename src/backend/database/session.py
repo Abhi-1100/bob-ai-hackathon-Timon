@@ -40,30 +40,38 @@ def _get_engine():
     if _engine is None:
         db_url = os.getenv("DATABASE_URL", "").strip('"\'')
         if not db_url:
-            raise RuntimeError(
-                "DATABASE_URL environment variable is not set. "
-                "Provide a valid PostgreSQL connection string in .env."
+            db_path = Path(__file__).resolve().parent.parent / "threat_intel.db"
+            db_url = f"sqlite:///{db_path}"
+            logger.info("DATABASE_URL not set, defaulting to SQLite: %s", db_url)
+
+        if db_url.startswith("sqlite"):
+            _engine = create_engine(
+                db_url,
+                connect_args={"check_same_thread": False},
+                future=True,
             )
-        if db_url.startswith("postgresql://"):
-            db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
-        _engine = create_engine(
-            db_url,
-            poolclass=QueuePool,
-            pool_pre_ping=False,
-            pool_recycle=300,
-            pool_size=15,
-            max_overflow=25,
-            pool_timeout=30,
-            connect_args={
-                "connect_timeout": 10,
-                "keepalives": 1,
-                "keepalives_idle": 30,
-                "keepalives_interval": 10,
-                "keepalives_count": 5,
-            },
-            future=True,
-        )
-        logger.info("High-performance database engine created successfully")
+            logger.info("SQLite database engine created successfully: %s", db_url)
+        else:
+            if db_url.startswith("postgresql://"):
+                db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+            _engine = create_engine(
+                db_url,
+                poolclass=QueuePool,
+                pool_pre_ping=False,
+                pool_recycle=300,
+                pool_size=15,
+                max_overflow=25,
+                pool_timeout=30,
+                connect_args={
+                    "connect_timeout": 10,
+                    "keepalives": 1,
+                    "keepalives_idle": 30,
+                    "keepalives_interval": 10,
+                    "keepalives_count": 5,
+                },
+                future=True,
+            )
+            logger.info("High-performance database engine created successfully")
     return _engine
 
 
