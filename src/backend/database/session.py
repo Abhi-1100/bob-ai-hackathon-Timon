@@ -34,44 +34,62 @@ _engine = None
 _SessionLocal = None
 
 
+def _get_database_url() -> str:
+    """Return configured DATABASE_URL or default fallback."""
+    db_url = os.getenv("DATABASE_URL", "").strip('"\'')
+    if not db_url or "username:password@host" in db_url or "host:5432" in db_url:
+        return "sqlite:///./threat_intel.db"
+    if db_url.startswith("postgresql://"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+    return db_url
+
+
 def _get_engine():
-    """Lazily create the SQLAlchemy engine on first use."""
+    """Lazily create the SQLAlchemy engine on first use with automatic fallback."""
     global _engine
     if _engine is None:
-        db_url = os.getenv("DATABASE_URL", "").strip('"\'')
-        if not db_url:
-            db_path = Path(__file__).resolve().parent.parent / "threat_intel.db"
-            db_url = f"sqlite:///{db_path}"
-            logger.info("DATABASE_URL not set, defaulting to SQLite: %s", db_url)
-
+        db_url = _get_database_url()
         if db_url.startswith("sqlite"):
             _engine = create_engine(
                 db_url,
                 connect_args={"check_same_thread": False},
                 future=True,
             )
-            logger.info("SQLite database engine created successfully: %s", db_url)
+            logger.info(f"Local SQLite database engine initialized successfully ({db_url})")
         else:
-            if db_url.startswith("postgresql://"):
-                db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
-            _engine = create_engine(
-                db_url,
-                poolclass=QueuePool,
-                pool_pre_ping=False,
-                pool_recycle=300,
-                pool_size=15,
-                max_overflow=25,
-                pool_timeout=30,
-                connect_args={
-                    "connect_timeout": 10,
-                    "keepalives": 1,
-                    "keepalives_idle": 30,
-                    "keepalives_interval": 10,
-                    "keepalives_count": 5,
-                },
-                future=True,
-            )
-            logger.info("High-performance database engine created successfully")
+            try:
+                engine = create_engine(
+                    db_url,
+                    poolclass=QueuePool,
+                    pool_pre_ping=True,
+                    pool_recycle=300,
+                    pool_size=15,
+                    max_overflow=25,
+                    pool_timeout=15,
+                    connect_args={
+                        "connect_timeout": 10,
+                        "keepalives": 1,
+                        "keepalives_idle": 30,
+                        "keepalives_interval": 10,
+                        "keepalives_count": 5,
+                    },
+                    future=True,
+                )
+                # Test connection to verify PostgreSQL is reachable
+                with engine.connect() as conn:
+                    pass
+                _engine = engine
+                logger.info("High-performance PostgreSQL database engine created successfully")
+            except Exception as exc:
+                logger.warning(
+                    f"PostgreSQL connection failed ({exc}). Falling back to local SQLite database."
+                )
+                fallback_url = "sqlite:///./threat_intel.db"
+                _engine = create_engine(
+                    fallback_url,
+                    connect_args={"check_same_thread": False},
+                    future=True,
+                )
     return _engine
 
 
