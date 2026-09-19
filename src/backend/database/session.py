@@ -45,9 +45,11 @@ def _get_engine():
             logger.info("DATABASE_URL not set, defaulting to SQLite: %s", db_url)
 
         if db_url.startswith("sqlite"):
+            from sqlalchemy.pool import StaticPool
             _engine = create_engine(
                 db_url,
                 connect_args={"check_same_thread": False},
+                poolclass=StaticPool,
                 future=True,
             )
             logger.info("SQLite database engine created successfully: %s", db_url)
@@ -62,13 +64,6 @@ def _get_engine():
                 pool_size=15,
                 max_overflow=25,
                 pool_timeout=30,
-                connect_args={
-                    "connect_timeout": 10,
-                    "keepalives": 1,
-                    "keepalives_idle": 30,
-                    "keepalives_interval": 10,
-                    "keepalives_count": 5,
-                },
                 future=True,
             )
             logger.info("High-performance database engine created successfully")

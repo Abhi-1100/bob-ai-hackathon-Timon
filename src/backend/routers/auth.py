@@ -350,14 +350,36 @@ def get_current_user_obj(
             user_id = payload.get("sub")
             if user_id:
                 try:
-                    user_uuid = uuid.UUID(str(user_id)) if not isinstance(user_id, uuid.UUID) else user_id
-                except Exception:
-                    user_uuid = user_id
-                user = db.query(UserDB).filter(UserDB.id == user_uuid).first()
-                if not user and payload.get("email"):
-                    user = db.query(UserDB).filter(UserDB.email == payload.get("email")).first()
-                if user:
-                    return user
+                    try:
+                        user_uuid = uuid.UUID(str(user_id)) if not isinstance(user_id, uuid.UUID) else user_id
+                    except Exception:
+                        user_uuid = user_id
+                    user = db.query(UserDB).filter(UserDB.id == user_uuid).first()
+                    if not user and payload.get("email"):
+                        user = db.query(UserDB).filter(UserDB.email == payload.get("email")).first()
+                    if user:
+                        return user
+                except Exception as exc:
+                    logger.warning(f"Database query error in get_current_user_obj: {exc}")
+                
+                for email, u in _MEM_USERS.items():
+                    if str(u.get("id")) == str(user_id):
+                        try:
+                            uid = uuid.UUID(str(u["id"]))
+                        except Exception:
+                            uid = u["id"]
+                        return UserDB(
+                            id=uid,
+                            email=u["email"],
+                            hashed_password=u["hashed_password"],
+                            full_name=u["full_name"]
+                        )
+                
+                # If we get here, the user was not found in the DB and not found in _MEM_USERS
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="User not found",
+                )
         except HTTPException:
             raise
         except Exception as exc:
