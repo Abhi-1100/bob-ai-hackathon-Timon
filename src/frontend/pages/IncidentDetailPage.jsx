@@ -16,7 +16,10 @@ import {
   Brain,
   AlertTriangle,
   TrendingUp,
-  Eye
+  Eye,
+  CheckCircle,
+  XCircle,
+  Shield
 } from 'lucide-react';
 import { api } from '../services/api';
 import { SeverityBadge, MitreChip, RiskScoreGauge } from '../components/Common';
@@ -25,6 +28,7 @@ import { AttackGraph } from '../components/AttackGraph';
 export function IncidentDetailPage({ chainId, onBack, navigate }) {
   const [chain, setChain] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dispositionSaving, setDispositionSaving] = useState(false);
 
   useEffect(() => {
     if (!chainId) return;
@@ -38,6 +42,26 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
       })
       .finally(() => setLoading(false));
   }, [chainId]);
+
+  const handleDispositionUpdate = async (e) => {
+    const newDisposition = e.target.value;
+    try {
+      setDispositionSaving(true);
+      await api.updateAnalystDisposition(chain.chain_id, newDisposition);
+      setChain(prev => ({
+        ...prev,
+        behavioral_context: {
+          ...prev.behavioral_context,
+          analyst_disposition: newDisposition
+        }
+      }));
+    } catch (err) {
+      console.error('Failed to update disposition', err);
+      alert('Failed to update disposition');
+    } finally {
+      setDispositionSaving(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -253,56 +277,118 @@ export function IncidentDetailPage({ chainId, onBack, navigate }) {
 
         {behavioral ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Anomaly Score Bar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 600 }}>Anomaly Score</span>
-                  <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
-                    {behavioral.anomaly_score ?? behavioralScore ?? 0}/100
-                  </span>
-                </div>
-                <div style={{
-                  height: 8,
-                  borderRadius: 4,
-                  background: 'var(--bg-tertiary)',
-                  overflow: 'hidden',
-                }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${behavioral.anomaly_score ?? behavioralScore ?? 0}%`,
+            {/* Top Row: System Status & Analyst Disposition */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
+              {/* System Detection (Status & Score) */}
+              <div style={{ flex: 1, minWidth: 250, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>System Detection</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{
+                    padding: '4px 12px',
                     borderRadius: 4,
-                    background: (behavioral.anomaly_score ?? behavioralScore ?? 0) >= 60
-                      ? 'linear-gradient(90deg, #EF4444, #DC2626)'
-                      : (behavioral.anomaly_score ?? behavioralScore ?? 0) >= 30
-                        ? 'linear-gradient(90deg, #F59E0B, #D97706)'
-                        : 'linear-gradient(90deg, #10B981, #059669)',
-                    transition: 'width 0.6s ease',
-                  }} />
+                    fontSize: 13,
+                    fontWeight: 700,
+                    background: behavioral.behavior_status === 'HIGH RISK' ? 'rgba(239, 68, 68, 0.15)' :
+                                behavioral.behavior_status === 'SUSPICIOUS' ? 'rgba(245, 158, 11, 0.15)' :
+                                behavioral.behavior_status === 'ANOMALOUS' ? 'rgba(139, 92, 246, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                    color: behavioral.behavior_status === 'HIGH RISK' ? '#EF4444' :
+                           behavioral.behavior_status === 'SUSPICIOUS' ? '#F59E0B' :
+                           behavioral.behavior_status === 'ANOMALOUS' ? '#8B5CF6' : '#10B981',
+                    border: `1px solid ${behavioral.behavior_status === 'HIGH RISK' ? 'rgba(239, 68, 68, 0.3)' :
+                                       behavioral.behavior_status === 'SUSPICIOUS' ? 'rgba(245, 158, 11, 0.3)' :
+                                       behavioral.behavior_status === 'ANOMALOUS' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`
+                  }}>
+                    {behavioral.behavior_status || 'NORMAL'}
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Score:</span>
+                    <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
+                      {behavioral.anomaly_score ?? behavioralScore ?? 0}/100
+                    </span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Analyst Disposition Selector */}
+              <div style={{ minWidth: 250 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 4, display: 'block' }}>
+                  Analyst Disposition
+                </span>
+                <select
+                  value={behavioral.analyst_disposition || 'NEEDS_REVIEW'}
+                  onChange={handleDispositionUpdate}
+                  disabled={dispositionSaving}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: 6,
+                    border: '1px solid var(--card-border)',
+                    background: 'var(--bg-tertiary)',
+                    color: 'var(--text-primary)',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    outline: 'none',
+                    cursor: dispositionSaving ? 'wait' : 'pointer'
+                  }}
+                >
+                  <option value="NEEDS_REVIEW">Needs Review</option>
+                  <option value="BENIGN_ACTIVITY">Benign Activity</option>
+                  <option value="AUTHORIZED_ACTIVITY">Authorized Activity</option>
+                  <option value="FALSE_POSITIVE">False Positive</option>
+                  <option value="TRUE_POSITIVE">True Positive</option>
+                  <option value="CONFIRMED_INCIDENT">Confirmed Incident</option>
+                </select>
               </div>
             </div>
 
-            {/* Analyst Assessment Banner */}
-            {behavioral.why_prioritized && (
-              <div style={{
-                padding: '12px 16px',
-                background: 'rgba(139, 92, 246, 0.08)',
-                border: '1px solid rgba(139, 92, 246, 0.25)',
-                borderRadius: 8,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                fontSize: 13,
-                color: 'var(--text-primary)',
-              }}>
-                <Lightbulb size={18} color="var(--purple)" style={{ flexShrink: 0 }} />
-                <div>
-                  <strong style={{ color: 'var(--purple)' }}>Analyst Intelligence: </strong>
-                  <span>{behavioral.why_prioritized}</span>
-                </div>
+            {/* Context Tags */}
+            {behavioral.context_tags && behavioral.context_tags.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
+                {behavioral.context_tags.map((tag, idx) => (
+                  <span key={idx} style={{
+                    padding: '3px 8px',
+                    borderRadius: 4,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    color: 'var(--text-secondary)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                  }}>
+                    {tag}
+                  </span>
+                ))}
               </div>
             )}
+
+            {/* Reasons / Assessment Banner */}
+            <div style={{
+              padding: '12px 16px',
+              background: 'rgba(139, 92, 246, 0.08)',
+              border: '1px solid rgba(139, 92, 246, 0.25)',
+              borderRadius: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+              fontSize: 13,
+              color: 'var(--text-primary)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <Lightbulb size={18} color="var(--purple)" style={{ flexShrink: 0, marginTop: 2 }} />
+                <div>
+                  <strong style={{ color: 'var(--purple)', display: 'block', marginBottom: 4 }}>Analyst Intelligence</strong>
+                  {behavioral.why_prioritized && (
+                    <span style={{ display: 'block', marginBottom: 8 }}>{behavioral.why_prioritized}</span>
+                  )}
+                  {behavioral.behavioral_reasons && behavioral.behavioral_reasons.length > 0 && (
+                    <ul style={{ margin: 0, paddingLeft: 16, color: 'var(--text-secondary)' }}>
+                      {behavioral.behavioral_reasons.map((reason, idx) => (
+                        <li key={idx} style={{ marginBottom: 2 }}>{reason}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {/* Dimension Breakdown Grid */}
             {behavioral.dimension_breakdown && Object.keys(behavioral.dimension_breakdown).length > 0 ? (

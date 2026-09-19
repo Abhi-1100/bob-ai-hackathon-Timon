@@ -59,7 +59,28 @@ def run_migration():
         else:
             print("  -> 'behavioral_level' already exists on risk_scores.")
 
+        # 3. Check behavioral_analyses table columns
+        ba_columns = [c["name"] for c in inspector.get_columns("behavioral_analyses")]
+        if "behavior_status" not in ba_columns:
+            print("  -> Adding 'behavior_status' column to behavioral_analyses...")
+            conn.execute(text("ALTER TABLE behavioral_analyses ADD COLUMN behavior_status VARCHAR(50);"))
+            conn.commit()
+            print("     Added 'behavior_status'.")
+
+        if "context_tags" not in ba_columns:
+            print("  -> Adding 'context_tags' column to behavioral_analyses...")
+            conn.execute(text("ALTER TABLE behavioral_analyses ADD COLUMN context_tags TEXT;"))
+            conn.commit()
+            print("     Added 'context_tags'.")
+
+        if "analyst_disposition" not in ba_columns:
+            print("  -> Adding 'analyst_disposition' column to behavioral_analyses...")
+            conn.execute(text("ALTER TABLE behavioral_analyses ADD COLUMN analyst_disposition VARCHAR(50) DEFAULT 'NEEDS_REVIEW';"))
+            conn.commit()
+            print("     Added 'analyst_disposition'.")
+
     print("[MIGRATION] Behavioral Analysis migration completed successfully!")
 
 if __name__ == "__main__":
     run_migration()
+
