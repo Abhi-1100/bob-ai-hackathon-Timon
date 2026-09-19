@@ -1,10 +1,10 @@
-# Solution Overview: Sentinel Forge
+# Solution Overview: ThreatIntel
 
 ## What We Built
 
-**Sentinel Forge** is an enterprise-grade, autonomous Threat Intelligence Correlation and Alert Prioritization platform designed to eliminate SOC alert fatigue. It ingests high-volume, multi-source raw security telemetry, automatically reconstructs fragmented events into coherent multi-stage **Attack Chains**, maps behaviors dynamically to the **MITRE ATT&CK Framework**, calculates deterministic 100-point risk scores, generates actionable incident containment recommendations, produces executive **BLUF (Bottom Line Up Front)** intelligence briefings, and provides an interactive, grounded AI Analyst Copilot.
+**ThreatIntel** is an enterprise-grade, autonomous Threat Intelligence Correlation and Alert Prioritization platform designed to eliminate SOC alert fatigue. It ingests high-volume, multi-source raw security telemetry, automatically reconstructs fragmented events into coherent multi-stage **Attack Chains**, maps behaviors dynamically to the **MITRE ATT&CK Framework**, calculates deterministic 100-point risk scores, generates actionable incident containment recommendations, produces executive **BLUF (Bottom Line Up Front)** intelligence briefings, and provides an interactive, grounded AI Analyst Copilot.
 
-Sentinel Forge is 100% dynamic, features complete multi-tenant tenant isolation, and operates with zero mock or static data fallbacks.
+ThreatIntel is 100% dynamic, features complete multi-tenant tenant isolation, and operates with zero mock or static data fallbacks.
 
 ---
 

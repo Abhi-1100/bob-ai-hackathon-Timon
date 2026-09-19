@@ -56,7 +56,7 @@ export function SettingsPage({ navigate }) {
 
   // 1. Profile State (Initialized dynamically from user in auth store)
   const [name, setName] = useState(user?.name || 'Security Analyst');
-  const [email, setEmail] = useState(user?.email || 'analyst@sentinelforge.mil');
+  const [email, setEmail] = useState(user?.email || 'analyst@threatintel.mil');
   const [organization, setOrganization] = useState(user?.organization || 'Security Operations Center');
 
   // Password Update State
@@ -91,7 +91,7 @@ export function SettingsPage({ navigate }) {
   const [primaryModel, setPrimaryModel] = useState(() => localStorage.getItem('d2_primary_model') || 'llama-3.3-70b-versatile');
   const [groqKey, setGroqKey] = useState(() => localStorage.getItem('d2_groq_key') || 'gsk_••••••••••••••••••••••••••••••••••••••••••••');
   const [watsonxKey, setWatsonxKey] = useState(() => localStorage.getItem('d2_watsonx_key') || '••••••••••••••••••••••••••••••••');
-  const [watsonxProject, setWatsonxProject] = useState(() => localStorage.getItem('d2_watsonx_project') || 'proj-sentinel-ai-prod');
+  const [watsonxProject, setWatsonxProject] = useState(() => localStorage.getItem('d2_watsonx_project') || 'proj-threatintel-ai-prod');
   const [qdrantUrl, setQdrantUrl] = useState(() => localStorage.getItem('d2_qdrant_url') || ':memory: (In-Memory Vector DB)');
   const [showKeys, setShowKeys] = useState(false);
   const [aiTestStatus, setAiTestStatus] = useState(null);

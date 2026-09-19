@@ -29,15 +29,15 @@ export function AuthPage({
   const [mode, setMode] = useState(initialMode); // 'login' | 'signup'
 
   // Login Form States
-  const [loginEmail, setLoginEmail] = useState('analyst@sentinelforge.mil');
-  const [loginPassword, setLoginPassword] = useState('SentinelForge#2026');
+  const [loginEmail, setLoginEmail] = useState('analyst@threatintel.mil');
+  const [loginPassword, setLoginPassword] = useState('ThreatIntel#2026');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
 
   // Signup Form States
   const [signupName, setSignupName] = useState('Alex Vance');
-  const [signupEmail, setSignupEmail] = useState('alex.vance@sentinelforge.mil');
+  const [signupEmail, setSignupEmail] = useState('alex.vance@threatintel.mil');
   const [signupOrg, setSignupOrg] = useState('Vance Cyber Defense Lab');
   const [signupPassword, setSignupPassword] = useState('');
   const [showSignupPassword, setShowSignupPassword] = useState(false);
@@ -284,7 +284,7 @@ export function AuthPage({
                       required
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      placeholder="analyst@sentinelforge.mil"
+                      placeholder="analyst@threatintel.mil"
                       className="auth-input"
                     />
                   </div>
