@@ -420,7 +420,7 @@ def answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
                 groq_api_key=api_key,
                 model_name=model_name,
                 temperature=0.1,
-                max_tokens=1000,
+                max_tokens=2500,
                 max_retries=1,
             )
             response = llm.invoke(messages)
