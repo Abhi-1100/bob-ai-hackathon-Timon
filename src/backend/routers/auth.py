@@ -271,6 +271,9 @@ def forgot_password(req: ForgotPasswordRequest, db: Session = Depends(get_db)):
             user.reset_token = reset_token
             user.reset_token_expires = expires
             db.commit()
+        elif clean_email in _MEM_USERS:
+            _MEM_USERS[clean_email]["reset_token"] = reset_token
+            _MEM_USERS[clean_email]["reset_token_expires"] = expires
     except Exception as exc:
         logger.warning(f"Database update error in forgot-password: {exc}")
         if clean_email in _MEM_USERS:
@@ -341,7 +344,7 @@ def get_current_user_obj(
     """
     FastAPI dependency to retrieve the authenticated UserDB model instance.
     Extracts the user from the Bearer JWT token.
-    Falls back to the seed analyst account if no header is provided (for dev/local test mode).
+    Falls back to memory cache or seed analyst account if DB is unavailable.
     """
     if authorization and authorization.startswith("Bearer "):
         token = authorization.split(" ")[1]
@@ -349,9 +352,28 @@ def get_current_user_obj(
             payload = decode_access_token(token)
             user_id = payload.get("sub")
             if user_id:
-                user = db.query(UserDB).filter(UserDB.id == user_id).first()
-                if user:
-                    return user
+                try:
+                    user = db.query(UserDB).filter(UserDB.id == user_id).first()
+                    if user:
+                        return user
+                except Exception as db_exc:
+                    logger.warning(f"Database lookup error for user_id {user_id}: {db_exc}")
+
+                # Check memory fallback if database lookup returned None or failed
+                for mem_user in _MEM_USERS.values():
+                    if str(mem_user.get("id")) == str(user_id):
+                        uid = mem_user["id"]
+                        if isinstance(uid, str):
+                            try:
+                                uid = uuid.UUID(uid)
+                            except Exception:
+                                pass
+                        return UserDB(
+                            id=uid,
+                            email=mem_user["email"],
+                            hashed_password=mem_user["hashed_password"],
+                            full_name=mem_user["full_name"],
+                        )
         except HTTPException:
             raise
         except Exception as exc:
@@ -363,13 +385,31 @@ def get_current_user_obj(
 
     # Fallback to seed analyst account if authorization header was not passed
     # (e.g., local dev or background test invocation)
-    fallback_user = db.query(UserDB).filter(UserDB.email == "analyst@sentinelforge.mil").first()
-    if fallback_user:
-        return fallback_user
+    try:
+        fallback_user = db.query(UserDB).filter(UserDB.email == "analyst@sentinelforge.mil").first()
+        if fallback_user:
+            return fallback_user
 
-    first_user = db.query(UserDB).first()
-    if first_user:
-        return first_user
+        first_user = db.query(UserDB).first()
+        if first_user:
+            return first_user
+    except Exception as exc:
+        logger.warning(f"Database query error during user fallback: {exc}")
+
+    if _DEFAULT_USER_EMAIL in _MEM_USERS:
+        mem_user = _MEM_USERS[_DEFAULT_USER_EMAIL]
+        uid = mem_user["id"]
+        if isinstance(uid, str):
+            try:
+                uid = uuid.UUID(uid)
+            except Exception:
+                pass
+        return UserDB(
+            id=uid,
+            email=mem_user["email"],
+            hashed_password=mem_user["hashed_password"],
+            full_name=mem_user["full_name"],
+        )
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

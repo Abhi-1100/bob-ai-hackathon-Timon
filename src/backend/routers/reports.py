@@ -55,7 +55,10 @@ def generate_chain_report(
     """Generate or retrieve cached BLUF report for an attack chain."""
     try:
         # Verify chain belongs to current_user
-        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        chain = db.query(AttackChainDB).filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None)),
+        ).first()
         if not chain:
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -117,7 +120,10 @@ def get_chain_report(
 ):
     """Retrieve stored BLUF report for an attack chain."""
     try:
-        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        chain = db.query(AttackChainDB).filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None)),
+        ).first()
         if not chain:
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND,
