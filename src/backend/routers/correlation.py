@@ -248,17 +248,27 @@ def get_attack_chain_by_id(
                 dim_breakdown = json.loads(ba.dimension_breakdown) if isinstance(ba.dimension_breakdown, str) else ba.dimension_breakdown
             except Exception:
                 pass
+        # Derive behavioral_reasons from full dimension signal sentences (not just top signals)
+        behavioral_reasons_derived = []
+        for dim_key, dim_data in dim_breakdown.items():
+            if isinstance(dim_data, dict):
+                for sig in (dim_data.get("signals") or []):
+                    if sig and sig not in behavioral_reasons_derived:
+                        behavioral_reasons_derived.append(sig)
+        if not behavioral_reasons_derived:
+            behavioral_reasons_derived = signals_list if signals_list else ["Behavior consistent with baseline profile."]
+
         behavioral_context = {
             "anomaly_score": ba.anomaly_score,
             "anomaly_level": ba.anomaly_level,
+            "behavior_status": getattr(ba, 'behavior_status', 'NORMAL') or 'NORMAL',
             "signals": signals_list,
             "contributing_signals": signals_list,
             "dimension_breakdown": dim_breakdown,
-            "why_prioritized": ba.why_prioritized,
-            "behavior_status": getattr(ba, 'behavior_status', 'NORMAL'),
+            "why_prioritized": ba.why_prioritized or "",
             "context_tags": json.loads(ba.context_tags) if isinstance(getattr(ba, 'context_tags', None), str) else (getattr(ba, 'context_tags', []) or []),
-            "analyst_disposition": getattr(ba, 'analyst_disposition', 'NEEDS_REVIEW'),
-            "behavioral_reasons": signals_list if signals_list else ["Behavior consistent with baseline profile."],
+            "analyst_disposition": getattr(ba, 'analyst_disposition', 'NEEDS_REVIEW') or 'NEEDS_REVIEW',
+            "behavioral_reasons": behavioral_reasons_derived,
         }
 
     # Recommendations
