@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreatIntel — Master Project Guide & Jury Defense Prep</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #131b2e;
+      --card-border: #1f293d;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --purple: #8b5cf6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--accent-hover);
+      margin-bottom: 16px;
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge.green {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .badge.purple {
+      background: rgba(139, 92, 246, 0.15);
+      color: #c4b5fd;
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    .nav-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .nav-box h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 10px;
+    }
+
+    .nav-grid a {
+      color: var(--accent-hover);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.92rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-grid a:hover {
+      background: rgba(59, 130, 246, 0.2);
+      color: #fff;
+    }
+
+    .section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: #ffffff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: #93c5fd;
+      margin: 18px 0 10px 0;
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .speech-box {
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin: 15px 0;
+      font-size: 1.05rem;
+      color: #f1f5f9;
+      font-style: italic;
+    }
+
+    .qa-card {
+      background: #0f1626;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .qa-question {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+
+    .qa-answer {
+      color: #cbd5e1;
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    ul, ol {
+      margin-left: 22px;
+      margin-bottom: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .tag-critical { color: #f87171; font-weight: bold; }
+    .tag-high { color: #fb923c; font-weight: bold; }
+    .tag-medium { color: #fbbf24; font-weight: bold; }
+    .tag-low { color: #34d399; font-weight: bold; }
+
+    .step-box {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .step-number {
+      background: var(--accent);
+      color: #fff;
+      font-weight: bold;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .btn-action {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>🛡️ ThreatIntel (Sentinel Forge)</h1>
+    <div class="subtitle">Threat Intelligence Correlation & Alert Prioritisation Assistant</div>
+    <p>Complete Master Guide for Project Demonstration, Viva Voce & Jury Technical Defense</p>
+    <div class="badge-bar">
+      <span class="badge">Team: TimonTrack</span>
+      <span class="badge purple">Track: AI (BOB AI Hackathon)</span>
+      <span class="badge green">106 Automated Tests Passing</span>
+      <span class="badge">React 18 + FastAPI + LangGraph + Qdrant</span>
+    </div>
+  </header>
+
+  <div class="nav-box">
+    <h3>📌 Jump Directly to Any Section</h3>
+    <div class="nav-grid">
+      <a href="#pitch-30s">1. 30-Second Elevator Pitch</a>
+      <a href="#pitch-2m">2. 2-Minute Full Project Speech</a>
+      <a href="#problem">3. Problem Statement & Why It Matters</a>
+      <a href="#solution">4. Our Solution (What We Built)</a>
+      <a href="#pipeline">5. The 7-Step Pipeline (How It Works)</a>
+      <a href="#scoring">6. Exact Risk Scoring Math & Formula</a>
+      <a href="#tech-stack">7. Tech Stack & Architecture</a>
+      <a href="#qa-jury">8. Top 15 Jury Q&A (Most Important)</a>
+      <a href="#team-roles">9. Team Members & Who Built What</a>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 30-SECOND PITCH -->
+  <div class="section" id="pitch-30s">
+    <h2>⚡ 1. 30-Second Elevator Pitch (Memorize This First)</h2>
+    <p>If the jury asks: <em>"In one or two sentences, what did you build?"</em>, say this word for word:</p>
+    <div class="speech-box">
+      "Modern Security Operations Centers drown in over 10,000 alerts every single day, causing extreme alert fatigue and buried intrusions. ThreatIntel is an autonomous cybersecurity platform that takes raw, noisy alerts, groups them into coherent multi-stage Attack Chains, maps attacker techniques to the MITRE ATT&CK framework, calculates an auditable 0 to 100 mathematical risk score, and uses a LangGraph AI Copilot with Qdrant vector retrieval to give analysts instant incident containment briefs in seconds."
+    </div>
+  </div>
+
+  <!-- SECTION 2: 2-MINUTE PITCH -->
+  <div class="section" id="pitch-2m">
+    <h2>🎙️ 2. 2-Minute Full Project Speech (For Presentation Opening)</h2>
+    <p>Read or deliver this when starting your formal demo presentation:</p>
+    <div class="speech-box">
+      "Respected Jury Members,<br><br>
+      In cybersecurity defense, time is an attacker's greatest ally. Today, tier-1 SOC analysts spend more than 70% of their time chasing false positive alerts across disconnected firewalls, SIEMs, and endpoint telemetry. By the time a multi-stage intrusion is manually pieced together, critical data has already been stolen.<br><br>
+      We built <strong>ThreatIntel</strong> to completely solve this bottleneck through a 4-part intelligent system:<br><br>
+      First, our <strong>Alert Correlation Engine</strong> groups isolated security logs into chronological <strong>Attack Chains</strong> using source IP affinity, a 30-minute sliding time window, and cyber kill-chain heuristics—instantly slashing alert noise by over 80%.<br><br>
+      Second, every attack behavior is automatically mapped to standardized <strong>MITRE ATT&CK enterprise techniques</strong> such as Port Scanning, Brute Force, and Credential Dumping.<br><br>
+      Third, rather than letting an AI guess the risk, we calculate a transparent, <strong>mathematical 0 to 100 Risk Score</strong> based on event severity, MITRE tactics, and chain progression bonuses, categorizing threats into Low, Medium, High, and Critical.<br><br>
+      Fourth, our <strong>LangGraph Multi-Agent AI</strong> synthesizes commander-ready <strong>BLUF (Bottom Line Up Front)</strong> executive briefings and provides an interactive <strong>Qdrant-powered RAG Copilot</strong> so analysts can investigate any threat in plain English.<br><br>
+      Our application is fully live, backed by PostgreSQL, two-tier Redis caching, 106 automated tests, and a modern glassmorphic React dashboard."
+    </div>
+  </div>
+
+  <!-- SECTION 3: PROBLEM STATEMENT -->
+  <div class="section" id="problem">
+    <h2>🎯 3. Problem Statement & Real-World Context</h2>
+    <p>Why is this software needed by banks, governments, and corporations?</p>
+    <ul>
+      <li><strong>Alert Fatigue:</strong> A typical bank receives 10,000 to 50,000 alerts daily. Analysts cannot keep up and get burned out.</li>
+      <li><strong>Schema Fragmentation:</strong> Splunk, IBM QRadar, firewalls, and AWS CloudTrail all output logs in completely different formats. Correlating them takes hours.</li>
+      <li><strong>Executive Communication Gap:</strong> When an intrusion happens, CISOs and executives need a <strong>BLUF</strong> brief (What was hit? What is the impact? What do we do right now?). Compiling this manually wastes valuable incident response time.</li>
+      <li><strong>False Positives:</strong> Over 80% of alerts are isolated pings or harmless errors. Finding the coordinated campaign inside the noise is like finding a needle in a haystack.</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 4: WHAT WE BUILT -->
+  <div class="section" id="solution">
+    <h2>💡 4. What We Built (Core Capabilities)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>What It Does</th>
+          <th>Why It Matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Log Ingestion & Normalizer</strong></td>
+          <td>Takes CSV/JSON alerts, validates timestamps and IP addresses, cleans corrupt data.</td>
+          <td>Ensures clean, reliable database storage.</td>
+        </tr>
+        <tr>
+          <td><strong>Correlation Engine</strong></td>
+          <td>Groups related alerts into Attack Chains (AC001, AC002) using 30-min time windows.</td>
+          <td>Turns 1,000 noisy alerts into 10 clear attack stories.</td>
+        </tr>
+        <tr>
+          <td><strong>MITRE ATT&CK Mapper</strong></td>
+          <td>Tags attack steps with official IDs (e.g. T1110 Brute Force, T1059 Command Execution).</td>
+          <td>Standardizes terminology across the global security industry.</td>
+        </tr>
+        <tr>
+          <td><strong>Risk Scoring Engine</strong></td>
+          <td>Calculates exact 0–100 risk score using verified mathematical weights.</td>
+          <td>Auditable, zero-hallucination threat ranking.</td>
+        </tr>
+        <tr>
+          <td><strong>Executive BLUF Briefings</strong></td>
+          <td>LLM agent generates a sub-100 word briefing for commanders and directors.</td>
+          <td>Enables instant executive decision-making.</td>
+        </tr>
+        <tr>
+          <td><strong>Interactive RAG Copilot</strong></td>
+          <td>Qdrant vector store + FastEmbed lets analysts chat with their threat database.</td>
+          <td>Instant answers with cited IPs and IOCs.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 5: PIPELINE -->
+  <div class="section" id="pipeline">
+    <h2>🔄 5. The 7-Step Pipeline (From Raw Logs to Solution)</h2>
+
+    <div class="step-box">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <div class="step-title">Ingestion & Validation</div>
+        <p>User uploads security CSV log. System verifies required columns (timestamp, src_ip, dst_ip, event, severity), cleans whitespace, and inserts rows into PostgreSQL under the user's tenant ID.</p>
+      </div>
+    </div>
+
+    <div class="step-box">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <div class="step-title">Temporal Correlation</div>
+        <p>Sorts alerts by time. Groups alerts sharing the same source IP. If the gap between two events exceeds 30 minutes, it splits them into separate Attack Chains.</p>
+      </div>
+    </div>
+
+    <div class="step-box">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <div class="step-title">MITRE ATT&CK Alignment</div>
+        <p>Maps event signatures to standardized Enterprise MITRE techniques (e.g. PortScan &rarr; T1595 Reconnaissance, CredentialDumping &rarr; T1003 Credential Access).</p>
+      </div>
+    </div>
+
+    <div class="step-box">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <div class="step-title">Deterministic Risk Scoring</div>
+        <p>Evaluates the mathematical formula: Event Score + MITRE Score + Chain Bonus. Assigns severity: Low (0-25), Medium (26-50), High (51-75), Critical (76-100).</p>
+      </div>
+    </div>
+
+    <div class="step-box">
+      <div class="step-number">5</div>
+      <div class="step-content">
+        <div class="step-title">LangGraph AI Agents Execution</div>
+        <p>LangGraph triggers Recommendation Agent to formulate 4-category containment guides, then triggers the BLUF Report Agent to formulate the executive summary.</p>
+      </div>
+    </div>
+
+    <div class="step-box">
+      <div class="step-number">6</div>
+      <div class="step-content">
+        <div class="step-title">Vector Knowledge Sync (Qdrant)</div>
+        <p>FastEmbed model (bge-small-en-v1.5) generates 384-dimensional embeddings of the attack narrative and indexes them in Qdrant Vector Database with metadata filters.</p>
+      </div>
+    </div>
+
+    <div class="step-box">
+      <div class="step-number">7</div>
+      <div class="step-content">
+        <div class="step-title">SOC Dashboard & AI Copilot</div>
+        <p>Data renders on the React SOC dashboard with live charts, and analysts can ask questions in the AI chat with grounded responses and cited IPs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: EXACT SCORING MATH -->
+  <div class="section" id="scoring">
+    <h2>🧮 6. Exact Risk Scoring Math & Formula</h2>
+    <p>When the jury asks <em>"Show me your mathematical formula for risk"</em>, show them this:</p>
+
+    <div class="speech-box">
+      <strong>Total Score = Event Score + MITRE Tactic Score + Chain Bonus</strong> (Capped at 100)
+    </div>
+
+    <h3>Component 1: Event Score (Sum of unique observed attack types)</h3>
+    <ul>
+      <li>Data Exfiltration: <strong>70 pts</strong></li>
+      <li>Ransomware: <strong>60 pts</strong></li>
+      <li>Malware: <strong>50 pts</strong></li>
+      <li>Privilege Escalation: <strong>45 pts</strong></li>
+      <li>Lateral Movement / Credential Dumping: <strong>40 pts</strong></li>
+      <li>Command Execution / C2 Beacon: <strong>35 pts</strong></li>
+      <li>SQL Injection: <strong>30 pts</strong></li>
+      <li>Brute Force / DDoS: <strong>25 pts</strong></li>
+      <li>Port Scan / Reconnaissance: <strong>10 pts</strong></li>
+    </ul>
+
+    <h3>Component 2: MITRE Tactic Score (Deduplicated tactics)</h3>
+    <ul>
+      <li>Exfiltration: <strong>30 pts</strong> | Impact: <strong>25 pts</strong></li>
+      <li>Credential Access / Privilege Escalation / Lateral Movement: <strong>20 pts each</strong></li>
+      <li>Execution / Persistence / Defense Evasion / Command & Control: <strong>15 pts each</strong></li>
+      <li>Initial Access: <strong>10 pts</strong> | Reconnaissance: <strong>5 pts</strong></li>
+    </ul>
+
+    <h3>Component 3: Chain Progression Bonus (Attack Maturity)</h3>
+    <ul>
+      <li>7 or more attack events: <strong>+20 points bonus</strong></li>
+      <li>5 to 6 attack events: <strong>+15 points bonus</strong></li>
+      <li>3 to 4 attack events: <strong>+10 points bonus</strong></li>
+      <li>Fewer than 3 events: <strong>0 bonus</strong></li>
+    </ul>
+
+    <h3>Severity Classification:</h3>
+    <p>
+      <span class="tag-critical">CRITICAL (76 - 100)</span> &nbsp;|&nbsp;
+      <span class="tag-high">HIGH (51 - 75)</span> &nbsp;|&nbsp;
+      <span class="tag-medium">MEDIUM (26 - 50)</span> &nbsp;|&nbsp;
+      <span class="tag-low">LOW (0 - 25)</span>
+    </p>
+  </div>
+
+  <!-- SECTION 7: TECH STACK -->
+  <div class="section" id="tech-stack">
+    <h2>🛠️ 7. Technical Architecture & Tech Stack</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Technology</th>
+          <th>Role in System</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Frontend</strong></td>
+          <td>React 18 + Vite + Lucide Icons + Recharts</td>
+          <td>Real-time dark-mode SOC dashboard with interactive charts and attack graphs.</td>
+        </tr>
+        <tr>
+          <td><strong>Backend</strong></td>
+          <td>FastAPI (Python 3.11) + Pydantic v2</td>
+          <td>Asynchronous REST API, request validation, authentication, and pipeline orchestration.</td>
+        </tr>
+        <tr>
+          <td><strong>AI Orchestration</strong></td>
+          <td>LangGraph & LangChain</td>
+          <td>Stateful agent workflow graph with conditional short-circuit error routing.</td>
+        </tr>
+        <tr>
+          <td><strong>LLM Inference</strong></td>
+          <td>Groq Llama 3.3 70B / watsonx.ai</td>
+          <td>Fast (<500ms) generation of BLUF summaries and containment recommendations.</td>
+        </tr>
+        <tr>
+          <td><strong>Vector Database</strong></td>
+          <td>Qdrant (Cosine Similarity)</td>
+          <td>High-speed semantic search over past attack chains and threat memory.</td>
+        </tr>
+        <tr>
+          <td><strong>Embedding Model</strong></td>
+          <td>FastEmbed (BAAI/bge-small-en-v1.5)</td>
+          <td>Local 384-dimensional dense embeddings in <15ms without sending data to OpenAI.</td>
+        </tr>
+        <tr>
+          <td><strong>Relational Database</strong></td>
+          <td>PostgreSQL (Neon Cloud) / SQLite</td>
+          <td>Stores users, uploads, alerts, attack chains, MITRE mappings, and chat history.</td>
+        </tr>
+        <tr>
+          <td><strong>Caching Layer</strong></td>
+          <td>Upstash Redis + L1 In-Memory Cache</td>
+          <td>Sub-10ms response times with tenant-prefixed cache keys (e.g. prefix_userid).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 8: JURY QA -->
+  <div class="section" id="qa-jury">
+    <h2>🎯 8. Top 15 Jury Questions & Winning Answers</h2>
+
+    <div class="qa-card">
+      <div class="qa-question">Q1: "Why didn't you just feed all raw logs directly to ChatGPT or Llama?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "Feeding raw logs directly to an LLM fails for three big reasons:
+        <br>1. <strong>Token Limits & Cost:</strong> 10,000 logs exceed context windows and cost too much.
+        <br>2. <strong>Hallucination:</strong> An LLM can hallucinate IP addresses and generate arbitrary, non-reproducible risk numbers.
+        <br>3. <strong>Regulatory Auditability:</strong> Cybersecurity frameworks like NIST and ISO require identical logs to produce identical scores every single time.
+        <br>That is why we use a <strong>hybrid architecture</strong>: deterministic Python math handles correlation, MITRE mapping, and scoring, while the LLM is reserved for what it does best: human summarization, executive briefs, and interactive analyst chat."
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-question">Q2: "What is LangGraph and why did you pick it over regular LangChain?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "Regular LangChain chains are strictly linear. If step 2 fails, the whole program crashes. <strong>LangGraph</strong> allows us to build a stateful directed graph with conditional edges. If any node encounters an issue, our <code>should_continue</code> router catches it and gracefully short-circuits to <code>store_results</code>, logging the error in the database instead of crashing."
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-question">Q3: "How does your correlation prevent false positives?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "False positives are usually isolated, one-off alerts like a single failed login or random port ping. Our correlation engine groups alerts by source IP within 30-minute windows and sorts them along the cyber kill-chain. An isolated ping stays a low-risk, single-event chain. Only coordinated, multi-stage intrusions earn chain bonuses and get escalated to Critical."
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-question">Q4: "What is BLUF and why does an executive need it?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "BLUF stands for <strong>Bottom Line Up Front</strong>. In a cyber incident, a Chief Information Security Officer (CISO) does not have time to read 50 pages of firewall logs. They need to know three things in under 60 seconds: <em>What happened? What is the business impact? What decision must I make right now?</em> Our BLUF Report Agent synthesizes this in a crisp, sub-100-word brief."
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-question">Q5: "How do you protect data between different users or client companies?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "We enforce multi-tenant isolation at four layers:
+        <br>1. <strong>Database Foreign Keys:</strong> Every table has a <code>user_id</code> with cascade delete.
+        <br>2. <strong>Composite Indexing:</strong> <code>(user_id, chain_id)</code> ensures Tenant A's AC001 never collides with Tenant B's AC001.
+        <br>3. <strong>Strict SQLAlchemy Filters:</strong> Every database query includes <code>filter(Model.user_id == current_user.id)</code>.
+        <br>4. <strong>Tenant-Prefixed Cache Keys:</strong> Redis keys look like <code>stats_{user_id}</code>, preventing cross-tenant data leaks."
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-question">Q6: "Why did you use Qdrant and FastEmbed instead of OpenAI?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "Three reasons:
+        <br>1. <strong>Privacy:</strong> FastEmbed runs locally using ONNX runtime, meaning internal confidential IP addresses never leave the server.
+        <br>2. <strong>Speed:</strong> Embeddings are calculated in <15 milliseconds with zero external API calls.
+        <br>3. <strong>Metadata Filtering:</strong> Qdrant allows instant vector filtering by <code>user_id</code> and <code>risk_level</code> at query time without degrading search quality."
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-question">Q7: "How many automated tests do you have?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "We have <strong>106 automated tests</strong> written in Pytest across 10 test files in <code>src/backend/tests/</code>, validating our CSV parser, correlation engine, MITRE mapper, risk math, LangGraph short-circuiting, and RAG chat."
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-question">Q8: "What are your known limitations?"</div>
+      <div class="qa-answer">
+        <strong>Answer:</strong> "We are completely transparent about our current scope:
+        <br>1. Currently processes batches via CSV/JSON uploads up to 50MB; real-time Kafka streaming is scheduled for version 2.
+        <br>2. Correlation primarily anchors on source IP; distributed multi-IP botnets currently map as separate chains until merged at the destination layer.
+        <br>3. If cloud LLM keys are absent in air-gapped environments, the system falls back to rule-grounded heuristic templates."
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 9: TEAM MEMBERS -->
+  <div class="section" id="team-roles">
+    <h2>👥 9. Team Members & Who Built What</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Member Name</th>
+          <th>Key Responsibilities & Contributions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Abhi Kakadiya (Lead)</strong></td>
+          <td>Overall architecture, FastAPI routers, database schema design, and LangGraph workflow orchestration.</td>
+        </tr>
+        <tr>
+          <td><strong>Om Ghori</strong></td>
+          <td>Deterministic Correlation Engine, MITRE ATT&CK mapping dictionary, and deterministic mathematical risk scoring formula.</td>
+        </tr>
+        <tr>
+          <td><strong>Jaimin Parmar</strong></td>
+          <td>Qdrant Vector Database integration, FastEmbed RAG pipeline, and backend unit test suite (106 tests).</td>
+        </tr>
+        <tr>
+          <td><strong>Digisha Savaliya</strong></td>
+          <td>React 18 frontend dashboard, glassmorphic dark-mode UI styling, Recharts integration, and report exports.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

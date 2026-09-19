@@ -344,6 +344,12 @@ class QdrantService:
                 or 50.0
             )
 
+            # Gather behavioral context from preloaded relationship
+            ba = getattr(chain, "behavioral_analysis", None)
+            ba_text = ""
+            if ba:
+                ba_text = f" Behavioral Anomaly Score: {ba.anomaly_score}/100 ({ba.anomaly_level}). Prioritization: {ba.why_prioritized}."
+
             # Chain document with user_id tenant identifier
             chain_doc = {
                 "chain_id": chain.chain_id,
@@ -353,6 +359,7 @@ class QdrantService:
                     f"targeting destinations [{chain.destination_ips}]. "
                     f"Progression sequence: {chain.events}. "
                     f"Total alerts: {chain.alert_count}. Overall Risk Score: {score_num} ({risk_level})."
+                    f"{ba_text}"
                 ),
                 "mitre": mitre_ids,
                 "doc_type": "attack_chain",
@@ -362,9 +369,39 @@ class QdrantService:
                     "alert_count": chain.alert_count,
                     "start_time": str(chain.start_time),
                     "end_time": str(chain.end_time),
+                    "behavioral_score": ba.anomaly_score if ba else None,
+                    "behavioral_level": ba.anomaly_level if ba else None,
                 },
             }
             docs_to_index.append(chain_doc)
+
+            # 1b. Check Contextual Behavioral Analysis doc
+            if ba:
+                ba_signals = []
+                if ba.signals:
+                    try:
+                        sig_data = json.loads(ba.signals) if isinstance(ba.signals, str) else ba.signals
+                        ba_signals = [s.get("description", "") for s in sig_data if isinstance(s, dict)]
+                    except Exception:
+                        pass
+                ba_doc = {
+                    "chain_id": chain.chain_id,
+                    "risk": risk_level,
+                    "summary": (
+                        f"Contextual Behavioral Anomaly Analysis for Attack Chain {chain.chain_id}: "
+                        f"Anomaly Score: {ba.anomaly_score}/100 ({ba.anomaly_level}). "
+                        f"Rationale: {ba.why_prioritized or 'Standard context signals'}. "
+                        f"Observed Behavioral Signals: {'; '.join(ba_signals[:5])}."
+                    ),
+                    "mitre": mitre_ids,
+                    "doc_type": "behavioral_analysis",
+                    "user_id": str(chain.user_id) if chain.user_id is not None else None,
+                    "metadata": {
+                        "anomaly_score": ba.anomaly_score,
+                        "anomaly_level": ba.anomaly_level,
+                    },
+                }
+                docs_to_index.append(ba_doc)
 
             # 2. Check Recommendations from preloaded relationship
             rec = getattr(chain, "recommendation", None)

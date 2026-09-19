@@ -20,6 +20,8 @@ class RiskScore(BaseModel):
     event_score: int = Field(default=0, description="Sub-score from event weights")
     mitre_score: int = Field(default=0, description="Sub-score from MITRE technique weights")
     chain_bonus: int = Field(default=0, description="Bonus points from chain length")
+    behavioral_score: Optional[int] = Field(default=None, description="Contextual behavioral anomaly score (0-100)")
+    behavioral_level: Optional[str] = Field(default=None, description="Behavioral anomaly classification (Normal, Low, Medium, High, Critical)")
     metadata: Optional[Dict[str, Any]] = Field(
         default_factory=dict,
         description="Extensible metadata for downstream agents",
@@ -39,6 +41,8 @@ class RiskScore(BaseModel):
                 "event_score": 75,
                 "mitre_score": 20,
                 "chain_bonus": 10,
+                "behavioral_score": 65,
+                "behavioral_level": "High",
                 "metadata": {},
             }
         }
@@ -52,6 +56,8 @@ class RiskScoreResponse(BaseModel):
     score: int = Field(..., ge=0, le=100)
     level: str = Field(...)
     reasoning: List[str] = Field(default_factory=list)
+    behavioral_score: Optional[int] = Field(default=None)
+    behavioral_level: Optional[str] = Field(default=None)
     message: str = Field(default="Risk score calculated successfully")
 
 

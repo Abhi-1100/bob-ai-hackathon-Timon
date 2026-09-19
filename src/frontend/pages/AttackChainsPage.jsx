@@ -129,6 +129,7 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                 <th>Destinations</th>
                 <th>Events</th>
                 <th>Risk Score</th>
+                <th>Behavioral</th>
                 <th>Risk Level</th>
                 <th>MITRE Techniques</th>
                 <th>Status</th>
@@ -139,7 +140,7 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
             <tbody>
               {filteredChains.length === 0 ? (
                 <tr>
-                  <td colSpan={10} style={{ textAlign: 'center', padding: '36px 0', color: 'var(--text-muted)' }}>
+                  <td colSpan={11} style={{ textAlign: 'center', padding: '36px 0', color: 'var(--text-muted)' }}>
                     No attack chains match the filter or search criteria.
                   </td>
                 </tr>
@@ -178,6 +179,23 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                         }}>
                           {score}
                         </span>
+                      </td>
+                      <td>
+                        {c.behavioral_score !== undefined && c.behavioral_score !== null ? (
+                          <span style={{
+                            padding: '3px 8px',
+                            borderRadius: 4,
+                            fontSize: 11,
+                            fontWeight: 700,
+                            background: c.behavioral_score >= 60 ? 'rgba(239, 68, 68, 0.12)' : c.behavioral_score >= 30 ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+                            color: c.behavioral_score >= 60 ? 'var(--critical)' : c.behavioral_score >= 30 ? 'var(--yellow)' : 'var(--green)',
+                            border: `1px solid ${c.behavioral_score >= 60 ? 'rgba(239, 68, 68, 0.25)' : c.behavioral_score >= 30 ? 'rgba(245, 158, 11, 0.25)' : 'rgba(16, 185, 129, 0.25)'}`,
+                          }}>
+                            {c.behavioral_score}/100
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>—</span>
+                        )}
                       </td>
                       <td>
                         <SeverityBadge value={sev} />

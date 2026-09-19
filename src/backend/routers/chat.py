@@ -44,12 +44,15 @@ router = APIRouter(
     tags=["AI Analyst Chat"],
 )
 
-# Service singleton
-_chat_service = AnalystChatService()
+# Service singleton (lazily initialized on first request)
+_chat_service: Optional[AnalystChatService] = None
 
 
 def get_chat_service() -> AnalystChatService:
     """Dependency provider for AnalystChatService."""
+    global _chat_service
+    if _chat_service is None:
+        _chat_service = AnalystChatService()
     return _chat_service
 
 

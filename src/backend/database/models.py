@@ -158,6 +158,15 @@ class AttackChainDB(Base):
         lazy="selectin",
     )
 
+    # Relationship to behavioral analysis (one-to-one)
+    behavioral_analysis = relationship(
+        "BehavioralAnalysisDB",
+        back_populates="attack_chain",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+
     __table_args__ = (
         Index("ix_attack_chains_user_id", "user_id"),
         Index("ix_attack_chains_user_chain", "user_id", "chain_id", unique=True),
@@ -253,6 +262,8 @@ class RiskScoreDB(Base):
     event_score = Column(Integer, nullable=False, default=0)
     mitre_score = Column(Integer, nullable=False, default=0)
     chain_bonus = Column(Integer, nullable=False, default=0)
+    behavioral_score = Column(Integer, nullable=True)
+    behavioral_level = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Relationship back to attack chain
@@ -379,5 +390,63 @@ class UserDB(Base):
 
     def __repr__(self) -> str:
         return f"<UserDB id={self.id} email={self.email}>"
+
+
+# ---------------------------------------------------------------------------
+# Behavioral + Context Analysis
+# ---------------------------------------------------------------------------
+class EntityBaselineDB(Base):
+    """Stores behavioral baselines per entity for anomaly detection."""
+    __tablename__ = "entity_baselines"
+
+    id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    entity_type = Column(String(50), nullable=False) # e.g. 'ip', 'user', 'device'
+    entity_value = Column(String(255), nullable=False)
+    observation_count = Column(Integer, nullable=False, default=0)
+    avg_events_per_hour = Column(Integer, nullable=False, default=0) # Storing as scaled integer or use Float
+    peak_events_per_hour = Column(Integer, nullable=False, default=0)
+    first_seen = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    last_seen = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    metadata_json = Column(Text, nullable=True)
+
+    __table_args__ = (
+        Index("ix_entity_baselines_user_id", "user_id"),
+        Index("ix_entity_baselines_type_value", "entity_type", "entity_value"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<EntityBaselineDB type={self.entity_type} value={self.entity_value}>"
+
+
+class BehavioralAnalysisDB(Base):
+    """Stores the full behavioral analysis result per attack chain."""
+    __tablename__ = "behavioral_analyses"
+
+    id = UUIDColumn()
+    attack_chain_id = Column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("attack_chains.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,
+    )
+    anomaly_score = Column(Integer, nullable=False, default=0)
+    anomaly_level = Column(String(50), nullable=False)
+    signals = Column(Text, nullable=True) # JSON list
+    dimension_breakdown = Column(Text, nullable=True) # JSON dict
+    why_prioritized = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    # Relationship back to attack chain
+    attack_chain = relationship("AttackChainDB", back_populates="behavioral_analysis")
+
+    __table_args__ = (
+        Index("ix_behavioral_analyses_chain_id", "attack_chain_id"),
+        Index("ix_behavioral_analyses_level", "anomaly_level"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<BehavioralAnalysisDB score={self.anomaly_score} level={self.anomaly_level}>"
+
 
 

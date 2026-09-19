@@ -167,14 +167,17 @@ class RiskScoringEngine:
         elif event_count >= 3:
             return 10
         return 0
-
     def calculate_total_score(
-        self, event_score: int, mitre_score: int, chain_bonus: int
+        self, event_score: int, mitre_score: int, chain_bonus: int, behavioral_score: Optional[int] = None
     ) -> int:
         """
         Calculate raw combined score and cap between 0 and 100.
+        Contextual behavioral anomaly contributes up to 25% (max +25 points) additively.
         """
         raw = event_score + mitre_score + chain_bonus
+        if behavioral_score is not None and behavioral_score > 0:
+            behavioral_contribution = round((behavioral_score / 100.0) * 25)
+            raw += behavioral_contribution
         return min(100, max(0, raw))
 
     def determine_severity(self, score: int) -> str:
@@ -201,6 +204,9 @@ class RiskScoringEngine:
         event_count: int,
         final_score: int,
         level: str,
+        behavioral_score: Optional[int] = None,
+        behavioral_level: Optional[str] = None,
+        behavioral_reasons: Optional[List[str]] = None,
     ) -> List[str]:
         """
         Assemble comprehensive, human-readable explanations for the score.
@@ -213,6 +219,16 @@ class RiskScoringEngine:
 
         # MITRE-specific explanations
         reasoning.extend(mitre_explanations)
+
+        # Behavioral context explanations
+        if behavioral_score is not None:
+            reasoning.append(
+                f"Contextual behavioral analysis indicates {behavioral_level or 'anomalous'} activity (anomaly score: {behavioral_score}/100)"
+            )
+            if behavioral_reasons:
+                for b_r in behavioral_reasons[:3]:
+                    if b_r and b_r not in reasoning:
+                        reasoning.append(f"Behavioral context: {b_r}")
 
         # Chain progression explanation
         if chain_bonus > 0:
@@ -240,6 +256,9 @@ class RiskScoringEngine:
         chain_id: str,
         events: List[str],
         mitre_mappings: Optional[List[Any]] = None,
+        behavioral_score: Optional[int] = None,
+        behavioral_level: Optional[str] = None,
+        behavioral_reasons: Optional[List[str]] = None,
     ) -> RiskScore:
         """
         Pure calculation method without direct database dependency.
@@ -249,7 +268,9 @@ class RiskScoringEngine:
         mitre_score, mitre_expl = self.calculate_mitre_score(mitre_mappings or [])
         chain_bonus = self.calculate_chain_bonus(len(events))
 
-        total_score = self.calculate_total_score(event_score, mitre_score, chain_bonus)
+        total_score = self.calculate_total_score(
+            event_score, mitre_score, chain_bonus, behavioral_score=behavioral_score
+        )
         level = self.determine_severity(total_score)
 
         reasoning = self.generate_reasoning(
@@ -259,6 +280,9 @@ class RiskScoringEngine:
             event_count=len(events),
             final_score=total_score,
             level=level,
+            behavioral_score=behavioral_score,
+            behavioral_level=behavioral_level,
+            behavioral_reasons=behavioral_reasons,
         )
 
         return RiskScore(
@@ -269,6 +293,8 @@ class RiskScoringEngine:
             event_score=event_score,
             mitre_score=mitre_score,
             chain_bonus=chain_bonus,
+            behavioral_score=behavioral_score,
+            behavioral_level=behavioral_level,
             metadata={
                 "event_count": len(events),
                 "unique_events": list(set(events)),
@@ -293,11 +319,29 @@ class RiskScoringEngine:
         # Load MITRE mappings associated with the chain
         mitre_mappings = self.mitre_repo.get_chain_mappings(chain.id)
 
+        # Extract behavioral analysis if present
+        behavioral_score = None
+        behavioral_level = None
+        behavioral_reasons = []
+        if getattr(chain, "behavioral_analysis", None):
+            b_rec = chain.behavioral_analysis
+            behavioral_score = b_rec.anomaly_score
+            behavioral_level = b_rec.anomaly_level
+            if b_rec.signals:
+                try:
+                    signals = json.loads(b_rec.signals)
+                    behavioral_reasons = [s.get("description", "") for s in signals if isinstance(s, dict)]
+                except Exception:
+                    pass
+
         # Calculate score
         score_obj = self.score_chain_data(
             chain_id=chain.chain_id,
             events=events,
             mitre_mappings=mitre_mappings,
+            behavioral_score=behavioral_score,
+            behavioral_level=behavioral_level,
+            behavioral_reasons=behavioral_reasons,
         )
 
         # Persist to database
@@ -309,6 +353,8 @@ class RiskScoringEngine:
             event_score=score_obj.event_score,
             mitre_score=score_obj.mitre_score,
             chain_bonus=score_obj.chain_bonus,
+            behavioral_score=score_obj.behavioral_score,
+            behavioral_level=score_obj.behavioral_level,
             commit=commit,
         )
 
@@ -344,10 +390,27 @@ class RiskScoringEngine:
             events = [e.strip() for e in (chain.events or "").split(",") if e.strip()]
             mitre_mappings = chain.mitre_mappings or []
 
+            behavioral_score = None
+            behavioral_level = None
+            behavioral_reasons = []
+            if getattr(chain, "behavioral_analysis", None):
+                b_rec = chain.behavioral_analysis
+                behavioral_score = b_rec.anomaly_score
+                behavioral_level = b_rec.anomaly_level
+                if b_rec.signals:
+                    try:
+                        signals = json.loads(b_rec.signals)
+                        behavioral_reasons = [s.get("description", "") for s in signals if isinstance(s, dict)]
+                    except Exception:
+                        pass
+
             score_obj = self.score_chain_data(
                 chain_id=chain.chain_id,
                 events=events,
                 mitre_mappings=mitre_mappings,
+                behavioral_score=behavioral_score,
+                behavioral_level=behavioral_level,
+                behavioral_reasons=behavioral_reasons,
             )
             results.append(score_obj)
 
@@ -360,6 +423,8 @@ class RiskScoringEngine:
                 existing.event_score = score_obj.event_score
                 existing.mitre_score = score_obj.mitre_score
                 existing.chain_bonus = score_obj.chain_bonus
+                existing.behavioral_score = score_obj.behavioral_score
+                existing.behavioral_level = score_obj.behavioral_level
             else:
                 new_record = RiskScoreDB(
                     attack_chain_id=chain.id,
@@ -369,6 +434,8 @@ class RiskScoringEngine:
                     event_score=score_obj.event_score,
                     mitre_score=score_obj.mitre_score,
                     chain_bonus=score_obj.chain_bonus,
+                    behavioral_score=score_obj.behavioral_score,
+                    behavioral_level=score_obj.behavioral_level,
                 )
                 self.db.add(new_record)
 
@@ -412,10 +479,13 @@ class RiskScoringEngine:
             event_score=record.event_score or 0,
             mitre_score=record.mitre_score or 0,
             chain_bonus=record.chain_bonus or 0,
+            behavioral_score=record.behavioral_score,
+            behavioral_level=record.behavioral_level,
             metadata={
                 "created_at": record.created_at.isoformat() if record.created_at else None
             },
         )
+
 
     def get_risk_distribution(self, user_id: Optional[UUID] = None) -> RiskDistribution:
         """

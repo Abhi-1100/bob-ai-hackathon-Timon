@@ -349,7 +349,13 @@ def get_current_user_obj(
             payload = decode_access_token(token)
             user_id = payload.get("sub")
             if user_id:
-                user = db.query(UserDB).filter(UserDB.id == user_id).first()
+                try:
+                    user_uuid = uuid.UUID(str(user_id)) if not isinstance(user_id, uuid.UUID) else user_id
+                except Exception:
+                    user_uuid = user_id
+                user = db.query(UserDB).filter(UserDB.id == user_uuid).first()
+                if not user and payload.get("email"):
+                    user = db.query(UserDB).filter(UserDB.email == payload.get("email")).first()
                 if user:
                     return user
         except HTTPException:

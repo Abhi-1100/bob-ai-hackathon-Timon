@@ -13,6 +13,7 @@ from langgraph.graph import StateGraph, START, END
 
 from graph.state import ThreatWorkflowState
 from nodes.load_chain_node import load_chain_node
+from nodes.behavior_node import behavior_node
 from nodes.mitre_node import mitre_node
 from nodes.risk_node import risk_node
 from nodes.recommendation_node import recommendation_node
@@ -39,6 +40,7 @@ def create_threat_workflow():
 
     # Add orchestration nodes
     workflow.add_node("load_chain", load_chain_node)
+    workflow.add_node("behavior_analysis", behavior_node)
     workflow.add_node("mitre_mapping", mitre_node)
     workflow.add_node("risk_scoring", risk_node)
     workflow.add_node("recommendations", recommendation_node)
@@ -50,6 +52,15 @@ def create_threat_workflow():
 
     workflow.add_conditional_edges(
         "load_chain",
+        should_continue,
+        {
+            "continue": "behavior_analysis",
+            "store_results": "store_results",
+        },
+    )
+
+    workflow.add_conditional_edges(
+        "behavior_analysis",
         should_continue,
         {
             "continue": "mitre_mapping",

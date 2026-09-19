@@ -62,6 +62,8 @@ def calculate_chain_risk(
                 "score": score_obj.score,
                 "level": score_obj.level,
                 "reasoning": score_obj.reasoning,
+                "behavioral_score": score_obj.behavioral_score,
+                "behavioral_level": score_obj.behavioral_level,
                 "message": "Risk score calculated successfully",
             },
         )

@@ -43,6 +43,8 @@ def risk_node(state: ThreatWorkflowState, config: Optional[RunnableConfig] = Non
             "event_score": score_obj.event_score,
             "mitre_score": score_obj.mitre_score,
             "chain_bonus": score_obj.chain_bonus,
+            "behavioral_score": score_obj.behavioral_score,
+            "behavioral_level": score_obj.behavioral_level,
         }
         logger.info(f"[Workflow Node: Risk] Assessed risk for {chain_id}: {score_obj.score}/100 ({score_obj.level})")
 

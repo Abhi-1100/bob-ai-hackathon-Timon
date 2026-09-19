@@ -12,6 +12,7 @@ class ThreatWorkflowState(TypedDict, total=False):
     """
     chain_id: str
     attack_chain: Optional[Dict[str, Any]]
+    behavioral_analysis: Optional[Dict[str, Any]]
     mitre_mappings: Optional[List[Dict[str, Any]]]
     risk_score: Optional[Dict[str, Any]]
     recommendations: Optional[Dict[str, Any]]
