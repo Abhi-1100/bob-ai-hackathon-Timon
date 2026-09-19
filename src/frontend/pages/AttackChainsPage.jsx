@@ -146,9 +146,9 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                 </tr>
               ) : (
                 filteredChains.map(c => {
-                  const id = c.chain_id || 'AC001';
-                  const score = c.risk_score || c.final_score || 85;
-                  const sev = c.severity || 'Critical';
+                  const id = c.chain_id || '—';
+                  const score = c.risk_score ?? c.final_score ?? 0;
+                  const sev = c.severity || c.risk_level || 'Medium';
                   const techniques = c.mitre_techniques || [];
 
                   return (
@@ -159,17 +159,18 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           <Globe size={13} color="#64748B" />
-                          <code style={{ color: 'var(--text-primary)' }}>{c.source_ip || '198.51.100.24'}</code>
+                          <code style={{ color: 'var(--text-primary)' }}>{c.source_ip || '—'}</code>
                         </div>
                       </td>
                       <td>
                         <span className="mono" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-                          {c.dest_ips?.slice(0, 2).join(', ') || '10.0.4.12'}
-                          {c.dest_ips?.length > 2 ? ` (+${c.dest_ips.length - 2})` : ''}
+                          {(c.dest_ips && c.dest_ips.length > 0)
+                            ? `${c.dest_ips.slice(0, 2).join(', ')}${c.dest_ips.length > 2 ? ` (+${c.dest_ips.length - 2})` : ''}`
+                            : '—'}
                         </span>
                       </td>
                       <td>
-                        <span className="mono" style={{ fontWeight: 600 }}>{c.alert_count || 8} events</span>
+                        <span className="mono" style={{ fontWeight: 600 }}>{c.alert_count ?? 0} events</span>
                       </td>
                       <td>
                         <span className="mono" style={{
