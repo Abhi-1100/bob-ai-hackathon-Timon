@@ -131,7 +131,7 @@ def client(db_session, test_chat_service):
 
     dummy_user = UserDB(
         id=TEST_USER_ID,
-        email="analyst@sentinelforge.mil",
+        email="analyst@ThreatIntel.mil",
         full_name="Lead SOC Analyst",
         hashed_password="hashed_password_mock",
     )

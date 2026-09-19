@@ -50,9 +50,11 @@ def _get_engine():
     if _engine is None:
         db_url = _get_database_url()
         if db_url.startswith("sqlite"):
+            from sqlalchemy.pool import StaticPool
             _engine = create_engine(
                 db_url,
                 connect_args={"check_same_thread": False},
+                poolclass=StaticPool,
                 future=True,
             )
             logger.info(f"Local SQLite database engine initialized successfully ({db_url})")
@@ -66,13 +68,6 @@ def _get_engine():
                     pool_size=15,
                     max_overflow=25,
                     pool_timeout=15,
-                    connect_args={
-                        "connect_timeout": 10,
-                        "keepalives": 1,
-                        "keepalives_idle": 30,
-                        "keepalives_interval": 10,
-                        "keepalives_count": 5,
-                    },
                     future=True,
                 )
                 # Test connection to verify PostgreSQL is reachable
@@ -85,9 +80,11 @@ def _get_engine():
                     f"PostgreSQL connection failed ({exc}). Falling back to local SQLite database."
                 )
                 fallback_url = "sqlite:///./threat_intel.db"
+                from sqlalchemy.pool import StaticPool
                 _engine = create_engine(
                     fallback_url,
                     connect_args={"check_same_thread": False},
+                    poolclass=StaticPool,
                     future=True,
                 )
     return _engine

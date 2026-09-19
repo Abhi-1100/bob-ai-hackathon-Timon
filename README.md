@@ -1,11 +1,7 @@
 # 🚀 TimonTrack — ThreatIntel
 ### Threat Intelligence Correlation & Alert Prioritisation Assistant
 
-> **Track:** AI  
-> **Challenge:** Threat Intelligence Correlation & Alert Prioritisation Assistant  
-> **Mission:** Ingest multi-source threat feeds, correlate cross-domain alerts to eliminate false positives, map attacker techniques to the MITRE ATT&CK® framework, dynamically rank threats, and autonomously synthesize high-priority BLUF (Bottom Line Up Front) intelligence summaries with an interactive SOC analyst copilot.
-
----
+Threat Intelligence Correlation & Alert Prioritisation Assistant
 
 ## 👥 Team
 
@@ -13,33 +9,20 @@
 |---|---|
 | **Team Name** | TimonTrack |
 | **Track** | AI |
-| **Team Lead** | Abhi Kakadiya — 24it035@charusat.edu.in |
+| **Team Lead** | Abhi Kakadiya — 24it035@charusat.edu.in / abhikakadiya1043@gmail.com |
 | **Members** | Jaimin Parmar (24ce073@charusat.edu.in), Digisha Savaliya (24it087@charusat.edu.in), Om Ghori (24dce43@charusat.edu.in) |
 
 ---
 
 ## 🎯 Problem Statement
 
-> See [`docs/problem-statement.md`](docs/problem-statement.md) and [`PRD_Threat_Intelligence_Assistant.md`](PRD_Threat_Intelligence_Assistant.md) for full specifications.
-
-Security Operations Centers (SOCs) and defence analysts face severe **alert fatigue**, receiving tens of thousands of fragmented alerts daily from disparate sources:
-- **Enterprise SIEMs** (Splunk, QRadar, Elastic)
-- **Tactical Cyber Sensors** (network intrusion detection, endpoint telemetry, firewalls)
-- **Satellite & Telemetry feeds** (orbital telemetry, downlink anomalies)
-- **OSINT & Intelligence Feeds** (unstructured threat bulletins, CVE advisories)
-
-**Core Pain Points:**
-1. **False Positive Overload:** Chasing noise wastes vital defense resources while coordinated multi-stage intrusions remain buried.
-2. **Schema Fragmentation:** Incompatible alert schemas prevent cross-feed correlation in real time.
-3. **Delayed Decision Cycles:** Commanders and SOC leads require concise, high-confidence **BLUF (Bottom Line Up Front)** intelligence in minutes, not hours.
-
----
+Security Operations Center (SOC) teams receive large volumes of fragmented alerts from SIEMs, endpoint tools, network sensors, and intelligence feeds. Analysts spend too much time investigating false positives and manually connecting related events, which delays the identification and response to real multi-stage threats.
 
 ## 💡 Solution
 
 **ThreatIntel** is an end-to-end, AI-driven threat intelligence and alert prioritization platform built with **FastAPI**, **LangGraph**, **Qdrant Vector Database**, and **React 18 + Vite**.
 
-1. **Multi-Source Ingestion & Normalization:** Ingests heterogeneous alert streams into a canonical schema.
+1. **Multi-Source Ingestion & Normalization:** Ingests heterogeneous alert streams (CSV, JSON, streaming API) into a canonical schema.
 2. **Correlation & Campaign Reconstruction:** Groups related alerts into Attack Chains across time windows and host relationships.
 3. **Automated MITRE ATT&CK® Mapping:** Correlates observed attacker behavior to MITRE enterprise tactics and techniques.
 4. **Dynamic Risk Scoring:** Evaluates multi-factor risk scores (0–100) and classifies threats into Critical, High, Medium, and Low.
@@ -50,13 +33,13 @@ Security Operations Centers (SOCs) and defence analysts face severe **alert fati
 
 ## ✨ Key Features
 
-- **Multi-Source Alert Ingestion Engine:** Automated ingestion and validation for CSV/JSON security feeds.
-- **Rule-Based & Semantic Correlation:** Clusters alerts into attack chains to slash noise and false positives.
-- **Automated MITRE ATT&CK® Framework Alignment:** Automatically tags attack techniques and tactics.
-- **Deterministic 4-Tier Risk Scoring Engine:** Prioritizes critical attack chains with transparent mathematical scoring.
-- **AI Executive BLUF Generator & Tactical Playbooks:** Formulates executive summaries and prioritized remediation playbooks.
-- **Interactive SOC Analyst Copilot:** LangGraph + Qdrant grounded retrieval-augmented chat assistant.
-- **Real-Time Glassmorphic SOC Dashboard:** Dark-mode React/Vite interface with live metrics, attack chain visualizer, and MITRE matrix.
+- Multi-source CSV/JSON/API alert ingestion and validation
+- Cross-alert correlation and attack-chain reconstruction
+- Automated MITRE ATT&CK tactic and technique mapping
+- Transparent 0–100 risk scoring and severity prioritization
+- AI-generated BLUF intelligence reports and remediation recommendations
+- Authenticated, user-isolated SOC dashboard with analytics and reports
+- RAG-powered AI analyst chat backed by Qdrant
 
 ## Supported ingestion methods
 
@@ -64,26 +47,23 @@ Security Operations Centers (SOCs) and defence analysts face severe **alert fati
 2. **JSON Upload** for an alert array or an `{ "alerts": [...] }` / `{ "data": [...] }` wrapper.
 3. **API URL** for a public HTTP(S) JSON alert feed fetched by the backend.
 
-Each source normalizes into the same canonical alert model before alert correlation, attack-chain generation, MITRE mapping, deterministic risk scoring, AI/RAG, Qdrant, and the SOC dashboard. API URL ingestion has a 10-second timeout, a 5 MB cap, disabled redirects, and blocks localhost, private, and non-HTTP(S) targets. This is connector-ready rather than a direct vendor integration.
+Each source normalizes into the same canonical alert model before alert correlation, attack-chain generation, MITRE mapping, deterministic risk scoring, AI/RAG, Qdrant, and the SOC dashboard. API URL ingestion has a 10-second timeout, a 5 MB cap, disabled redirects, and blocks localhost, private, and non-HTTP(S) targets.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
 | Category | Technologies |
 |---|---|
-| **Languages** | Python 3.11+, JavaScript / JSX, SQL |
-| **Backend Frameworks** | FastAPI, Uvicorn, Pydantic v2, SQLAlchemy, Alembic |
-| **AI / Orchestration** | LangGraph, LangChain, Groq (Llama 3.3 70B), Qdrant Vector Store, FastEmbed |
-| **Frontend Frameworks** | React 18, Vite, Lucide Icons, Vanilla CSS Design System |
-| **Databases** | SQLite (embedded), PostgreSQL / Neon compatible |
-| **DevOps & Testing** | Pytest, GitHub Actions, Docker |
-
----
+| Languages | Python, JavaScript, JSX, SQL |
+| Frameworks | FastAPI, React, Vite, LangGraph, LangChain |
+| IBM Technologies | IBM watsonx.ai integration support |
+| Databases | SQLite, PostgreSQL-compatible databases, Qdrant Vector Database |
+| Other | Groq/Llama, SQLAlchemy, Alembic, Zustand, Recharts, Pytest, Render, Vercel |
 
 ## 📁 Repository Structure
 
-```
+```text
 bob-ai-hackathon-Timon/
 │
 ├── submission.yaml          # Structured metadata — read by evaluators & validation CI
@@ -184,18 +164,18 @@ The current worker uses an in-process asyncio queue for the demo. Production dep
 cd src/backend
 
 # Configure environment variables
-cp ../.env.example .env
-# Edit .env with your GROQ_API_KEY / WATSONX credentials
+# Copy .env from template
+# Set GROQ_API_KEY, DATABASE_URL, etc.
 
-# Install backend dependencies
+# Install dependencies
 pip install -r requirements.txt
 
 # Run backend with uvicorn
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 - **Interactive API Documentation:** `http://127.0.0.1:8000/docs`
-- **Health Check:** `http://127.0.0.1:8000/health`
+- **Health Check:** `http://127.0.0.1:8000/`
 
 ### 2. Frontend Setup (React + Vite)
 
@@ -212,19 +192,17 @@ npm run dev
 
 - **SOC Web Dashboard:** `http://localhost:5173`
 
-### 3. Running Automated Tests
+### 3. Tests and Production Build
 
 ```bash
-# Run backend test suite (106 unit & integration tests)
+# Run backend test suite
 pytest src/backend/tests/ -v
 
 # Test frontend production build
 npm --prefix src/frontend run build
 ```
 
----
-
-## 🖥️ Demo
+## 🖥 Demo
 
 | Artifact | Link |
 |---|---|
@@ -237,21 +215,10 @@ npm --prefix src/frontend run build
 
 ## ⚠️ Known Limitations
 
-- Vector search uses local in-memory Qdrant by default unless remote `QDRANT_URL` is supplied.
-- Threat alert CSVs larger than 50MB should be uploaded in chunks.
-- watsonx.ai integration can fall back to local/Groq Llama 3.3 models in offline development environments.
-
----
+- Local development uses in-memory Qdrant when no remote Qdrant URL is configured.
+- AI-generated reports, recommendations, and analyst chat require a configured model provider such as Groq or watsonx.ai.
+- The default development setup uses SQLite; production deployments should use a managed PostgreSQL-compatible database.
 
 ## 🏅 What We're Most Proud Of
 
-- Fully autonomous, explainable threat correlation pipeline linking raw SIEM alerts to MITRE ATT&CK techniques in seconds.
-- Multi-agent LangGraph workflow producing commander-ready BLUF executive summaries and concrete tactical remediation steps.
-- Interactive, grounded RAG analyst copilot with persistent session memory.
-- Modern, glassmorphic SOC dashboard delivering a responsive dark-mode analyst experience.
-
----
-
-## 🔗 Repository
-
-[https://github.com/Abhi-1100/bob-ai-hackathon-Timon](https://github.com/Abhi-1100/bob-ai-hackathon-Timon)
+Sentinel Forge turns noisy, disconnected security alerts into explainable attack chains with MITRE ATT&CK context, transparent risk prioritization, and actionable BLUF summaries. The strongest part of the submission is the end-to-end workflow connecting ingestion, correlation, scoring, reporting, and analyst chat in one unified SOC experience.

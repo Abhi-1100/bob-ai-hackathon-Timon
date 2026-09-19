@@ -57,7 +57,7 @@ def db_session():
     from database.models import UserDB
     user = UserDB(
         id=TEST_USER_ID,
-        email="analyst@sentinelforge.mil",
+        email="analyst@ThreatIntel.mil",
         full_name="Chief SOC Analyst",
         hashed_password="mock_hashed_password",
     )

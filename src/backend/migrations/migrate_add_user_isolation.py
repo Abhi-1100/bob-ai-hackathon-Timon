@@ -25,7 +25,7 @@ if db_url.startswith("postgresql://"):
 print(f"[MIGRATION] Connecting to database...")
 engine = create_engine(db_url)
 
-DEFAULT_EMAIL = "analyst@sentinelforge.mil"
+DEFAULT_EMAIL = "analyst@ThreatIntel.mil"
 DEFAULT_USER_ID = "11111111-1111-1111-1111-111111111111"
 
 with engine.connect() as conn:
@@ -48,7 +48,7 @@ with engine.connect() as conn:
         else:
             # Create seed user
             seed_user_id = DEFAULT_USER_ID
-            # PBKDF2 hash for 'SentinelForge#2026'
+            # PBKDF2 hash for 'ThreatIntel#2026'
             sample_hash = "pbkdf2:sha256:100000$67b93a0bfa254921$84e868a8677c72449a03cf69c76082c3c6314c45b736b7617fa7259ea62bf9f7"
             conn.execute(
                 text("""

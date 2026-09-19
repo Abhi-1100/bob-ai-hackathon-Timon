@@ -112,7 +112,7 @@ npm --prefix src/frontend run build
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
 5. Under **Environment Variables**, add the values from your `.env` (`DATABASE_URL`, `GROQ_API_KEY`, `JWT_SECRET`, `UPSTASH_REDIS_REST_URL`, etc.).
-6. Click **Deploy Web Service** and copy the live URL (e.g., `https://sentinel-forge-backend.onrender.com`).
+6. Click **Deploy Web Service** and copy the live URL (e.g., `https://threat-intel-backend.onrender.com`).
 
 ### B. Deploying Frontend to Vercel
 1. In [Vercel Dashboard](https://vercel.com/), click **Add New...** -> **Project**.
@@ -121,5 +121,5 @@ npm --prefix src/frontend run build
    - **Root Directory**: `src/frontend`
    - **Framework Preset**: `Vite`
 4. Under **Environment Variables**, add:
-   - `VITE_API_BASE_URL`: `https://sentinel-forge-backend.onrender.com` (your Render backend URL)
+   - `VITE_API_BASE_URL`: `https://threat-intel-backend.onrender.com` (your Render backend URL)
 5. Click **Deploy**. Vercel will build the production bundle and serve the live app with SPA routing rewrites.

@@ -1,0 +1,2501 @@
+sku,name,warehouse,stock,reorder,cost
+COMP-35938,Mouse - Wireless,East Coast Fulfillment,3103,197,$137.25
+MOD-79260,SSD - RTX 4070,Express Logistics (WH-03),4831,398,$361.14
+MOD-31756,Monitor - Mid-Tower,Central Hub (WH-01),2002,342,$669.47
+SKU-EL-31681,Power Supply - Intel Core i7,West Coast Dist,3933,491,$612.98
+SKU-EL-29079,Case - 27-inch 4K,West Coast Dist,3637,493,$386.44
+PRD-HW-65878,HDD - 27-inch 4K,West Coast Dist,4790,299,$302.85
+MOD-14850,Cable - 2TB 7200RPM,Central Hub (WH-01),1268,343,$418.44
+PRD-HW-97004,Case - 32GB DDR5,Regional Depot (WH-02),1555,110,$793.94
+SKU-EL-5564,GPU - 2TB 7200RPM,Express Logistics (WH-03),4348,430,$667.76
+COMP-33610,RAM - Mechanical RGB,Regional Depot (WH-02),1375,192,$34.78
+SKU-EL-74287,RAM - Intel Core i7,Central Hub (WH-01),3996,311,$563.72
+PWR-29682,GPU - 27-inch 4K,Express Logistics (WH-03),1285,137,$736.51
+COMP-45950,Mouse - Mechanical RGB,West Coast Dist,4720,440,$391.76
+PRD-HW-65589,Case - 120mm PWM,Express Logistics (WH-03),3512,235,$579.43
+MOD-18297,Monitor - 2TB 7200RPM,Regional Depot (WH-02),2989,399,$572.02
+MOD-2937,Keyboard - 32GB DDR5,East Coast Fulfillment,2367,222,$744.62
+COMP-13697,Power Supply - Wireless,Regional Depot (WH-02),3788,149,$557.77
+SKU-EL-12307,Power Supply - Mechanical RGB,West Coast Dist,3485,471,$660.85
+PRD-HW-77106,CPU - ATX,Central Hub (WH-01),1477,163,$225.30
+PWR-82323,Cooling Fan - 850W Gold,Central Hub (WH-01),3768,435,$369.25
+PRD-HW-17027,CPU - 850W Gold,Regional Depot (WH-02),1287,475,$333.98
+PRD-HW-41221,CPU - Mechanical RGB,Regional Depot (WH-02),58,447,$622.49
+PRD-HW-17526,SSD - 120mm PWM,Central Hub (WH-01),1660,454,$142.09
+COMP-97117,Motherboard - RTX 4070,West Coast Dist,3940,272,$68.96
+MOD-60884,GPU - 32GB DDR5,Express Logistics (WH-03),4734,490,$600.99
+COMP-28915,Power Supply - Wireless,Central Hub (WH-01),211,57,$177.39
+COMP-78940,Motherboard - 27-inch 4K,East Coast Fulfillment,2063,309,$279.56
+PWR-73324,Power Supply - USB-C 2m,Central Hub (WH-01),3445,67,$130.92
+SKU-EL-25739,Cable - 2TB 7200RPM,Central Hub (WH-01),2242,453,$552.09
+COMP-36462,RAM - 2TB 7200RPM,Central Hub (WH-01),2618,424,$51.76
+PWR-65339,Mouse - 2TB 7200RPM,West Coast Dist,3181,145,$670.17
+MOD-14478,Keyboard - RTX 4070,Regional Depot (WH-02),1065,260,$266.09
+COMP-96477,GPU - Mechanical RGB,Central Hub (WH-01),3761,268,$528.09
+PRD-HW-62946,RAM - Wireless,East Coast Fulfillment,1344,232,$170.71
+SKU-EL-95251,GPU - Wireless,West Coast Dist,1724,261,$427.37
+PWR-76476,RAM - RTX 4070,West Coast Dist,2229,236,$119.53
+SKU-EL-44095,Motherboard - Mid-Tower,East Coast Fulfillment,4981,124,$602.15
+MOD-50894,Power Supply - USB-C 2m,West Coast Dist,4031,354,$680.98
+PWR-68939,Power Supply - ATX,East Coast Fulfillment,1788,402,$511.65
+PRD-HW-85498,CPU - Intel Core i7,Regional Depot (WH-02),3385,231,$661.34
+SKU-EL-76159,Power Supply - ATX,Regional Depot (WH-02),3166,415,$615.07
+SKU-EL-47706,CPU - USB-C 2m,Central Hub (WH-01),4472,159,$633.20
+MOD-34400,Cable - Wireless,East Coast Fulfillment,4834,491,$7.20
+SKU-EL-1498,Monitor - Wireless,West Coast Dist,478,450,$406.93
+PRD-HW-43916,Mouse - 32GB DDR5,West Coast Dist,2840,230,$155.38
+PRD-HW-25816,Monitor - Mid-Tower,West Coast Dist,4380,266,$478.60
+PWR-3067,Case - 32GB DDR5,Express Logistics (WH-03),1212,61,$585.82
+PWR-19645,Keyboard - USB-C 2m,Express Logistics (WH-03),4696,467,$83.27
+COMP-84147,Mouse - Wireless,East Coast Fulfillment,1724,424,$699.82
+COMP-38283,Case - 32GB DDR5,Central Hub (WH-01),247,111,$675.18
+SKU-EL-15529,CPU - Intel Core i7,Regional Depot (WH-02),4400,455,$788.61
+COMP-41996,HDD - Mid-Tower,East Coast Fulfillment,4660,463,$605.19
+PWR-17439,Keyboard - Wireless,Express Logistics (WH-03),4351,173,$735.95
+PRD-HW-33774,Case - USB-C 2m,Central Hub (WH-01),4572,239,$557.05
+PRD-HW-6172,CPU - Mechanical RGB,Express Logistics (WH-03),1383,285,$315.74
+PWR-78285,RAM - Intel Core i7,Central Hub (WH-01),2838,457,$93.31
+COMP-47168,Cable - 120mm PWM,East Coast Fulfillment,4800,386,$158.86
+COMP-94022,Cable - ATX,Regional Depot (WH-02),4860,295,$508.08
+SKU-EL-74923,Mouse - 850W Gold,Central Hub (WH-01),3673,106,$658.87
+MOD-24331,CPU - 2TB 7200RPM,East Coast Fulfillment,2669,145,$140.31
+PRD-HW-17189,Motherboard - 1TB NVMe,Central Hub (WH-01),2535,306,$382.98
+SKU-EL-83785,Monitor - Wireless,Central Hub (WH-01),2092,439,$726.43
+PWR-35582,Mouse - 32GB DDR5,West Coast Dist,2827,76,$527.19
+COMP-89074,Cable - Mid-Tower,West Coast Dist,4839,82,$462.62
+PWR-61350,Cable - 2TB 7200RPM,West Coast Dist,2312,70,$601.65
+SKU-EL-62012,Case - 27-inch 4K,West Coast Dist,4560,203,$119.46
+PWR-4303,Cable - 27-inch 4K,Central Hub (WH-01),1914,208,$714.62
+SKU-EL-66673,RAM - Mid-Tower,Express Logistics (WH-03),653,326,$360.46
+COMP-49317,Keyboard - USB-C 2m,Express Logistics (WH-03),2328,67,$385.84
+SKU-EL-14005,GPU - Intel Core i7,Central Hub (WH-01),3880,106,$426.32
+PWR-70423,GPU - 850W Gold,Central Hub (WH-01),2435,451,$625.97
+PWR-18205,CPU - 2TB 7200RPM,Regional Depot (WH-02),4972,18,$534.62
+PRD-HW-82823,HDD - 27-inch 4K,Central Hub (WH-01),2271,364,$253.82
+SKU-EL-21029,CPU - Wireless,Central Hub (WH-01),773,329,$187.26
+PRD-HW-44967,Monitor - Wireless,Central Hub (WH-01),106,110,$392.48
+MOD-68786,Cooling Fan - 1TB NVMe,Central Hub (WH-01),1857,172,$684.68
+MOD-46261,CPU - Mechanical RGB,Central Hub (WH-01),3891,279,$456.77
+SKU-EL-28150,HDD - 32GB DDR5,Central Hub (WH-01),3069,54,$276.90
+PRD-HW-30028,CPU - 120mm PWM,Regional Depot (WH-02),2238,164,$617.58
+COMP-61906,Monitor - Mid-Tower,West Coast Dist,441,360,$569.87
+COMP-35110,Cable - 120mm PWM,West Coast Dist,463,466,$603.91
+COMP-90161,Motherboard - 2TB 7200RPM,Express Logistics (WH-03),995,204,$18.17
+PRD-HW-9863,Cable - Wireless,Central Hub (WH-01),1099,364,$734.04
+PWR-74665,Keyboard - Mid-Tower,Express Logistics (WH-03),2795,158,$676.84
+PRD-HW-18443,CPU - 120mm PWM,West Coast Dist,71,84,$408.26
+PWR-84926,Cooling Fan - Intel Core i7,Central Hub (WH-01),1998,122,$89.53
+SKU-EL-22340,RAM - Wireless,Regional Depot (WH-02),4026,252,$659.19
+PRD-HW-43431,RAM - 2TB 7200RPM,Central Hub (WH-01),2289,405,$600.29
+PWR-64507,HDD - RTX 4070,Express Logistics (WH-03),3299,187,$331.90
+SKU-EL-84364,SSD - Mechanical RGB,Central Hub (WH-01),3492,343,$514.21
+SKU-EL-9139,Monitor - Mid-Tower,Express Logistics (WH-03),2846,388,$103.58
+PRD-HW-49148,RAM - 850W Gold,Express Logistics (WH-03),978,400,$779.31
+COMP-56330,HDD - RTX 4070,Regional Depot (WH-02),4374,37,$454.83
+SKU-EL-7090,CPU - Mid-Tower,Express Logistics (WH-03),3015,396,$476.14
+PWR-55759,RAM - 1TB NVMe,Express Logistics (WH-03),1703,233,$274.32
+COMP-95994,RAM - RTX 4070,Regional Depot (WH-02),1275,389,$446.45
+SKU-EL-10683,CPU - 120mm PWM,Central Hub (WH-01),928,55,$559.09
+SKU-EL-16040,Keyboard - 120mm PWM,East Coast Fulfillment,346,454,$220.20
+COMP-93274,GPU - RTX 4070,Express Logistics (WH-03),3217,317,$32.25
+PRD-HW-20400,RAM - USB-C 2m,West Coast Dist,4866,375,$11.30
+MOD-93288,Cable - Wireless,Express Logistics (WH-03),2043,423,$567.18
+PRD-HW-66099,HDD - Wireless,West Coast Dist,4802,201,$380.39
+MOD-85457,RAM - USB-C 2m,East Coast Fulfillment,87,161,$188.42
+PRD-HW-2452,Cable - ATX,East Coast Fulfillment,678,127,$108.87
+SKU-EL-12960,SSD - 2TB 7200RPM,East Coast Fulfillment,0,223,$45.91
+MOD-43980,Monitor - 27-inch 4K,Regional Depot (WH-02),825,239,$451.92
+MOD-70451,Power Supply - Wireless,West Coast Dist,3797,479,$175.41
+SKU-EL-73537,Case - Intel Core i7,Central Hub (WH-01),4491,272,$713.72
+SKU-EL-94395,GPU - Mid-Tower,Central Hub (WH-01),832,440,$126.15
+PRD-HW-53723,Power Supply - 120mm PWM,Regional Depot (WH-02),2356,357,$749.44
+PWR-57117,Case - 32GB DDR5,Central Hub (WH-01),380,74,$395.82
+SKU-EL-96107,GPU - 1TB NVMe,Central Hub (WH-01),2700,243,$568.05
+SKU-EL-40385,Keyboard - 32GB DDR5,Express Logistics (WH-03),2013,89,$516.69
+COMP-33788,SSD - ATX,East Coast Fulfillment,493,233,$176.85
+COMP-48636,Cable - Wireless,Regional Depot (WH-02),1686,70,$325.73
+PWR-61290,Power Supply - 27-inch 4K,Regional Depot (WH-02),4244,428,$693.07
+MOD-78042,GPU - Mechanical RGB,Express Logistics (WH-03),3296,416,$673.67
+SKU-EL-3892,CPU - 27-inch 4K,West Coast Dist,2308,249,$220.70
+PRD-HW-57292,Case - 1TB NVMe,Regional Depot (WH-02),417,164,$548.66
+PWR-58546,Motherboard - 1TB NVMe,Regional Depot (WH-02),2148,271,$418.93
+PRD-HW-97378,Keyboard - Wireless,East Coast Fulfillment,4198,494,$276.37
+SKU-EL-16829,RAM - 850W Gold,West Coast Dist,2784,476,$61.00
+SKU-EL-47094,GPU - Intel Core i7,Central Hub (WH-01),1899,121,$542.67
+COMP-54490,GPU - Mechanical RGB,Regional Depot (WH-02),3497,373,$268.40
+COMP-75071,RAM - Wireless,Express Logistics (WH-03),4627,205,$365.20
+PRD-HW-25158,GPU - 27-inch 4K,Central Hub (WH-01),3490,477,$633.35
+PRD-HW-95718,SSD - ATX,Express Logistics (WH-03),4623,313,$737.05
+MOD-5972,Power Supply - Wireless,East Coast Fulfillment,977,266,$258.07
+MOD-63560,Power Supply - 32GB DDR5,West Coast Dist,1667,140,$775.55
+PRD-HW-60329,HDD - 27-inch 4K,Express Logistics (WH-03),3648,440,$317.32
+COMP-7276,SSD - 120mm PWM,West Coast Dist,2279,147,$256.34
+COMP-7196,Cooling Fan - 32GB DDR5,West Coast Dist,1833,182,$159.92
+MOD-46031,SSD - Intel Core i7,West Coast Dist,832,388,$447.29
+SKU-EL-55961,Monitor - Mechanical RGB,Express Logistics (WH-03),126,398,$164.20
+COMP-59666,HDD - 120mm PWM,Express Logistics (WH-03),3214,166,$299.41
+MOD-75767,Mouse - Mechanical RGB,Central Hub (WH-01),1277,264,$19.02
+COMP-24001,Power Supply - 1TB NVMe,West Coast Dist,578,260,$328.38
+SKU-EL-42353,Monitor - Intel Core i7,West Coast Dist,1684,36,$256.86
+SKU-EL-34297,Cable - ATX,Express Logistics (WH-03),1019,433,$35.93
+COMP-12324,GPU - 32GB DDR5,West Coast Dist,2554,196,$172.99
+COMP-18754,Monitor - 1TB NVMe,East Coast Fulfillment,717,102,$621.46
+PWR-90815,CPU - Mechanical RGB,West Coast Dist,4041,33,$159.10
+MOD-8911,Keyboard - RTX 4070,East Coast Fulfillment,4148,343,$254.14
+SKU-EL-90644,Keyboard - 850W Gold,Express Logistics (WH-03),2633,356,$144.06
+PWR-10224,SSD - Intel Core i7,Express Logistics (WH-03),4160,25,$599.52
+PRD-HW-1939,GPU - Wireless,East Coast Fulfillment,1419,142,$203.69
+MOD-32447,RAM - 1TB NVMe,West Coast Dist,1228,137,$482.91
+SKU-EL-95242,Monitor - 27-inch 4K,West Coast Dist,730,173,$467.13
+PRD-HW-32757,SSD - 2TB 7200RPM,West Coast Dist,2586,164,$643.29
+PRD-HW-95714,CPU - Wireless,Express Logistics (WH-03),477,22,$259.06
+PRD-HW-40208,Cooling Fan - 120mm PWM,West Coast Dist,4954,76,$257.36
+MOD-48610,Power Supply - 120mm PWM,Central Hub (WH-01),3415,38,$695.82
+PWR-6297,RAM - 1TB NVMe,Central Hub (WH-01),3123,123,$135.51
+MOD-38634,Monitor - 27-inch 4K,Regional Depot (WH-02),4918,207,$133.74
+SKU-EL-74132,RAM - USB-C 2m,West Coast Dist,1481,273,$12.21
+MOD-26516,Cooling Fan - Intel Core i7,Regional Depot (WH-02),716,92,$283.23
+SKU-EL-4871,Power Supply - 850W Gold,East Coast Fulfillment,3050,491,$700.32
+SKU-EL-48284,Cooling Fan - ATX,Express Logistics (WH-03),2721,189,$188.37
+COMP-36388,Cooling Fan - Mid-Tower,Central Hub (WH-01),4547,259,$378.30
+COMP-12429,HDD - 32GB DDR5,Regional Depot (WH-02),4432,16,$37.78
+COMP-83738,Keyboard - RTX 4070,West Coast Dist,1330,310,$20.44
+PWR-66879,Keyboard - 27-inch 4K,West Coast Dist,2519,221,$501.08
+MOD-22862,GPU - Mid-Tower,East Coast Fulfillment,4138,159,$558.92
+PRD-HW-77844,Mouse - 2TB 7200RPM,East Coast Fulfillment,3072,376,$725.76
+SKU-EL-60200,Monitor - ATX,East Coast Fulfillment,4935,319,$502.36
+PWR-18255,Cooling Fan - 27-inch 4K,West Coast Dist,4440,222,$799.96
+MOD-84047,Case - RTX 4070,Central Hub (WH-01),3227,469,$592.35
+MOD-72073,Cable - ATX,East Coast Fulfillment,925,19,$399.90
+SKU-EL-43042,Mouse - 2TB 7200RPM,Central Hub (WH-01),1944,262,$184.97
+COMP-74197,Cooling Fan - Wireless,Express Logistics (WH-03),3060,211,$577.81
+MOD-67152,Motherboard - 2TB 7200RPM,East Coast Fulfillment,4936,479,$406.26
+SKU-EL-91720,SSD - 850W Gold,West Coast Dist,1235,433,$41.57
+PRD-HW-23743,SSD - Mid-Tower,Express Logistics (WH-03),3411,129,$20.22
+MOD-87032,Monitor - USB-C 2m,Regional Depot (WH-02),2200,76,$569.19
+COMP-21405,Mouse - 32GB DDR5,Express Logistics (WH-03),4999,410,$662.08
+PRD-HW-3302,Power Supply - USB-C 2m,Central Hub (WH-01),1656,352,$792.47
+COMP-23147,Motherboard - 1TB NVMe,Express Logistics (WH-03),3309,349,$591.78
+MOD-38969,SSD - 850W Gold,West Coast Dist,3422,206,$384.02
+COMP-12515,Monitor - USB-C 2m,Central Hub (WH-01),3675,440,$238.64
+SKU-EL-91989,Keyboard - 27-inch 4K,Regional Depot (WH-02),3599,443,$210.21
+COMP-51071,CPU - USB-C 2m,Regional Depot (WH-02),4923,209,$400.75
+PWR-67593,Motherboard - 27-inch 4K,Regional Depot (WH-02),464,17,$564.28
+SKU-EL-54009,Cable - 850W Gold,East Coast Fulfillment,4873,425,$106.57
+SKU-EL-40803,RAM - Wireless,Regional Depot (WH-02),1722,237,$581.12
+PRD-HW-84809,Keyboard - Mid-Tower,Central Hub (WH-01),1701,187,$187.45
+COMP-4013,SSD - 2TB 7200RPM,East Coast Fulfillment,3882,352,$699.30
+COMP-61917,GPU - Intel Core i7,West Coast Dist,894,496,$23.38
+SKU-EL-78287,Monitor - USB-C 2m,West Coast Dist,1076,84,$581.50
+SKU-EL-65784,Motherboard - 850W Gold,Central Hub (WH-01),4344,331,$291.35
+SKU-EL-57545,CPU - 27-inch 4K,East Coast Fulfillment,2013,195,$176.49
+MOD-23024,GPU - 1TB NVMe,East Coast Fulfillment,3414,89,$470.02
+PRD-HW-84962,Cable - 2TB 7200RPM,Regional Depot (WH-02),3566,347,$98.60
+PWR-51978,Power Supply - Wireless,West Coast Dist,2815,381,$781.88
+PWR-55733,Power Supply - 32GB DDR5,Central Hub (WH-01),4616,357,$173.45
+PWR-29267,Cooling Fan - 27-inch 4K,West Coast Dist,917,194,$597.74
+PWR-41559,Power Supply - ATX,East Coast Fulfillment,2446,500,$60.39
+MOD-11917,Keyboard - 27-inch 4K,Regional Depot (WH-02),1909,74,$736.70
+COMP-99407,GPU - 32GB DDR5,Central Hub (WH-01),1067,26,$625.68
+SKU-EL-91713,Monitor - ATX,West Coast Dist,1533,96,$132.78
+COMP-98670,Keyboard - Intel Core i7,West Coast Dist,754,423,$640.88
+PWR-21472,Monitor - 850W Gold,Central Hub (WH-01),4067,311,$303.78
+PRD-HW-86782,HDD - 2TB 7200RPM,West Coast Dist,4860,274,$568.24
+MOD-95547,Motherboard - Mid-Tower,East Coast Fulfillment,3161,416,$469.06
+MOD-82663,Power Supply - USB-C 2m,Central Hub (WH-01),238,152,$779.24
+PWR-43330,Case - 2TB 7200RPM,West Coast Dist,4019,36,$565.72
+PWR-53785,GPU - Mid-Tower,Regional Depot (WH-02),898,295,$729.25
+SKU-EL-80407,GPU - 32GB DDR5,Regional Depot (WH-02),3254,431,$528.23
+PWR-80007,SSD - Mid-Tower,East Coast Fulfillment,4305,163,$705.09
+PWR-54302,SSD - Mid-Tower,Central Hub (WH-01),1365,241,$162.70
+PRD-HW-78590,Case - 1TB NVMe,East Coast Fulfillment,4225,89,$73.57
+PRD-HW-32850,HDD - Mechanical RGB,Central Hub (WH-01),4888,339,$349.91
+COMP-27318,Cooling Fan - ATX,Express Logistics (WH-03),2072,427,$393.75
+MOD-63946,GPU - Wireless,Express Logistics (WH-03),825,161,$797.32
+SKU-EL-97591,Case - 2TB 7200RPM,East Coast Fulfillment,1413,52,$653.14
+PRD-HW-78491,Motherboard - 32GB DDR5,Express Logistics (WH-03),626,232,$697.67
+MOD-69823,SSD - 2TB 7200RPM,East Coast Fulfillment,2734,130,$246.98
+PWR-12168,Case - 32GB DDR5,Central Hub (WH-01),754,253,$732.60
+COMP-74346,Case - Intel Core i7,Central Hub (WH-01),2009,246,$245.35
+MOD-27228,Mouse - RTX 4070,West Coast Dist,4020,63,$363.49
+PRD-HW-24651,Keyboard - 32GB DDR5,East Coast Fulfillment,2435,179,$21.53
+COMP-80003,Power Supply - USB-C 2m,Regional Depot (WH-02),4984,211,$738.49
+PWR-30993,RAM - 1TB NVMe,Express Logistics (WH-03),2896,26,$455.56
+SKU-EL-25187,Motherboard - RTX 4070,Express Logistics (WH-03),1443,467,$147.36
+PRD-HW-34559,HDD - 2TB 7200RPM,Regional Depot (WH-02),3849,202,$652.33
+PWR-81299,RAM - 850W Gold,Central Hub (WH-01),4496,98,$42.59
+SKU-EL-33838,HDD - 32GB DDR5,East Coast Fulfillment,3184,95,$764.24
+COMP-19958,Monitor - Intel Core i7,Express Logistics (WH-03),1066,95,$362.00
+SKU-EL-48503,RAM - Mid-Tower,East Coast Fulfillment,2764,129,$693.25
+MOD-35468,Mouse - 32GB DDR5,Central Hub (WH-01),2182,451,$656.32
+SKU-EL-10334,SSD - Intel Core i7,East Coast Fulfillment,4226,30,$467.00
+MOD-91168,Keyboard - ATX,Express Logistics (WH-03),3620,394,$247.08
+COMP-9563,Case - RTX 4070,East Coast Fulfillment,3177,181,$551.17
+PWR-98384,SSD - USB-C 2m,East Coast Fulfillment,1743,397,$398.88
+PRD-HW-3223,GPU - Mechanical RGB,Express Logistics (WH-03),3715,267,$361.11
+COMP-13657,Mouse - 1TB NVMe,West Coast Dist,630,278,$280.59
+SKU-EL-88244,GPU - ATX,West Coast Dist,502,283,$476.78
+MOD-61845,Case - Intel Core i7,Central Hub (WH-01),269,355,$647.47
+COMP-38164,Keyboard - Mechanical RGB,West Coast Dist,2507,205,$652.54
+PWR-47868,Cooling Fan - 1TB NVMe,Express Logistics (WH-03),3199,211,$537.47
+PWR-96461,Keyboard - 32GB DDR5,East Coast Fulfillment,4853,150,$215.74
+COMP-92708,SSD - RTX 4070,West Coast Dist,76,151,$343.00
+PWR-38860,Power Supply - 2TB 7200RPM,East Coast Fulfillment,2124,443,$700.91
+MOD-72441,Case - 850W Gold,Central Hub (WH-01),2355,364,$336.49
+COMP-28558,RAM - USB-C 2m,West Coast Dist,2061,473,$608.60
+COMP-19868,GPU - 2TB 7200RPM,Regional Depot (WH-02),3591,447,$603.28
+MOD-70976,SSD - Intel Core i7,East Coast Fulfillment,1399,203,$183.75
+COMP-58857,HDD - RTX 4070,Central Hub (WH-01),3875,385,$754.13
+PWR-11803,RAM - Mid-Tower,West Coast Dist,3884,297,$556.89
+PRD-HW-18452,Mouse - USB-C 2m,Express Logistics (WH-03),2219,178,$23.30
+PWR-72945,Cooling Fan - Mechanical RGB,Express Logistics (WH-03),4055,471,$793.08
+PWR-83022,SSD - 32GB DDR5,Regional Depot (WH-02),4889,141,$767.38
+PWR-13785,Power Supply - 850W Gold,West Coast Dist,2150,249,$83.19
+MOD-72806,SSD - Intel Core i7,West Coast Dist,661,59,$742.79
+PRD-HW-21266,Keyboard - RTX 4070,Express Logistics (WH-03),2694,88,$114.31
+PRD-HW-45464,Cooling Fan - 120mm PWM,Regional Depot (WH-02),3235,397,$138.56
+MOD-17773,Mouse - Mid-Tower,West Coast Dist,1255,486,$205.48
+MOD-55978,Keyboard - Mid-Tower,East Coast Fulfillment,2692,487,$271.74
+MOD-43398,CPU - 2TB 7200RPM,East Coast Fulfillment,1618,273,$218.15
+PRD-HW-58173,RAM - Wireless,Central Hub (WH-01),1397,500,$342.63
+SKU-EL-59579,Keyboard - 850W Gold,Express Logistics (WH-03),1893,36,$272.19
+MOD-11746,HDD - 850W Gold,Regional Depot (WH-02),3365,120,$539.02
+SKU-EL-11440,Cable - 2TB 7200RPM,East Coast Fulfillment,4575,28,$12.37
+COMP-2697,HDD - RTX 4070,West Coast Dist,4248,375,$429.41
+SKU-EL-53075,HDD - 32GB DDR5,East Coast Fulfillment,474,80,$143.38
+SKU-EL-68774,GPU - Mid-Tower,Express Logistics (WH-03),4104,204,$631.90
+PRD-HW-96023,HDD - USB-C 2m,Regional Depot (WH-02),500,365,$58.42
+SKU-EL-85002,Case - 2TB 7200RPM,Regional Depot (WH-02),3644,152,$310.39
+PWR-92097,GPU - Mid-Tower,East Coast Fulfillment,558,239,$158.88
+PRD-HW-20668,Monitor - 1TB NVMe,Regional Depot (WH-02),3905,210,$432.89
+PWR-62453,Keyboard - 27-inch 4K,West Coast Dist,4531,450,$331.50
+PRD-HW-43153,HDD - 27-inch 4K,West Coast Dist,2962,49,$542.47
+SKU-EL-93833,SSD - 27-inch 4K,East Coast Fulfillment,751,393,$205.87
+MOD-87307,Keyboard - 120mm PWM,West Coast Dist,1711,431,$386.00
+COMP-83565,Cooling Fan - 120mm PWM,Express Logistics (WH-03),2317,367,$597.04
+PWR-27780,SSD - 32GB DDR5,West Coast Dist,3912,29,$737.40
+PRD-HW-14672,SSD - Intel Core i7,West Coast Dist,117,215,$259.98
+MOD-83578,Power Supply - RTX 4070,East Coast Fulfillment,4975,275,$733.94
+MOD-97099,Case - RTX 4070,Express Logistics (WH-03),804,476,$584.38
+PWR-11700,Motherboard - Intel Core i7,East Coast Fulfillment,2229,431,$596.93
+PRD-HW-90801,Monitor - 1TB NVMe,Central Hub (WH-01),980,166,$694.66
+SKU-EL-62095,Case - 32GB DDR5,East Coast Fulfillment,3199,47,$788.40
+SKU-EL-39954,RAM - 27-inch 4K,Regional Depot (WH-02),892,125,$667.16
+SKU-EL-18594,Monitor - RTX 4070,Express Logistics (WH-03),1824,139,$199.58
+COMP-56488,Cooling Fan - 120mm PWM,West Coast Dist,3937,307,$732.80
+SKU-EL-7347,Mouse - 850W Gold,Regional Depot (WH-02),812,165,$748.01
+MOD-14197,Power Supply - Wireless,Regional Depot (WH-02),2555,42,$598.48
+MOD-30643,GPU - Mid-Tower,Express Logistics (WH-03),4084,299,$764.99
+MOD-6201,Monitor - 1TB NVMe,East Coast Fulfillment,335,465,$653.34
+PWR-44365,GPU - 32GB DDR5,Regional Depot (WH-02),3793,372,$164.42
+PRD-HW-99058,CPU - 850W Gold,West Coast Dist,2617,492,$573.78
+PRD-HW-83558,RAM - USB-C 2m,West Coast Dist,1194,209,$391.71
+MOD-40744,RAM - 2TB 7200RPM,West Coast Dist,2194,461,$168.60
+PWR-2741,Cooling Fan - 120mm PWM,Regional Depot (WH-02),4652,69,$226.92
+PWR-22809,Mouse - 32GB DDR5,Express Logistics (WH-03),2918,285,$725.59
+SKU-EL-87664,Power Supply - 32GB DDR5,Central Hub (WH-01),2107,372,$159.45
+PWR-68336,Case - Mechanical RGB,East Coast Fulfillment,3901,128,$690.36
+PRD-HW-78355,HDD - Mechanical RGB,Regional Depot (WH-02),1448,310,$618.49
+MOD-13626,Motherboard - 32GB DDR5,West Coast Dist,4107,173,$259.00
+PWR-60336,CPU - 120mm PWM,West Coast Dist,746,174,$17.60
+SKU-EL-99245,SSD - USB-C 2m,East Coast Fulfillment,1243,311,$287.60
+COMP-59431,Mouse - Wireless,Express Logistics (WH-03),4187,339,$454.56
+SKU-EL-93444,GPU - 27-inch 4K,East Coast Fulfillment,2664,241,$694.49
+COMP-90216,Cable - 27-inch 4K,Central Hub (WH-01),846,163,$784.29
+MOD-62294,HDD - Wireless,West Coast Dist,3038,34,$203.06
+PWR-15857,Cable - Intel Core i7,East Coast Fulfillment,4336,103,$203.02
+PRD-HW-99681,Motherboard - 27-inch 4K,East Coast Fulfillment,1678,164,$472.10
+PWR-32934,Monitor - Wireless,Regional Depot (WH-02),1620,313,$85.47
+SKU-EL-52438,SSD - 120mm PWM,West Coast Dist,1370,303,$775.34
+PRD-HW-90134,Mouse - 1TB NVMe,East Coast Fulfillment,1725,192,$59.67
+PWR-34793,RAM - Mid-Tower,Regional Depot (WH-02),1560,435,$697.14
+MOD-59831,SSD - Mechanical RGB,Regional Depot (WH-02),215,397,$46.50
+PWR-73733,Cable - 120mm PWM,Express Logistics (WH-03),2065,438,$223.04
+PRD-HW-96854,Cable - 32GB DDR5,East Coast Fulfillment,3253,436,$363.26
+PRD-HW-37436,HDD - USB-C 2m,Express Logistics (WH-03),881,480,$215.99
+PRD-HW-94888,Cable - 120mm PWM,East Coast Fulfillment,3726,301,$510.43
+PWR-78910,Mouse - Intel Core i7,East Coast Fulfillment,2836,102,$496.01
+MOD-84269,Monitor - 2TB 7200RPM,Regional Depot (WH-02),3297,473,$239.74
+PWR-87290,Cooling Fan - 120mm PWM,Express Logistics (WH-03),3553,461,$109.82
+COMP-2689,GPU - 27-inch 4K,West Coast Dist,2722,366,$699.41
+PRD-HW-40538,SSD - 32GB DDR5,Express Logistics (WH-03),796,178,$300.78
+PRD-HW-30017,Cooling Fan - RTX 4070,Regional Depot (WH-02),387,374,$401.45
+SKU-EL-67749,HDD - USB-C 2m,West Coast Dist,388,284,$673.81
+SKU-EL-64822,SSD - ATX,Express Logistics (WH-03),785,271,$426.78
+PRD-HW-69559,SSD - 1TB NVMe,Express Logistics (WH-03),563,425,$10.36
+PRD-HW-96954,GPU - Mechanical RGB,Central Hub (WH-01),3569,66,$184.62
+COMP-27490,SSD - Mid-Tower,East Coast Fulfillment,2778,346,$514.74
+PWR-82631,GPU - Mid-Tower,Express Logistics (WH-03),3798,50,$118.19
+MOD-9347,Motherboard - Mechanical RGB,Regional Depot (WH-02),3654,56,$540.13
+SKU-EL-7214,SSD - Intel Core i7,Express Logistics (WH-03),3633,410,$714.81
+SKU-EL-33847,Mouse - Intel Core i7,Central Hub (WH-01),2226,429,$282.86
+MOD-37842,Power Supply - 120mm PWM,West Coast Dist,4381,473,$318.53
+PRD-HW-65303,Case - 1TB NVMe,Regional Depot (WH-02),4631,196,$522.47
+PRD-HW-7520,SSD - 1TB NVMe,East Coast Fulfillment,4464,236,$546.03
+PRD-HW-2127,Motherboard - Intel Core i7,East Coast Fulfillment,4861,20,$112.01
+PWR-55627,HDD - USB-C 2m,East Coast Fulfillment,3218,249,$686.73
+PWR-68348,RAM - USB-C 2m,Express Logistics (WH-03),28,192,$540.48
+SKU-EL-33263,Cable - 120mm PWM,West Coast Dist,293,438,$340.64
+PRD-HW-30088,HDD - Wireless,Express Logistics (WH-03),4328,459,$460.81
+SKU-EL-31010,Cable - 1TB NVMe,Regional Depot (WH-02),4906,89,$759.41
+PRD-HW-23391,Motherboard - 27-inch 4K,Express Logistics (WH-03),3334,421,$718.62
+SKU-EL-48325,Cable - 2TB 7200RPM,East Coast Fulfillment,1228,289,$775.04
+COMP-72233,Power Supply - Intel Core i7,Regional Depot (WH-02),4532,160,$153.62
+COMP-52665,Keyboard - ATX,West Coast Dist,2713,389,$538.86
+SKU-EL-61557,Monitor - RTX 4070,East Coast Fulfillment,3920,465,$398.24
+SKU-EL-41997,CPU - Mid-Tower,West Coast Dist,985,68,$107.90
+SKU-EL-84576,Keyboard - Mid-Tower,East Coast Fulfillment,3767,139,$66.42
+PRD-HW-3448,Keyboard - USB-C 2m,West Coast Dist,426,17,$489.83
+SKU-EL-33119,SSD - Intel Core i7,Express Logistics (WH-03),4081,231,$258.59
+COMP-89265,Motherboard - 1TB NVMe,West Coast Dist,4953,53,$135.27
+PWR-47111,Cooling Fan - 1TB NVMe,Regional Depot (WH-02),838,408,$56.53
+SKU-EL-35715,Power Supply - Intel Core i7,Express Logistics (WH-03),1277,426,$404.45
+COMP-43614,Mouse - USB-C 2m,Express Logistics (WH-03),2896,58,$384.61
+PRD-HW-13877,Monitor - RTX 4070,Express Logistics (WH-03),2082,418,$591.48
+COMP-32923,SSD - Mid-Tower,Regional Depot (WH-02),2367,130,$430.94
+COMP-33510,Keyboard - Mechanical RGB,Central Hub (WH-01),2184,367,$169.59
+MOD-82260,HDD - USB-C 2m,Central Hub (WH-01),3744,137,$160.94
+PWR-85549,Keyboard - Intel Core i7,West Coast Dist,3057,477,$618.03
+PWR-14427,CPU - RTX 4070,Express Logistics (WH-03),4294,85,$435.34
+PRD-HW-90408,Monitor - 850W Gold,Express Logistics (WH-03),501,370,$484.10
+COMP-89637,Mouse - 32GB DDR5,Central Hub (WH-01),299,442,$556.04
+PWR-36832,RAM - USB-C 2m,Central Hub (WH-01),541,15,$119.59
+MOD-28726,Cable - 2TB 7200RPM,East Coast Fulfillment,638,16,$599.27
+PWR-12704,SSD - Mechanical RGB,Regional Depot (WH-02),4432,421,$311.93
+PRD-HW-62334,Case - Mid-Tower,Regional Depot (WH-02),2268,445,$798.87
+PWR-8664,Case - Intel Core i7,West Coast Dist,3941,370,$85.75
+PWR-9866,Mouse - 2TB 7200RPM,Express Logistics (WH-03),1534,470,$453.97
+PRD-HW-34143,RAM - Mid-Tower,East Coast Fulfillment,2060,218,$465.72
+SKU-EL-92884,Power Supply - USB-C 2m,West Coast Dist,3332,321,$255.11
+MOD-66720,GPU - 27-inch 4K,Express Logistics (WH-03),2553,74,$267.07
+MOD-91124,HDD - 1TB NVMe,Central Hub (WH-01),1926,365,$38.34
+SKU-EL-39993,CPU - 32GB DDR5,West Coast Dist,878,60,$205.46
+PWR-80232,Mouse - Wireless,East Coast Fulfillment,4890,262,$683.45
+PWR-99481,RAM - 120mm PWM,West Coast Dist,4114,322,$395.43
+PRD-HW-78892,SSD - Intel Core i7,Central Hub (WH-01),3779,218,$459.94
+COMP-10580,Power Supply - Wireless,East Coast Fulfillment,2456,36,$441.82
+SKU-EL-40674,Monitor - Mechanical RGB,Express Logistics (WH-03),2965,30,$316.32
+SKU-EL-73271,Power Supply - 120mm PWM,East Coast Fulfillment,1445,202,$70.66
+PWR-34466,CPU - 2TB 7200RPM,East Coast Fulfillment,1758,81,$22.72
+PWR-13461,HDD - 1TB NVMe,Express Logistics (WH-03),2637,401,$590.71
+SKU-EL-79321,SSD - 27-inch 4K,Central Hub (WH-01),3738,164,$561.86
+COMP-40377,HDD - 1TB NVMe,East Coast Fulfillment,459,479,$779.11
+MOD-56454,Monitor - USB-C 2m,Regional Depot (WH-02),2425,436,$461.26
+MOD-24821,Monitor - USB-C 2m,Central Hub (WH-01),4136,432,$77.67
+SKU-EL-94414,RAM - 2TB 7200RPM,Regional Depot (WH-02),3222,30,$342.70
+SKU-EL-40527,SSD - 27-inch 4K,West Coast Dist,1656,216,$435.38
+SKU-EL-84022,SSD - 1TB NVMe,Express Logistics (WH-03),2170,335,$389.07
+MOD-86956,SSD - 27-inch 4K,Central Hub (WH-01),4222,374,$209.01
+PWR-59484,GPU - RTX 4070,East Coast Fulfillment,3101,206,$72.83
+PWR-75017,Monitor - Wireless,Express Logistics (WH-03),2085,419,$459.00
+COMP-15249,SSD - RTX 4070,West Coast Dist,3744,332,$573.92
+PWR-40800,SSD - RTX 4070,Regional Depot (WH-02),4691,62,$265.08
+MOD-40724,RAM - Wireless,East Coast Fulfillment,2176,340,$132.66
+MOD-1207,RAM - Mid-Tower,Regional Depot (WH-02),4271,198,$20.91
+PWR-57865,GPU - 1TB NVMe,East Coast Fulfillment,4419,107,$329.10
+MOD-57307,SSD - ATX,West Coast Dist,4135,202,$183.58
+SKU-EL-34489,Cable - 1TB NVMe,Regional Depot (WH-02),3503,386,$614.95
+SKU-EL-11486,Power Supply - RTX 4070,Central Hub (WH-01),3907,164,$47.52
+COMP-47133,Keyboard - 32GB DDR5,East Coast Fulfillment,2335,192,$500.88
+COMP-51469,Case - 27-inch 4K,Regional Depot (WH-02),543,436,$357.30
+MOD-92845,Cooling Fan - 27-inch 4K,East Coast Fulfillment,1989,232,$160.01
+PWR-54654,GPU - 1TB NVMe,East Coast Fulfillment,2350,191,$76.02
+MOD-23924,Motherboard - RTX 4070,Regional Depot (WH-02),1155,166,$792.44
+COMP-9224,SSD - 1TB NVMe,West Coast Dist,2766,194,$368.07
+PWR-94565,Case - 120mm PWM,East Coast Fulfillment,2780,81,$316.62
+PRD-HW-64742,Mouse - Mid-Tower,Central Hub (WH-01),2208,222,$790.10
+SKU-EL-90104,GPU - ATX,East Coast Fulfillment,3156,158,$393.63
+SKU-EL-18850,Monitor - 1TB NVMe,West Coast Dist,406,450,$100.27
+PWR-94078,Mouse - 850W Gold,Regional Depot (WH-02),531,318,$727.59
+PRD-HW-5255,Mouse - 2TB 7200RPM,West Coast Dist,3796,75,$617.41
+PWR-78003,Power Supply - USB-C 2m,East Coast Fulfillment,153,32,$629.97
+MOD-69774,RAM - 2TB 7200RPM,West Coast Dist,3224,357,$47.02
+PRD-HW-44695,CPU - Mid-Tower,Central Hub (WH-01),1139,479,$723.61
+MOD-27654,Case - 32GB DDR5,Express Logistics (WH-03),1740,101,$555.07
+COMP-45918,Mouse - Wireless,Central Hub (WH-01),856,46,$12.28
+MOD-85119,RAM - 2TB 7200RPM,Central Hub (WH-01),3338,187,$184.91
+MOD-56825,GPU - 27-inch 4K,Central Hub (WH-01),4262,400,$220.55
+MOD-56140,SSD - Intel Core i7,Central Hub (WH-01),2457,336,$640.94
+MOD-25993,Cable - RTX 4070,West Coast Dist,263,251,$51.49
+MOD-76834,GPU - 27-inch 4K,West Coast Dist,4799,402,$119.48
+MOD-83901,RAM - Wireless,Regional Depot (WH-02),1663,191,$201.00
+SKU-EL-42928,Power Supply - 120mm PWM,Regional Depot (WH-02),275,182,$200.38
+PWR-83345,CPU - 120mm PWM,Regional Depot (WH-02),358,364,$689.96
+PRD-HW-21242,Monitor - RTX 4070,West Coast Dist,3161,284,$450.59
+SKU-EL-69367,Monitor - 27-inch 4K,Regional Depot (WH-02),1939,384,$121.29
+MOD-34822,Power Supply - 32GB DDR5,East Coast Fulfillment,2054,162,$324.91
+MOD-99615,Case - 120mm PWM,Central Hub (WH-01),4701,233,$213.81
+SKU-EL-15996,RAM - Intel Core i7,West Coast Dist,2657,263,$184.15
+PWR-24905,Power Supply - 2TB 7200RPM,East Coast Fulfillment,3135,372,$478.47
+COMP-92027,Cooling Fan - 850W Gold,Express Logistics (WH-03),4371,384,$649.00
+SKU-EL-40324,Cooling Fan - Intel Core i7,Central Hub (WH-01),2051,30,$17.94
+COMP-9812,Cooling Fan - 850W Gold,West Coast Dist,4540,339,$366.91
+PWR-36524,Mouse - 850W Gold,West Coast Dist,2577,171,$296.68
+PWR-29297,GPU - 120mm PWM,Express Logistics (WH-03),2257,311,$736.21
+SKU-EL-38698,HDD - 850W Gold,Central Hub (WH-01),969,282,$740.75
+COMP-84837,SSD - RTX 4070,East Coast Fulfillment,4516,236,$627.36
+SKU-EL-1566,Mouse - Mechanical RGB,Express Logistics (WH-03),3549,490,$429.72
+PRD-HW-94689,HDD - 850W Gold,East Coast Fulfillment,1213,95,$706.02
+COMP-39699,Power Supply - 32GB DDR5,Regional Depot (WH-02),2896,107,$117.71
+SKU-EL-83308,Cooling Fan - Mid-Tower,Express Logistics (WH-03),622,428,$634.07
+PWR-44180,GPU - 27-inch 4K,East Coast Fulfillment,2001,377,$375.00
+PWR-41459,Case - Wireless,Express Logistics (WH-03),1302,462,$564.15
+PWR-3498,HDD - USB-C 2m,Regional Depot (WH-02),2954,346,$566.43
+COMP-23126,Cooling Fan - Mid-Tower,West Coast Dist,642,333,$117.00
+COMP-9326,RAM - USB-C 2m,Express Logistics (WH-03),2095,147,$622.00
+PWR-51140,GPU - USB-C 2m,East Coast Fulfillment,1984,329,$569.46
+COMP-3145,GPU - Intel Core i7,Express Logistics (WH-03),2735,491,$782.17
+PWR-80508,Monitor - Mechanical RGB,West Coast Dist,1020,362,$736.50
+PRD-HW-42180,CPU - 2TB 7200RPM,Express Logistics (WH-03),1846,136,$206.75
+SKU-EL-21446,Mouse - Mid-Tower,Regional Depot (WH-02),1656,391,$461.92
+MOD-35407,CPU - Mechanical RGB,West Coast Dist,2742,441,$352.73
+SKU-EL-87341,Motherboard - USB-C 2m,Express Logistics (WH-03),1656,487,$83.50
+COMP-4060,Cooling Fan - USB-C 2m,Central Hub (WH-01),559,349,$744.21
+SKU-EL-80588,Case - ATX,Express Logistics (WH-03),3047,199,$42.93
+MOD-64910,GPU - USB-C 2m,Central Hub (WH-01),2613,183,$255.90
+COMP-59773,SSD - USB-C 2m,Express Logistics (WH-03),1621,140,$759.67
+MOD-57733,Motherboard - Mechanical RGB,East Coast Fulfillment,3226,91,$520.63
+SKU-EL-4499,Motherboard - Mid-Tower,West Coast Dist,3225,168,$249.79
+PRD-HW-28289,Mouse - 32GB DDR5,Regional Depot (WH-02),3765,31,$749.69
+SKU-EL-82633,Keyboard - 32GB DDR5,Regional Depot (WH-02),728,211,$280.52
+MOD-46651,Keyboard - Mid-Tower,Regional Depot (WH-02),2844,336,$611.44
+PWR-10192,RAM - Wireless,Central Hub (WH-01),2384,413,$66.71
+COMP-12142,Cooling Fan - 27-inch 4K,Regional Depot (WH-02),1356,29,$96.06
+PRD-HW-94219,Power Supply - 32GB DDR5,Regional Depot (WH-02),2320,321,$100.47
+PWR-96877,Keyboard - RTX 4070,Regional Depot (WH-02),4551,415,$623.81
+PWR-1543,Case - Mechanical RGB,Central Hub (WH-01),3970,383,$61.39
+PRD-HW-14204,GPU - Intel Core i7,West Coast Dist,101,40,$514.23
+PWR-24030,GPU - 32GB DDR5,Express Logistics (WH-03),89,129,$569.73
+SKU-EL-52533,Power Supply - USB-C 2m,Central Hub (WH-01),4563,77,$349.26
+SKU-EL-16071,GPU - Mechanical RGB,West Coast Dist,3998,55,$67.73
+PRD-HW-86778,Motherboard - Intel Core i7,Regional Depot (WH-02),4785,77,$226.18
+COMP-87482,CPU - 32GB DDR5,East Coast Fulfillment,2758,199,$581.18
+PRD-HW-24437,Mouse - RTX 4070,West Coast Dist,1894,341,$586.88
+SKU-EL-89125,Case - USB-C 2m,Central Hub (WH-01),4360,174,$401.76
+SKU-EL-88805,RAM - 27-inch 4K,West Coast Dist,1850,221,$157.46
+SKU-EL-6561,Monitor - Mid-Tower,West Coast Dist,486,147,$143.33
+MOD-18989,Power Supply - RTX 4070,East Coast Fulfillment,2118,418,$522.91
+PWR-83143,Cooling Fan - USB-C 2m,Express Logistics (WH-03),4541,378,$509.04
+SKU-EL-11553,Keyboard - 1TB NVMe,East Coast Fulfillment,98,458,$147.83
+PRD-HW-32235,GPU - Mid-Tower,Express Logistics (WH-03),1720,428,$553.27
+COMP-21763,Power Supply - 850W Gold,East Coast Fulfillment,2347,78,$34.50
+COMP-60141,Power Supply - USB-C 2m,Express Logistics (WH-03),1792,427,$28.37
+PRD-HW-98108,HDD - 2TB 7200RPM,Central Hub (WH-01),631,137,$429.86
+PRD-HW-29327,Cable - 1TB NVMe,Express Logistics (WH-03),3793,424,$654.40
+COMP-42688,SSD - 850W Gold,Express Logistics (WH-03),3081,385,$652.79
+PWR-49895,Cooling Fan - Mechanical RGB,Central Hub (WH-01),904,173,$784.50
+PWR-32141,Cable - 1TB NVMe,Central Hub (WH-01),323,293,$24.31
+PWR-52011,Case - Intel Core i7,West Coast Dist,3137,423,$544.93
+PRD-HW-52384,Cable - USB-C 2m,East Coast Fulfillment,1475,142,$602.75
+COMP-1258,SSD - 27-inch 4K,East Coast Fulfillment,3782,449,$144.54
+MOD-59665,GPU - 32GB DDR5,East Coast Fulfillment,4229,244,$194.81
+PRD-HW-36706,Cooling Fan - 2TB 7200RPM,West Coast Dist,4651,225,$786.24
+COMP-25148,Mouse - 1TB NVMe,East Coast Fulfillment,2570,172,$179.92
+MOD-8017,Keyboard - Wireless,Express Logistics (WH-03),3735,69,$78.76
+PWR-99005,Cable - 27-inch 4K,East Coast Fulfillment,1406,381,$564.65
+PWR-16334,Motherboard - 2TB 7200RPM,Central Hub (WH-01),3692,108,$524.38
+PWR-8891,Monitor - RTX 4070,Central Hub (WH-01),4238,252,$568.90
+PRD-HW-14112,Keyboard - 850W Gold,East Coast Fulfillment,2996,38,$448.98
+PWR-83261,Power Supply - Mid-Tower,Central Hub (WH-01),1098,235,$789.23
+PWR-25293,Keyboard - RTX 4070,Express Logistics (WH-03),2509,494,$728.89
+COMP-87557,Cooling Fan - 27-inch 4K,East Coast Fulfillment,2934,272,$686.21
+PWR-83317,Motherboard - Mid-Tower,Regional Depot (WH-02),638,223,$337.60
+COMP-7107,HDD - 2TB 7200RPM,Central Hub (WH-01),4669,251,$65.49
+MOD-44636,HDD - 32GB DDR5,Express Logistics (WH-03),4793,186,$237.61
+COMP-77306,Motherboard - Mid-Tower,Express Logistics (WH-03),3324,464,$388.30
+MOD-81752,Motherboard - RTX 4070,West Coast Dist,4396,445,$509.42
+COMP-81204,RAM - Mid-Tower,East Coast Fulfillment,583,433,$247.35
+COMP-82642,RAM - Intel Core i7,Regional Depot (WH-02),3818,179,$127.93
+SKU-EL-3817,Motherboard - 120mm PWM,West Coast Dist,3202,303,$428.27
+PWR-1962,Keyboard - RTX 4070,Express Logistics (WH-03),861,283,$536.29
+MOD-33519,Mouse - 27-inch 4K,Central Hub (WH-01),3889,496,$578.09
+MOD-89067,Mouse - RTX 4070,East Coast Fulfillment,3298,262,$532.85
+SKU-EL-40827,Cooling Fan - Mechanical RGB,Express Logistics (WH-03),3012,412,$498.74
+PRD-HW-72689,SSD - 120mm PWM,Express Logistics (WH-03),4423,133,$384.33
+PWR-99676,Cable - 850W Gold,Express Logistics (WH-03),2173,461,$600.01
+SKU-EL-86628,HDD - 120mm PWM,West Coast Dist,3850,434,$103.06
+SKU-EL-89183,Power Supply - RTX 4070,East Coast Fulfillment,3741,14,$124.67
+PRD-HW-44383,Keyboard - 850W Gold,West Coast Dist,3182,161,$394.78
+COMP-20059,CPU - Mechanical RGB,Express Logistics (WH-03),1391,74,$417.57
+MOD-10428,HDD - 120mm PWM,East Coast Fulfillment,1396,455,$725.42
+COMP-62361,RAM - RTX 4070,Regional Depot (WH-02),4952,433,$32.03
+COMP-39046,Keyboard - 850W Gold,Central Hub (WH-01),4075,11,$318.82
+MOD-4828,Cable - 1TB NVMe,Express Logistics (WH-03),3362,367,$386.17
+SKU-EL-92207,Cable - 27-inch 4K,Central Hub (WH-01),1450,68,$307.29
+PRD-HW-4818,Motherboard - Wireless,Regional Depot (WH-02),749,257,$405.60
+MOD-28764,SSD - RTX 4070,East Coast Fulfillment,2062,300,$738.44
+COMP-45928,HDD - Mid-Tower,West Coast Dist,1214,330,$91.34
+MOD-91443,GPU - ATX,West Coast Dist,1367,424,$458.15
+PRD-HW-56572,Cooling Fan - 120mm PWM,Regional Depot (WH-02),3166,448,$288.61
+PWR-98633,Case - Mid-Tower,East Coast Fulfillment,894,147,$521.87
+PRD-HW-22566,HDD - Mid-Tower,Central Hub (WH-01),2328,462,$338.26
+SKU-EL-44108,Keyboard - 850W Gold,Central Hub (WH-01),3430,29,$281.71
+PWR-20599,Monitor - Mid-Tower,Express Logistics (WH-03),2793,42,$275.10
+MOD-26997,Power Supply - ATX,East Coast Fulfillment,3187,64,$569.81
+PWR-82064,Motherboard - Intel Core i7,East Coast Fulfillment,4791,118,$541.92
+MOD-91476,Cable - Intel Core i7,West Coast Dist,4197,377,$528.48
+COMP-31938,Keyboard - Intel Core i7,West Coast Dist,4216,205,$513.39
+PWR-97937,SSD - 850W Gold,Regional Depot (WH-02),2363,198,$235.05
+COMP-52285,Power Supply - 2TB 7200RPM,Central Hub (WH-01),2817,117,$410.35
+MOD-47774,Power Supply - Wireless,Express Logistics (WH-03),3690,84,$58.08
+MOD-58530,Case - 27-inch 4K,Central Hub (WH-01),1024,465,$57.39
+MOD-21577,RAM - Wireless,Regional Depot (WH-02),176,266,$482.83
+SKU-EL-64451,GPU - ATX,Express Logistics (WH-03),1785,176,$300.92
+PWR-78158,Mouse - USB-C 2m,West Coast Dist,762,216,$569.92
+COMP-92293,CPU - Intel Core i7,Regional Depot (WH-02),4171,274,$265.50
+PRD-HW-89456,HDD - 1TB NVMe,Central Hub (WH-01),1543,283,$234.47
+COMP-30929,HDD - RTX 4070,East Coast Fulfillment,2349,268,$689.46
+COMP-3246,Monitor - 32GB DDR5,Regional Depot (WH-02),2994,285,$436.73
+SKU-EL-27988,SSD - Mid-Tower,Central Hub (WH-01),997,125,$566.72
+PWR-27105,Cable - Intel Core i7,Express Logistics (WH-03),2311,271,$209.48
+MOD-33776,Mouse - 27-inch 4K,East Coast Fulfillment,3837,15,$574.27
+SKU-EL-6933,Power Supply - USB-C 2m,Regional Depot (WH-02),1890,158,$97.08
+SKU-EL-84857,Power Supply - Intel Core i7,Express Logistics (WH-03),4337,404,$234.29
+SKU-EL-94075,GPU - 32GB DDR5,Regional Depot (WH-02),2483,157,$75.07
+MOD-53023,GPU - 27-inch 4K,Central Hub (WH-01),464,333,$294.21
+PWR-30314,Power Supply - RTX 4070,Central Hub (WH-01),355,346,$62.60
+PWR-56162,HDD - 1TB NVMe,East Coast Fulfillment,3986,464,$718.25
+PRD-HW-52828,Cooling Fan - 32GB DDR5,West Coast Dist,4445,34,$389.07
+SKU-EL-16387,HDD - 1TB NVMe,Central Hub (WH-01),142,142,$477.36
+PWR-18067,GPU - 32GB DDR5,Express Logistics (WH-03),3496,53,$338.62
+COMP-66935,RAM - ATX,West Coast Dist,3242,223,$546.14
+COMP-4993,Cooling Fan - USB-C 2m,Regional Depot (WH-02),761,457,$217.23
+PWR-95361,Cable - 850W Gold,East Coast Fulfillment,3199,101,$401.11
+SKU-EL-51807,Cooling Fan - 850W Gold,Regional Depot (WH-02),2660,407,$564.90
+PRD-HW-92758,Mouse - ATX,Central Hub (WH-01),4215,371,$237.52
+COMP-65212,Case - 2TB 7200RPM,East Coast Fulfillment,3962,290,$194.21
+SKU-EL-27445,RAM - Wireless,Express Logistics (WH-03),813,238,$107.80
+COMP-90961,Power Supply - 2TB 7200RPM,Express Logistics (WH-03),66,77,$466.28
+PWR-40511,Monitor - 120mm PWM,East Coast Fulfillment,1702,428,$131.19
+MOD-45797,Monitor - 1TB NVMe,West Coast Dist,1999,131,$711.35
+COMP-35392,Cable - USB-C 2m,Regional Depot (WH-02),4881,336,$169.49
+SKU-EL-55650,Keyboard - 1TB NVMe,East Coast Fulfillment,2901,338,$777.41
+SKU-EL-58548,HDD - USB-C 2m,West Coast Dist,1979,228,$376.86
+MOD-12670,Mouse - Mechanical RGB,Express Logistics (WH-03),485,106,$672.37
+COMP-55538,Power Supply - 1TB NVMe,West Coast Dist,4778,493,$203.07
+PWR-25413,Motherboard - ATX,Express Logistics (WH-03),1492,117,$214.98
+PRD-HW-33738,Keyboard - 120mm PWM,West Coast Dist,254,290,$687.88
+PWR-35463,GPU - RTX 4070,West Coast Dist,4144,458,$52.25
+MOD-41150,HDD - 1TB NVMe,Regional Depot (WH-02),3258,115,$525.66
+MOD-21200,Power Supply - Wireless,East Coast Fulfillment,3282,401,$422.64
+SKU-EL-39004,HDD - Intel Core i7,Central Hub (WH-01),3838,244,$704.60
+MOD-23477,Motherboard - ATX,East Coast Fulfillment,3653,267,$617.86
+COMP-36253,GPU - 32GB DDR5,Regional Depot (WH-02),2559,474,$790.28
+PWR-87716,SSD - Mid-Tower,Regional Depot (WH-02),300,297,$88.84
+SKU-EL-21974,Monitor - 1TB NVMe,East Coast Fulfillment,2742,143,$600.34
+PWR-38556,Cable - ATX,Central Hub (WH-01),3638,350,$431.15
+MOD-8566,Motherboard - RTX 4070,Central Hub (WH-01),250,337,$251.63
+PRD-HW-51810,SSD - Mid-Tower,East Coast Fulfillment,2949,410,$714.21
+MOD-47674,RAM - Wireless,East Coast Fulfillment,2760,411,$318.02
+SKU-EL-34593,Cable - 2TB 7200RPM,West Coast Dist,1895,144,$362.42
+SKU-EL-67375,HDD - 120mm PWM,East Coast Fulfillment,1960,19,$457.28
+PRD-HW-33007,Cable - Mechanical RGB,Central Hub (WH-01),2284,275,$397.83
+PWR-53494,Case - Mechanical RGB,Central Hub (WH-01),1347,91,$82.76
+COMP-48672,Case - 850W Gold,Regional Depot (WH-02),3294,57,$418.93
+MOD-52938,CPU - USB-C 2m,Central Hub (WH-01),3002,417,$343.79
+COMP-76912,GPU - Wireless,West Coast Dist,1886,291,$436.72
+PWR-74754,Motherboard - 2TB 7200RPM,Regional Depot (WH-02),3505,359,$748.98
+PRD-HW-69594,Case - Mid-Tower,Regional Depot (WH-02),4436,20,$565.65
+SKU-EL-2591,Cable - 32GB DDR5,Central Hub (WH-01),828,230,$485.33
+MOD-1145,Cooling Fan - Mid-Tower,Regional Depot (WH-02),922,415,$744.08
+PWR-14865,Cable - ATX,Express Logistics (WH-03),266,387,$82.72
+COMP-61789,GPU - 1TB NVMe,Central Hub (WH-01),2969,253,$196.66
+SKU-EL-59192,Power Supply - 2TB 7200RPM,Central Hub (WH-01),1233,297,$593.33
+PWR-90005,SSD - RTX 4070,Express Logistics (WH-03),4711,377,$229.05
+SKU-EL-59048,Motherboard - 1TB NVMe,Central Hub (WH-01),3930,159,$25.84
+PWR-75674,RAM - Mid-Tower,Central Hub (WH-01),1291,252,$566.07
+PWR-69901,Case - RTX 4070,Central Hub (WH-01),4492,191,$63.35
+PRD-HW-21334,Power Supply - 32GB DDR5,Central Hub (WH-01),136,320,$453.13
+PRD-HW-31376,RAM - 1TB NVMe,West Coast Dist,2596,155,$417.64
+SKU-EL-56293,Keyboard - RTX 4070,Express Logistics (WH-03),3749,209,$47.54
+COMP-31584,CPU - 32GB DDR5,West Coast Dist,1069,442,$669.12
+PRD-HW-62403,Keyboard - 120mm PWM,West Coast Dist,725,455,$788.97
+PRD-HW-36678,Power Supply - Intel Core i7,East Coast Fulfillment,4519,244,$141.07
+PWR-97056,CPU - 27-inch 4K,Central Hub (WH-01),1782,68,$627.84
+PRD-HW-41775,Keyboard - 1TB NVMe,East Coast Fulfillment,3845,28,$517.94
+COMP-41832,Monitor - 120mm PWM,East Coast Fulfillment,1418,363,$100.20
+COMP-55851,Keyboard - 2TB 7200RPM,Central Hub (WH-01),3855,470,$342.24
+SKU-EL-99912,Cooling Fan - USB-C 2m,West Coast Dist,3791,161,$229.43
+COMP-79898,Case - 120mm PWM,Express Logistics (WH-03),2583,279,$544.37
+SKU-EL-4996,Monitor - 32GB DDR5,West Coast Dist,4323,182,$61.75
+COMP-54389,RAM - 27-inch 4K,East Coast Fulfillment,1044,109,$699.58
+PWR-71121,GPU - 120mm PWM,Regional Depot (WH-02),1042,409,$279.50
+PRD-HW-43293,HDD - 850W Gold,Express Logistics (WH-03),1922,316,$171.37
+MOD-42778,Power Supply - Mechanical RGB,Express Logistics (WH-03),4355,478,$293.18
+COMP-60315,HDD - 850W Gold,Express Logistics (WH-03),2672,110,$616.75
+SKU-EL-30049,CPU - ATX,Central Hub (WH-01),1221,166,$742.66
+SKU-EL-40825,Power Supply - 2TB 7200RPM,East Coast Fulfillment,2461,309,$185.98
+SKU-EL-58949,SSD - 32GB DDR5,Express Logistics (WH-03),4827,344,$610.13
+PRD-HW-79712,Cable - 120mm PWM,Express Logistics (WH-03),3412,76,$733.01
+SKU-EL-51160,GPU - 2TB 7200RPM,East Coast Fulfillment,1771,88,$748.95
+PRD-HW-71968,Keyboard - Intel Core i7,East Coast Fulfillment,3054,328,$371.61
+PWR-94797,Case - 1TB NVMe,Central Hub (WH-01),479,392,$95.65
+PWR-32659,Motherboard - 27-inch 4K,East Coast Fulfillment,28,302,$402.26
+PRD-HW-4007,Cooling Fan - 1TB NVMe,Central Hub (WH-01),758,498,$315.30
+PWR-48098,Case - 850W Gold,West Coast Dist,979,171,$686.94
+PWR-1246,CPU - 32GB DDR5,Central Hub (WH-01),3963,18,$394.96
+MOD-84646,GPU - 850W Gold,Express Logistics (WH-03),2022,236,$252.94
+COMP-63857,GPU - USB-C 2m,Regional Depot (WH-02),4264,159,$300.39
+COMP-86353,Case - 120mm PWM,East Coast Fulfillment,3936,207,$456.24
+SKU-EL-40300,GPU - Mid-Tower,East Coast Fulfillment,4833,342,$373.72
+SKU-EL-54853,Keyboard - Wireless,Express Logistics (WH-03),892,180,$744.36
+COMP-82582,Mouse - Mid-Tower,Regional Depot (WH-02),974,492,$652.35
+MOD-94134,Mouse - 2TB 7200RPM,West Coast Dist,3830,332,$494.27
+MOD-14722,CPU - 27-inch 4K,Express Logistics (WH-03),2406,206,$560.36
+SKU-EL-38761,Motherboard - 27-inch 4K,Regional Depot (WH-02),2904,311,$569.30
+PRD-HW-87547,Monitor - Intel Core i7,West Coast Dist,4668,180,$501.36
+SKU-EL-43375,HDD - Mechanical RGB,East Coast Fulfillment,2066,232,$10.73
+COMP-73386,Monitor - 27-inch 4K,Central Hub (WH-01),3144,53,$277.23
+COMP-56505,GPU - 2TB 7200RPM,East Coast Fulfillment,4005,49,$239.33
+PRD-HW-42349,Cable - Mid-Tower,Express Logistics (WH-03),3721,54,$116.81
+PWR-90267,Keyboard - Mechanical RGB,West Coast Dist,4469,111,$651.32
+MOD-55349,Cable - 32GB DDR5,West Coast Dist,4904,333,$405.20
+SKU-EL-28116,Case - 27-inch 4K,Central Hub (WH-01),3738,487,$429.43
+PRD-HW-62528,Monitor - 27-inch 4K,Central Hub (WH-01),419,301,$456.43
+SKU-EL-20096,Power Supply - 1TB NVMe,Express Logistics (WH-03),1179,62,$125.76
+PWR-29321,Mouse - Wireless,East Coast Fulfillment,1606,48,$346.20
+COMP-14390,GPU - 850W Gold,East Coast Fulfillment,558,383,$637.93
+SKU-EL-23731,Case - Mid-Tower,East Coast Fulfillment,1762,432,$383.59
+COMP-50479,Case - Mechanical RGB,Express Logistics (WH-03),2482,430,$111.31
+PWR-99285,Cooling Fan - ATX,East Coast Fulfillment,4199,140,$33.06
+PRD-HW-51445,CPU - Mechanical RGB,Express Logistics (WH-03),969,127,$336.60
+PWR-84311,Monitor - 27-inch 4K,West Coast Dist,845,145,$236.48
+PWR-35322,CPU - Mid-Tower,East Coast Fulfillment,1610,117,$112.95
+PWR-83175,Keyboard - RTX 4070,Express Logistics (WH-03),2086,80,$92.92
+PWR-30943,Motherboard - 27-inch 4K,Express Logistics (WH-03),1545,440,$544.68
+PWR-52098,Cable - 27-inch 4K,West Coast Dist,578,265,$88.96
+PWR-27677,SSD - 120mm PWM,West Coast Dist,3467,162,$704.08
+PRD-HW-66644,CPU - 2TB 7200RPM,Express Logistics (WH-03),4510,202,$129.51
+COMP-33111,RAM - 2TB 7200RPM,West Coast Dist,501,46,$628.02
+PWR-31375,Cable - 2TB 7200RPM,West Coast Dist,3750,312,$580.00
+SKU-EL-26231,Cooling Fan - Mechanical RGB,West Coast Dist,4218,68,$155.00
+MOD-44471,Keyboard - 32GB DDR5,East Coast Fulfillment,334,157,$688.60
+SKU-EL-73088,CPU - Wireless,Central Hub (WH-01),726,112,$758.57
+MOD-25433,Cable - Wireless,West Coast Dist,3641,418,$736.18
+PWR-20865,SSD - 1TB NVMe,Regional Depot (WH-02),4339,289,$113.46
+PWR-30370,Keyboard - 850W Gold,West Coast Dist,1434,264,$534.82
+COMP-39324,Cable - 32GB DDR5,Regional Depot (WH-02),2872,401,$419.66
+PRD-HW-57023,CPU - 850W Gold,Central Hub (WH-01),287,32,$439.37
+SKU-EL-36812,Motherboard - 1TB NVMe,Regional Depot (WH-02),1593,118,$197.15
+PWR-36917,SSD - USB-C 2m,Central Hub (WH-01),1546,51,$576.25
+MOD-98571,Motherboard - 27-inch 4K,East Coast Fulfillment,2047,179,$170.50
+SKU-EL-50118,SSD - Mid-Tower,Express Logistics (WH-03),4047,224,$541.54
+MOD-50021,Cooling Fan - 27-inch 4K,West Coast Dist,1261,326,$285.90
+COMP-6446,Cable - 120mm PWM,Express Logistics (WH-03),4042,258,$592.08
+PRD-HW-22067,Case - USB-C 2m,Central Hub (WH-01),1358,186,$625.46
+SKU-EL-69746,RAM - Mechanical RGB,East Coast Fulfillment,4355,321,$512.90
+SKU-EL-56171,Mouse - Mid-Tower,East Coast Fulfillment,2946,101,$420.00
+PWR-81649,Monitor - Intel Core i7,East Coast Fulfillment,1471,184,$511.09
+MOD-33257,Keyboard - ATX,Regional Depot (WH-02),1774,194,$796.78
+PWR-8903,Power Supply - 27-inch 4K,Central Hub (WH-01),3761,105,$390.63
+PRD-HW-22837,Monitor - Intel Core i7,West Coast Dist,945,212,$116.14
+COMP-99815,Case - USB-C 2m,Central Hub (WH-01),754,496,$674.63
+COMP-97479,SSD - Mid-Tower,Regional Depot (WH-02),3858,328,$77.08
+PRD-HW-62640,Keyboard - 120mm PWM,East Coast Fulfillment,2464,273,$67.50
+PRD-HW-99996,CPU - Wireless,West Coast Dist,4639,115,$613.53
+MOD-56541,CPU - Mechanical RGB,West Coast Dist,450,427,$600.46
+SKU-EL-54239,Keyboard - RTX 4070,East Coast Fulfillment,93,358,$661.56
+MOD-77425,Case - USB-C 2m,Express Logistics (WH-03),663,289,$520.32
+SKU-EL-34761,Motherboard - Wireless,Central Hub (WH-01),4274,448,$561.81
+MOD-58141,RAM - RTX 4070,Express Logistics (WH-03),4169,458,$596.17
+SKU-EL-75199,Monitor - Mechanical RGB,East Coast Fulfillment,4291,86,$437.61
+PWR-16570,SSD - Intel Core i7,Express Logistics (WH-03),4329,196,$12.18
+PRD-HW-32181,Monitor - Mechanical RGB,Express Logistics (WH-03),4316,450,$469.40
+SKU-EL-31120,Case - RTX 4070,West Coast Dist,1978,107,$363.30
+MOD-40670,GPU - 120mm PWM,East Coast Fulfillment,3924,82,$29.86
+PRD-HW-78499,SSD - Intel Core i7,Central Hub (WH-01),3865,382,$54.88
+PRD-HW-69212,CPU - RTX 4070,West Coast Dist,2701,231,$786.83
+PWR-24039,Mouse - 850W Gold,Regional Depot (WH-02),2958,491,$86.14
+MOD-55471,RAM - Mid-Tower,Central Hub (WH-01),4761,261,$79.48
+SKU-EL-11760,RAM - ATX,West Coast Dist,4629,234,$192.49
+MOD-23283,CPU - 1TB NVMe,East Coast Fulfillment,1176,130,$689.53
+SKU-EL-5931,Motherboard - 2TB 7200RPM,West Coast Dist,3329,191,$578.72
+MOD-49145,Keyboard - 32GB DDR5,East Coast Fulfillment,4794,372,$717.88
+PRD-HW-77194,SSD - 120mm PWM,Regional Depot (WH-02),3536,444,$123.92
+COMP-31827,HDD - Intel Core i7,East Coast Fulfillment,2137,112,$689.81
+PWR-3355,Case - 120mm PWM,Express Logistics (WH-03),4495,408,$631.38
+PRD-HW-56184,Mouse - Mechanical RGB,West Coast Dist,2857,143,$369.00
+MOD-86108,Cable - Mid-Tower,Central Hub (WH-01),4166,65,$367.43
+COMP-48149,SSD - 32GB DDR5,Express Logistics (WH-03),3144,218,$251.44
+SKU-EL-27884,RAM - ATX,Central Hub (WH-01),535,275,$104.39
+MOD-31040,RAM - 120mm PWM,East Coast Fulfillment,4440,14,$274.88
+MOD-54154,Cable - Mid-Tower,Central Hub (WH-01),678,60,$382.94
+COMP-17547,Mouse - 1TB NVMe,Regional Depot (WH-02),1905,453,$68.65
+COMP-47265,SSD - RTX 4070,Regional Depot (WH-02),4870,322,$433.83
+MOD-88592,SSD - 27-inch 4K,Central Hub (WH-01),1311,497,$100.00
+COMP-93367,Mouse - 27-inch 4K,West Coast Dist,4380,77,$468.01
+SKU-EL-65007,HDD - 2TB 7200RPM,West Coast Dist,3468,476,$614.68
+PWR-10074,Power Supply - 32GB DDR5,Regional Depot (WH-02),3448,293,$38.45
+PWR-82218,GPU - 120mm PWM,West Coast Dist,2016,220,$192.63
+SKU-EL-70231,Keyboard - 1TB NVMe,East Coast Fulfillment,34,157,$701.06
+COMP-77970,Mouse - 850W Gold,Central Hub (WH-01),1916,135,$497.53
+SKU-EL-93276,Keyboard - Wireless,Central Hub (WH-01),792,290,$762.46
+SKU-EL-48512,HDD - 1TB NVMe,Central Hub (WH-01),4646,191,$345.68
+SKU-EL-32742,CPU - 2TB 7200RPM,Express Logistics (WH-03),4167,289,$311.50
+PWR-19238,Cable - Mid-Tower,Express Logistics (WH-03),2667,448,$503.70
+MOD-77317,HDD - USB-C 2m,West Coast Dist,89,247,$649.03
+PRD-HW-78032,Cable - Wireless,Regional Depot (WH-02),430,388,$149.05
+COMP-77059,SSD - 850W Gold,Express Logistics (WH-03),2629,26,$611.85
+COMP-65461,GPU - ATX,Central Hub (WH-01),4862,444,$482.53
+COMP-64615,Keyboard - Mid-Tower,East Coast Fulfillment,4344,87,$573.01
+SKU-EL-78773,Keyboard - 32GB DDR5,West Coast Dist,3878,306,$427.25
+COMP-13772,Monitor - 120mm PWM,Central Hub (WH-01),2270,270,$697.75
+SKU-EL-82294,Cable - 27-inch 4K,Express Logistics (WH-03),375,206,$24.92
+PRD-HW-76305,HDD - 32GB DDR5,East Coast Fulfillment,1553,219,$460.58
+SKU-EL-94061,SSD - 27-inch 4K,East Coast Fulfillment,4842,487,$192.75
+COMP-96918,Motherboard - 1TB NVMe,Express Logistics (WH-03),291,243,$710.19
+PRD-HW-41370,SSD - Mid-Tower,East Coast Fulfillment,3040,260,$364.73
+PRD-HW-4174,Case - 850W Gold,East Coast Fulfillment,4269,188,$559.96
+SKU-EL-87492,Cable - 850W Gold,Regional Depot (WH-02),3217,421,$544.94
+PRD-HW-83580,Case - 120mm PWM,West Coast Dist,3477,375,$67.08
+COMP-17314,SSD - 120mm PWM,East Coast Fulfillment,3520,334,$258.06
+PRD-HW-53156,Motherboard - 2TB 7200RPM,Central Hub (WH-01),729,240,$381.03
+MOD-79374,Keyboard - Intel Core i7,East Coast Fulfillment,1962,103,$33.95
+SKU-EL-8245,Power Supply - 120mm PWM,Central Hub (WH-01),3038,272,$129.71
+COMP-95597,HDD - Intel Core i7,East Coast Fulfillment,1692,375,$351.22
+PRD-HW-98391,GPU - Mid-Tower,Express Logistics (WH-03),2696,344,$335.48
+SKU-EL-96700,Cooling Fan - 1TB NVMe,Express Logistics (WH-03),293,299,$71.12
+MOD-36509,Keyboard - 27-inch 4K,Regional Depot (WH-02),3419,75,$227.28
+PWR-31902,HDD - Mid-Tower,Central Hub (WH-01),1535,195,$589.40
+COMP-82264,Cable - RTX 4070,East Coast Fulfillment,4239,374,$278.26
+PRD-HW-15038,Monitor - 2TB 7200RPM,Express Logistics (WH-03),2254,477,$233.72
+PRD-HW-24509,SSD - RTX 4070,East Coast Fulfillment,2738,123,$91.63
+COMP-47467,Power Supply - ATX,Regional Depot (WH-02),6,465,$91.66
+PWR-48921,HDD - Intel Core i7,East Coast Fulfillment,4184,54,$450.98
+PRD-HW-58224,Cooling Fan - RTX 4070,Regional Depot (WH-02),4921,177,$786.52
+PWR-47165,Motherboard - 27-inch 4K,Central Hub (WH-01),911,424,$156.43
+PWR-36783,Keyboard - ATX,West Coast Dist,3140,89,$475.25
+PRD-HW-60118,Monitor - Intel Core i7,Express Logistics (WH-03),2598,466,$236.59
+SKU-EL-51955,Motherboard - 850W Gold,Central Hub (WH-01),2497,411,$577.23
+MOD-24994,RAM - Intel Core i7,Central Hub (WH-01),2096,20,$216.21
+MOD-45512,Cable - 120mm PWM,West Coast Dist,2620,60,$403.79
+COMP-74036,Motherboard - 2TB 7200RPM,Central Hub (WH-01),2941,382,$400.33
+MOD-78880,Motherboard - 850W Gold,East Coast Fulfillment,870,307,$656.43
+PWR-1820,RAM - USB-C 2m,East Coast Fulfillment,2224,328,$57.54
+COMP-76942,HDD - 2TB 7200RPM,Central Hub (WH-01),4140,23,$351.74
+MOD-65692,CPU - Mid-Tower,Central Hub (WH-01),857,97,$578.85
+MOD-65482,RAM - 850W Gold,West Coast Dist,4876,470,$226.39
+SKU-EL-60954,Power Supply - 27-inch 4K,West Coast Dist,3797,373,$692.01
+PWR-88830,Mouse - RTX 4070,Central Hub (WH-01),1384,353,$797.86
+PWR-35176,Monitor - 2TB 7200RPM,West Coast Dist,1450,333,$796.52
+MOD-71179,Cable - 2TB 7200RPM,Central Hub (WH-01),3147,349,$211.82
+PRD-HW-39653,HDD - USB-C 2m,Regional Depot (WH-02),2050,167,$488.25
+SKU-EL-41663,Motherboard - 27-inch 4K,West Coast Dist,1720,428,$799.54
+MOD-83121,Mouse - Mechanical RGB,West Coast Dist,1645,390,$434.27
+PWR-40946,RAM - Mid-Tower,Regional Depot (WH-02),585,166,$486.48
+COMP-37002,HDD - Wireless,West Coast Dist,1100,394,$88.48
+PRD-HW-44756,CPU - Wireless,Regional Depot (WH-02),340,229,$335.69
+PRD-HW-30899,HDD - ATX,Regional Depot (WH-02),3705,271,$13.33
+SKU-EL-61888,Case - Mechanical RGB,East Coast Fulfillment,673,459,$231.28
+PRD-HW-79211,SSD - Mid-Tower,Central Hub (WH-01),627,226,$687.00
+PRD-HW-76757,Case - RTX 4070,Central Hub (WH-01),3211,117,$672.15
+COMP-16778,Keyboard - ATX,East Coast Fulfillment,1376,248,$776.52
+COMP-5943,Cooling Fan - 1TB NVMe,East Coast Fulfillment,2657,263,$724.55
+COMP-93721,HDD - Intel Core i7,Central Hub (WH-01),1577,185,$388.09
+MOD-96568,Cooling Fan - Intel Core i7,Express Logistics (WH-03),10,326,$721.63
+PRD-HW-1626,GPU - 1TB NVMe,Central Hub (WH-01),30,321,$536.13
+PRD-HW-69060,GPU - Wireless,Regional Depot (WH-02),3395,243,$223.71
+MOD-44357,GPU - 1TB NVMe,Express Logistics (WH-03),1597,37,$477.00
+PRD-HW-84630,HDD - Wireless,West Coast Dist,3019,11,$513.36
+PWR-21874,HDD - USB-C 2m,West Coast Dist,1728,304,$351.54
+MOD-23931,Cooling Fan - 120mm PWM,Central Hub (WH-01),4800,363,$701.65
+MOD-73127,Power Supply - Intel Core i7,Express Logistics (WH-03),1400,345,$267.27
+PWR-85610,Mouse - USB-C 2m,Central Hub (WH-01),2213,409,$124.50
+PWR-20402,Case - USB-C 2m,West Coast Dist,3278,341,$197.74
+MOD-70342,Case - 850W Gold,Regional Depot (WH-02),413,289,$138.35
+SKU-EL-19375,Cable - 120mm PWM,Express Logistics (WH-03),1858,485,$759.90
+COMP-9123,Cooling Fan - Mechanical RGB,East Coast Fulfillment,61,249,$748.63
+COMP-40990,Keyboard - 32GB DDR5,West Coast Dist,519,186,$153.58
+MOD-49470,RAM - Mechanical RGB,East Coast Fulfillment,4660,254,$395.53
+PRD-HW-97546,SSD - RTX 4070,Regional Depot (WH-02),443,67,$520.50
+MOD-93876,Case - Mechanical RGB,Regional Depot (WH-02),2127,26,$614.31
+COMP-95723,RAM - 850W Gold,West Coast Dist,1913,114,$641.10
+MOD-5082,GPU - 850W Gold,Central Hub (WH-01),3010,171,$570.97
+COMP-71488,RAM - Wireless,West Coast Dist,4296,413,$561.15
+PRD-HW-81027,Motherboard - 2TB 7200RPM,West Coast Dist,1902,374,$712.68
+PRD-HW-64121,Keyboard - Wireless,Express Logistics (WH-03),2168,369,$678.22
+COMP-4364,Keyboard - USB-C 2m,Express Logistics (WH-03),2356,406,$647.97
+SKU-EL-26924,Mouse - 1TB NVMe,Regional Depot (WH-02),905,233,$272.49
+SKU-EL-73269,GPU - ATX,West Coast Dist,4949,273,$785.06
+MOD-57462,RAM - USB-C 2m,Express Logistics (WH-03),2939,68,$40.50
+PWR-69623,Monitor - RTX 4070,West Coast Dist,2769,490,$188.65
+SKU-EL-79567,CPU - 120mm PWM,Regional Depot (WH-02),1102,444,$80.23
+PRD-HW-43887,CPU - RTX 4070,East Coast Fulfillment,3307,42,$190.74
+COMP-54091,CPU - 850W Gold,West Coast Dist,4687,303,$313.28
+SKU-EL-45899,CPU - RTX 4070,Express Logistics (WH-03),3992,196,$172.87
+PRD-HW-53764,Keyboard - USB-C 2m,West Coast Dist,1517,113,$565.84
+MOD-86485,Cooling Fan - Wireless,East Coast Fulfillment,1617,221,$483.77
+MOD-62873,SSD - RTX 4070,Central Hub (WH-01),2860,497,$34.15
+MOD-34127,Monitor - 27-inch 4K,Regional Depot (WH-02),4055,427,$485.50
+SKU-EL-31868,Case - 2TB 7200RPM,Regional Depot (WH-02),4450,93,$44.95
+SKU-EL-12667,Cooling Fan - ATX,West Coast Dist,3911,377,$181.13
+PRD-HW-13998,Motherboard - Wireless,West Coast Dist,573,187,$359.01
+PWR-58393,RAM - 120mm PWM,Central Hub (WH-01),228,84,$577.59
+PRD-HW-98188,Cooling Fan - 2TB 7200RPM,Express Logistics (WH-03),208,224,$39.88
+PRD-HW-8842,HDD - 850W Gold,Regional Depot (WH-02),3812,59,$476.36
+PRD-HW-77836,Keyboard - 2TB 7200RPM,Central Hub (WH-01),4706,306,$305.98
+MOD-3545,Monitor - Mid-Tower,Central Hub (WH-01),4415,397,$547.71
+COMP-87108,Monitor - 120mm PWM,Central Hub (WH-01),4150,56,$278.30
+SKU-EL-34610,Cable - 2TB 7200RPM,Central Hub (WH-01),1287,485,$681.93
+MOD-29932,HDD - RTX 4070,West Coast Dist,4553,93,$283.31
+MOD-25502,RAM - RTX 4070,Regional Depot (WH-02),911,256,$692.98
+PWR-94647,Mouse - Wireless,East Coast Fulfillment,2748,486,$714.49
+COMP-93154,Mouse - ATX,East Coast Fulfillment,4475,78,$656.22
+MOD-6889,HDD - 27-inch 4K,Regional Depot (WH-02),884,205,$646.73
+MOD-53533,Mouse - 32GB DDR5,West Coast Dist,532,94,$190.55
+SKU-EL-14636,GPU - Intel Core i7,Regional Depot (WH-02),3396,48,$783.98
+MOD-96093,SSD - Mid-Tower,Express Logistics (WH-03),3115,258,$768.19
+COMP-34752,Keyboard - 32GB DDR5,Regional Depot (WH-02),3466,357,$183.74
+MOD-70251,Case - 1TB NVMe,East Coast Fulfillment,663,229,$769.34
+MOD-32324,GPU - ATX,Express Logistics (WH-03),1634,469,$304.42
+MOD-87256,Case - 2TB 7200RPM,Express Logistics (WH-03),3651,240,$354.46
+SKU-EL-72452,Keyboard - Mechanical RGB,Regional Depot (WH-02),3594,85,$760.09
+SKU-EL-48667,CPU - RTX 4070,Central Hub (WH-01),2931,74,$544.57
+COMP-10554,Power Supply - 120mm PWM,East Coast Fulfillment,3906,484,$775.45
+MOD-99253,Motherboard - RTX 4070,West Coast Dist,3643,348,$656.30
+SKU-EL-49446,Motherboard - 1TB NVMe,Regional Depot (WH-02),2407,386,$798.52
+MOD-23083,Cable - 1TB NVMe,Regional Depot (WH-02),1043,392,$309.11
+PWR-82877,Cooling Fan - USB-C 2m,Regional Depot (WH-02),2862,274,$65.96
+PRD-HW-38872,Monitor - Mid-Tower,Express Logistics (WH-03),4139,408,$205.27
+SKU-EL-38248,Motherboard - Mid-Tower,Central Hub (WH-01),1215,124,$184.50
+COMP-56941,HDD - 1TB NVMe,Regional Depot (WH-02),2168,429,$414.28
+PWR-97020,Keyboard - ATX,West Coast Dist,1704,196,$505.76
+MOD-65846,Keyboard - 32GB DDR5,West Coast Dist,4058,140,$784.89
+SKU-EL-98107,HDD - Mechanical RGB,East Coast Fulfillment,1201,360,$73.35
+SKU-EL-19665,CPU - RTX 4070,Express Logistics (WH-03),4669,437,$97.26
+PRD-HW-99086,Monitor - RTX 4070,West Coast Dist,4280,314,$344.32
+PRD-HW-28660,CPU - 32GB DDR5,West Coast Dist,1960,167,$727.06
+PWR-2620,Keyboard - Mechanical RGB,Central Hub (WH-01),1687,309,$545.45
+PWR-64992,Mouse - Intel Core i7,West Coast Dist,2449,434,$240.10
+MOD-99666,HDD - Intel Core i7,Regional Depot (WH-02),2519,87,$503.27
+MOD-20761,GPU - 27-inch 4K,West Coast Dist,383,131,$693.80
+PRD-HW-4079,HDD - Intel Core i7,Central Hub (WH-01),4565,335,$284.64
+SKU-EL-31436,Motherboard - Mid-Tower,West Coast Dist,2556,145,$721.83
+PWR-6477,Mouse - USB-C 2m,West Coast Dist,1405,301,$512.16
+SKU-EL-46446,Monitor - RTX 4070,Regional Depot (WH-02),801,53,$137.68
+COMP-88982,Power Supply - 27-inch 4K,West Coast Dist,4844,10,$309.03
+PRD-HW-24549,GPU - 32GB DDR5,Express Logistics (WH-03),4275,421,$670.35
+PRD-HW-76256,SSD - RTX 4070,West Coast Dist,3917,378,$54.60
+PRD-HW-97230,Mouse - Mechanical RGB,Express Logistics (WH-03),369,93,$684.13
+PWR-1140,Cooling Fan - 1TB NVMe,East Coast Fulfillment,3806,446,$9.37
+SKU-EL-51373,Case - 27-inch 4K,Central Hub (WH-01),84,15,$691.45
+MOD-40135,HDD - 850W Gold,Central Hub (WH-01),1180,337,$290.67
+PWR-46047,HDD - 1TB NVMe,East Coast Fulfillment,2998,201,$70.48
+MOD-65512,Keyboard - 2TB 7200RPM,Central Hub (WH-01),4224,148,$461.48
+PRD-HW-26691,CPU - 120mm PWM,Express Logistics (WH-03),2566,439,$231.14
+COMP-78131,Keyboard - 120mm PWM,Regional Depot (WH-02),1449,409,$160.28
+MOD-67383,Power Supply - Mechanical RGB,Central Hub (WH-01),4913,321,$469.58
+MOD-73596,Keyboard - Mechanical RGB,East Coast Fulfillment,1587,97,$324.28
+PRD-HW-26344,SSD - USB-C 2m,Regional Depot (WH-02),3831,286,$725.94
+SKU-EL-70027,Cooling Fan - USB-C 2m,Express Logistics (WH-03),264,272,$676.68
+PRD-HW-3037,CPU - 2TB 7200RPM,Express Logistics (WH-03),949,137,$57.16
+MOD-82122,Motherboard - USB-C 2m,Express Logistics (WH-03),2223,90,$164.33
+PRD-HW-11403,Case - 32GB DDR5,East Coast Fulfillment,1339,462,$82.55
+SKU-EL-16133,Power Supply - 850W Gold,West Coast Dist,1678,38,$61.95
+PWR-2247,HDD - 27-inch 4K,West Coast Dist,1523,108,$692.07
+PRD-HW-29100,HDD - 2TB 7200RPM,East Coast Fulfillment,4865,167,$178.87
+MOD-78808,Keyboard - 2TB 7200RPM,West Coast Dist,1234,40,$292.45
+MOD-3425,Monitor - 2TB 7200RPM,Regional Depot (WH-02),1736,459,$296.71
+PRD-HW-31785,Cooling Fan - ATX,West Coast Dist,3861,199,$254.80
+MOD-79067,Power Supply - Mid-Tower,East Coast Fulfillment,2989,464,$675.49
+SKU-EL-80751,Keyboard - 120mm PWM,Express Logistics (WH-03),653,99,$785.37
+MOD-3805,Cable - ATX,West Coast Dist,3346,301,$725.83
+COMP-85068,GPU - Mechanical RGB,Express Logistics (WH-03),239,496,$539.21
+PWR-85403,Keyboard - 32GB DDR5,Central Hub (WH-01),3887,271,$236.91
+PWR-79684,Power Supply - Intel Core i7,East Coast Fulfillment,608,124,$37.97
+PRD-HW-15429,Cable - 120mm PWM,West Coast Dist,3447,399,$265.86
+PRD-HW-28157,HDD - USB-C 2m,Express Logistics (WH-03),3025,17,$273.21
+SKU-EL-43749,Mouse - Intel Core i7,West Coast Dist,3695,432,$635.38
+MOD-43843,HDD - 27-inch 4K,West Coast Dist,4950,274,$206.33
+SKU-EL-3807,RAM - 2TB 7200RPM,East Coast Fulfillment,3306,21,$307.11
+SKU-EL-46263,HDD - RTX 4070,West Coast Dist,1084,69,$500.37
+PRD-HW-65593,CPU - 2TB 7200RPM,West Coast Dist,1779,419,$125.35
+PWR-26186,Monitor - Mechanical RGB,East Coast Fulfillment,1389,391,$360.40
+PWR-40654,GPU - 850W Gold,Central Hub (WH-01),1653,268,$108.39
+PRD-HW-90149,Case - ATX,Central Hub (WH-01),4270,85,$680.68
+PRD-HW-52128,SSD - Wireless,West Coast Dist,3861,404,$599.24
+PRD-HW-4645,Monitor - 120mm PWM,Regional Depot (WH-02),1295,420,$631.01
+COMP-66665,Mouse - Wireless,West Coast Dist,504,133,$285.03
+MOD-8556,Cooling Fan - Wireless,Regional Depot (WH-02),3166,233,$11.50
+MOD-82434,Keyboard - Wireless,Central Hub (WH-01),207,59,$83.42
+COMP-41526,Motherboard - 2TB 7200RPM,Central Hub (WH-01),1741,163,$239.90
+SKU-EL-49938,CPU - 120mm PWM,West Coast Dist,4950,190,$556.49
+SKU-EL-40116,HDD - Wireless,Express Logistics (WH-03),4316,387,$51.35
+MOD-65511,RAM - Intel Core i7,Central Hub (WH-01),4861,235,$27.52
+PRD-HW-26363,HDD - Mechanical RGB,Express Logistics (WH-03),1692,252,$446.01
+MOD-26059,HDD - 32GB DDR5,East Coast Fulfillment,4928,474,$561.75
+PWR-81971,Monitor - USB-C 2m,Express Logistics (WH-03),2356,413,$221.54
+SKU-EL-62059,Case - Wireless,Regional Depot (WH-02),1663,244,$229.92
+MOD-41071,CPU - Wireless,East Coast Fulfillment,3283,376,$411.92
+SKU-EL-74614,Power Supply - 1TB NVMe,Regional Depot (WH-02),1147,120,$224.18
+PWR-98309,Keyboard - 32GB DDR5,Express Logistics (WH-03),1050,452,$280.14
+MOD-60976,CPU - 32GB DDR5,West Coast Dist,1041,57,$504.10
+COMP-86581,Power Supply - 32GB DDR5,Central Hub (WH-01),2441,457,$115.48
+PRD-HW-22375,Mouse - 2TB 7200RPM,Express Logistics (WH-03),2270,112,$85.09
+MOD-61826,Keyboard - Mechanical RGB,Central Hub (WH-01),3716,239,$185.52
+SKU-EL-46718,Cooling Fan - Mid-Tower,West Coast Dist,4849,165,$752.00
+PWR-22152,CPU - 1TB NVMe,Express Logistics (WH-03),114,149,$673.84
+MOD-64066,GPU - Intel Core i7,Central Hub (WH-01),428,382,$499.36
+MOD-69104,Keyboard - 2TB 7200RPM,East Coast Fulfillment,2505,105,$395.50
+PWR-58487,RAM - 1TB NVMe,Regional Depot (WH-02),3013,276,$784.41
+MOD-13992,Keyboard - 850W Gold,Central Hub (WH-01),442,280,$370.83
+MOD-29258,Keyboard - 850W Gold,East Coast Fulfillment,1842,78,$718.13
+PRD-HW-99742,Cable - 2TB 7200RPM,Central Hub (WH-01),3660,268,$252.09
+MOD-64048,Motherboard - 2TB 7200RPM,West Coast Dist,4335,216,$51.04
+MOD-37215,SSD - 2TB 7200RPM,West Coast Dist,3636,210,$52.64
+PWR-99818,Power Supply - 120mm PWM,East Coast Fulfillment,2388,420,$611.72
+COMP-37447,Keyboard - ATX,Regional Depot (WH-02),2579,471,$705.86
+COMP-94189,Power Supply - 27-inch 4K,Regional Depot (WH-02),3796,27,$55.15
+COMP-25606,Motherboard - Wireless,Express Logistics (WH-03),4347,100,$93.62
+PRD-HW-41477,CPU - 32GB DDR5,West Coast Dist,684,350,$597.47
+PRD-HW-84329,Keyboard - 2TB 7200RPM,Regional Depot (WH-02),4345,137,$318.08
+PRD-HW-31906,Keyboard - 120mm PWM,West Coast Dist,1412,288,$619.55
+PRD-HW-49588,GPU - RTX 4070,West Coast Dist,2776,333,$674.73
+SKU-EL-25443,SSD - USB-C 2m,Regional Depot (WH-02),4057,289,$310.97
+SKU-EL-30454,GPU - ATX,Express Logistics (WH-03),2828,381,$772.91
+PRD-HW-49972,RAM - Mechanical RGB,East Coast Fulfillment,4936,332,$10.99
+SKU-EL-28265,Mouse - Wireless,Express Logistics (WH-03),2271,165,$95.94
+MOD-97447,GPU - 32GB DDR5,Express Logistics (WH-03),3855,199,$73.84
+SKU-EL-2753,Keyboard - Intel Core i7,East Coast Fulfillment,111,432,$345.70
+PRD-HW-51159,Power Supply - 2TB 7200RPM,West Coast Dist,4963,403,$711.57
+MOD-17775,Power Supply - RTX 4070,Express Logistics (WH-03),2185,46,$523.59
+PRD-HW-68731,Power Supply - ATX,West Coast Dist,4976,83,$618.86
+MOD-11753,Case - 27-inch 4K,Regional Depot (WH-02),4852,244,$534.09
+SKU-EL-26470,Mouse - 2TB 7200RPM,Central Hub (WH-01),1921,62,$400.24
+COMP-4137,CPU - Wireless,Central Hub (WH-01),4837,403,$110.93
+COMP-23975,Motherboard - 1TB NVMe,Central Hub (WH-01),3988,326,$102.11
+PWR-63938,CPU - Intel Core i7,Central Hub (WH-01),4826,118,$19.75
+COMP-7420,Power Supply - 27-inch 4K,West Coast Dist,4923,352,$792.98
+SKU-EL-52465,Cooling Fan - ATX,East Coast Fulfillment,4700,487,$340.03
+PRD-HW-66469,Monitor - 2TB 7200RPM,West Coast Dist,412,301,$279.89
+MOD-75861,HDD - Wireless,Central Hub (WH-01),234,312,$454.45
+PRD-HW-39634,Mouse - USB-C 2m,East Coast Fulfillment,3022,44,$467.36
+PRD-HW-20718,Motherboard - Mid-Tower,Express Logistics (WH-03),2085,440,$589.48
+SKU-EL-84634,SSD - Mid-Tower,East Coast Fulfillment,2833,177,$708.26
+MOD-67029,SSD - Mid-Tower,West Coast Dist,531,291,$116.77
+PRD-HW-35002,Monitor - 27-inch 4K,Central Hub (WH-01),1756,195,$489.14
+PRD-HW-40385,Case - 27-inch 4K,Regional Depot (WH-02),831,396,$642.04
+MOD-85573,Cooling Fan - Mechanical RGB,Regional Depot (WH-02),3579,88,$92.08
+PWR-59356,HDD - USB-C 2m,West Coast Dist,1921,107,$513.26
+MOD-2950,SSD - RTX 4070,Central Hub (WH-01),1015,174,$638.68
+MOD-98693,Case - 2TB 7200RPM,Regional Depot (WH-02),982,302,$209.98
+SKU-EL-2901,Cooling Fan - Mechanical RGB,Central Hub (WH-01),4060,143,$157.23
+PRD-HW-58308,Motherboard - Mid-Tower,Central Hub (WH-01),172,406,$179.30
+PWR-33972,Mouse - 32GB DDR5,East Coast Fulfillment,3456,428,$196.11
+PRD-HW-86828,Motherboard - Mid-Tower,Express Logistics (WH-03),3705,135,$146.91
+PWR-38900,Mouse - Wireless,East Coast Fulfillment,23,144,$526.95
+MOD-87561,Cable - 120mm PWM,East Coast Fulfillment,2644,58,$513.60
+MOD-44350,Power Supply - 2TB 7200RPM,East Coast Fulfillment,1802,250,$571.76
+PRD-HW-7604,Cable - 27-inch 4K,East Coast Fulfillment,4551,204,$82.05
+COMP-63326,Mouse - 1TB NVMe,West Coast Dist,123,357,$755.81
+COMP-25559,Cable - 27-inch 4K,West Coast Dist,56,275,$415.70
+PRD-HW-27360,Case - 850W Gold,Express Logistics (WH-03),2505,182,$368.84
+PWR-47933,CPU - Wireless,Express Logistics (WH-03),3761,115,$487.73
+PWR-33478,Cable - 2TB 7200RPM,Regional Depot (WH-02),169,446,$416.64
+SKU-EL-16703,Cooling Fan - 2TB 7200RPM,East Coast Fulfillment,3570,497,$546.37
+SKU-EL-22188,SSD - Intel Core i7,West Coast Dist,1573,463,$226.42
+PRD-HW-30902,RAM - RTX 4070,West Coast Dist,3216,417,$681.22
+SKU-EL-76758,Cable - 850W Gold,West Coast Dist,3239,178,$433.57
+PWR-35345,SSD - RTX 4070,East Coast Fulfillment,1993,82,$768.67
+SKU-EL-20726,Case - Wireless,Regional Depot (WH-02),987,371,$439.78
+MOD-78945,Power Supply - RTX 4070,West Coast Dist,3032,487,$570.80
+COMP-40345,RAM - 1TB NVMe,Central Hub (WH-01),2484,47,$738.82
+PWR-2648,RAM - 1TB NVMe,East Coast Fulfillment,4623,407,$676.55
+PWR-72650,RAM - USB-C 2m,Express Logistics (WH-03),925,107,$653.34
+PWR-77932,SSD - Intel Core i7,Express Logistics (WH-03),1391,485,$375.72
+MOD-96565,CPU - 2TB 7200RPM,Express Logistics (WH-03),516,66,$638.98
+SKU-EL-67764,HDD - Mid-Tower,Express Logistics (WH-03),4789,189,$567.77
+COMP-91141,Keyboard - 850W Gold,East Coast Fulfillment,3623,476,$489.19
+PWR-3043,Motherboard - Wireless,East Coast Fulfillment,47,275,$53.40
+SKU-EL-36098,Cable - Wireless,Regional Depot (WH-02),330,117,$775.33
+COMP-99083,Power Supply - ATX,Regional Depot (WH-02),597,411,$356.75
+PWR-21151,RAM - Wireless,Central Hub (WH-01),4484,77,$407.17
+PWR-85346,Keyboard - 850W Gold,Regional Depot (WH-02),3706,477,$398.10
+MOD-56370,HDD - 850W Gold,West Coast Dist,643,236,$448.39
+COMP-26657,GPU - 850W Gold,Express Logistics (WH-03),1585,230,$371.92
+MOD-39665,Cable - Intel Core i7,East Coast Fulfillment,540,309,$221.40
+PRD-HW-69687,Cooling Fan - RTX 4070,East Coast Fulfillment,3403,338,$203.97
+MOD-64907,RAM - Mechanical RGB,Regional Depot (WH-02),1797,163,$470.99
+MOD-80853,GPU - 32GB DDR5,Express Logistics (WH-03),3125,141,$520.33
+MOD-86816,Case - 27-inch 4K,Express Logistics (WH-03),1849,244,$467.46
+COMP-91311,RAM - 1TB NVMe,East Coast Fulfillment,1670,111,$684.48
+SKU-EL-69288,Power Supply - 120mm PWM,Express Logistics (WH-03),3698,296,$281.14
+COMP-75803,SSD - 27-inch 4K,Express Logistics (WH-03),2852,290,$771.88
+MOD-69860,Motherboard - RTX 4070,Express Logistics (WH-03),1142,353,$248.83
+MOD-79692,Case - 2TB 7200RPM,Central Hub (WH-01),3352,458,$542.77
+SKU-EL-18694,Keyboard - Wireless,West Coast Dist,505,441,$613.83
+PWR-12868,RAM - RTX 4070,Express Logistics (WH-03),2069,187,$391.11
+MOD-47961,Cable - Intel Core i7,Central Hub (WH-01),4772,54,$354.36
+COMP-71157,RAM - RTX 4070,East Coast Fulfillment,1990,12,$738.93
+MOD-41932,Case - 120mm PWM,East Coast Fulfillment,3490,165,$209.88
+MOD-10752,Power Supply - USB-C 2m,Regional Depot (WH-02),1548,89,$730.47
+MOD-67735,Cooling Fan - ATX,Central Hub (WH-01),4321,364,$720.35
+MOD-23271,Motherboard - Mechanical RGB,East Coast Fulfillment,902,186,$264.17
+PWR-13938,Motherboard - 1TB NVMe,Regional Depot (WH-02),4067,276,$649.28
+PWR-16432,HDD - Wireless,West Coast Dist,1220,301,$20.84
+PRD-HW-20351,Keyboard - 2TB 7200RPM,East Coast Fulfillment,1866,131,$362.98
+PWR-1481,Power Supply - Intel Core i7,Express Logistics (WH-03),2476,258,$557.47
+MOD-17573,Cable - Mid-Tower,West Coast Dist,68,406,$436.60
+SKU-EL-82415,Monitor - 1TB NVMe,Central Hub (WH-01),510,236,$546.88
+PRD-HW-68141,Mouse - 850W Gold,East Coast Fulfillment,1971,199,$595.70
+PRD-HW-9165,HDD - 27-inch 4K,Central Hub (WH-01),3655,72,$641.48
+PRD-HW-3712,Power Supply - Intel Core i7,East Coast Fulfillment,3535,306,$46.77
+SKU-EL-23631,Cooling Fan - 32GB DDR5,Express Logistics (WH-03),3946,317,$355.05
+PWR-84894,Monitor - 850W Gold,Central Hub (WH-01),241,447,$481.71
+SKU-EL-56975,Keyboard - Wireless,Central Hub (WH-01),1255,490,$430.88
+COMP-78155,Motherboard - Mechanical RGB,West Coast Dist,4702,149,$588.89
+PRD-HW-46400,Keyboard - 32GB DDR5,Regional Depot (WH-02),1713,459,$50.23
+PRD-HW-15953,Power Supply - 1TB NVMe,West Coast Dist,2297,121,$260.86
+PRD-HW-36363,GPU - Mechanical RGB,West Coast Dist,2260,243,$120.19
+PRD-HW-57641,RAM - USB-C 2m,Express Logistics (WH-03),1710,268,$258.13
+PRD-HW-45621,Power Supply - 2TB 7200RPM,West Coast Dist,550,334,$286.92
+MOD-11714,SSD - 1TB NVMe,West Coast Dist,1558,91,$366.41
+COMP-94990,Monitor - ATX,Central Hub (WH-01),444,77,$166.18
+SKU-EL-98582,Case - Intel Core i7,Central Hub (WH-01),2951,311,$678.59
+PWR-80035,GPU - 32GB DDR5,West Coast Dist,4565,72,$762.30
+SKU-EL-92879,CPU - 120mm PWM,Central Hub (WH-01),4762,382,$406.39
+COMP-8911,Power Supply - Mechanical RGB,West Coast Dist,4307,356,$311.58
+PWR-51762,RAM - RTX 4070,Central Hub (WH-01),4339,203,$502.87
+COMP-90525,Power Supply - 850W Gold,Regional Depot (WH-02),1455,54,$75.66
+PRD-HW-61184,Monitor - Wireless,Express Logistics (WH-03),3068,289,$52.55
+PRD-HW-29503,Motherboard - USB-C 2m,Regional Depot (WH-02),778,487,$705.07
+MOD-44376,Cooling Fan - Mid-Tower,Central Hub (WH-01),975,107,$268.73
+MOD-46077,Mouse - USB-C 2m,Express Logistics (WH-03),3476,145,$88.44
+COMP-85081,Case - ATX,West Coast Dist,440,52,$293.12
+SKU-EL-98496,Keyboard - ATX,Express Logistics (WH-03),4881,278,$698.35
+MOD-56013,Motherboard - Wireless,Regional Depot (WH-02),595,79,$233.35
+SKU-EL-21370,Cooling Fan - 32GB DDR5,Regional Depot (WH-02),2155,329,$15.30
+SKU-EL-17755,Power Supply - 2TB 7200RPM,East Coast Fulfillment,751,389,$717.20
+COMP-29465,Cable - 120mm PWM,Central Hub (WH-01),2532,250,$540.63
+PWR-79687,Keyboard - RTX 4070,West Coast Dist,4605,210,$786.68
+SKU-EL-90731,Mouse - USB-C 2m,Express Logistics (WH-03),1746,50,$71.00
+MOD-39950,SSD - 27-inch 4K,East Coast Fulfillment,4260,68,$371.21
+COMP-2960,Power Supply - USB-C 2m,Express Logistics (WH-03),3435,126,$739.65
+COMP-81546,HDD - 1TB NVMe,East Coast Fulfillment,3938,226,$246.11
+COMP-50317,CPU - RTX 4070,West Coast Dist,1175,265,$249.65
+PWR-92313,Mouse - Wireless,Regional Depot (WH-02),4236,393,$521.27
+SKU-EL-36540,HDD - USB-C 2m,Express Logistics (WH-03),4745,433,$38.18
+MOD-91080,HDD - Mid-Tower,Central Hub (WH-01),3264,462,$706.34
+PRD-HW-82989,RAM - 27-inch 4K,Central Hub (WH-01),2881,60,$440.03
+PWR-21876,Power Supply - 2TB 7200RPM,East Coast Fulfillment,4415,220,$548.19
+SKU-EL-95856,CPU - 850W Gold,Regional Depot (WH-02),2583,390,$259.34
+SKU-EL-16456,Cooling Fan - Mechanical RGB,East Coast Fulfillment,4847,369,$473.41
+PWR-33222,Power Supply - USB-C 2m,West Coast Dist,494,411,$210.60
+PRD-HW-29895,SSD - Wireless,West Coast Dist,935,417,$465.81
+COMP-1711,GPU - 120mm PWM,Regional Depot (WH-02),4025,495,$665.07
+SKU-EL-81057,Motherboard - Wireless,East Coast Fulfillment,919,49,$754.14
+PRD-HW-1429,RAM - 120mm PWM,West Coast Dist,2280,428,$671.23
+MOD-26683,Motherboard - ATX,Central Hub (WH-01),2538,273,$90.21
+PRD-HW-8630,Monitor - 850W Gold,Regional Depot (WH-02),4524,261,$496.81
+MOD-35767,Cable - USB-C 2m,Express Logistics (WH-03),3416,91,$734.60
+SKU-EL-12977,Cable - 1TB NVMe,West Coast Dist,1535,11,$671.13
+MOD-66380,Motherboard - ATX,Express Logistics (WH-03),4194,55,$87.27
+PWR-47013,Cable - 850W Gold,East Coast Fulfillment,1111,46,$710.79
+SKU-EL-30126,SSD - Wireless,Central Hub (WH-01),621,24,$533.51
+COMP-45070,Monitor - Intel Core i7,Regional Depot (WH-02),3008,417,$82.42
+SKU-EL-81262,Motherboard - 32GB DDR5,East Coast Fulfillment,1881,88,$688.68
+MOD-48269,CPU - 850W Gold,Express Logistics (WH-03),2835,267,$453.34
+PWR-49023,Monitor - Wireless,Regional Depot (WH-02),3291,294,$69.22
+MOD-83809,RAM - USB-C 2m,Express Logistics (WH-03),2561,70,$350.79
+PWR-13661,Case - Wireless,Express Logistics (WH-03),969,474,$353.68
+PWR-56902,Cooling Fan - 32GB DDR5,Central Hub (WH-01),1825,110,$35.90
+PRD-HW-53448,Cooling Fan - Wireless,Regional Depot (WH-02),3434,61,$318.66
+SKU-EL-74690,HDD - Mid-Tower,Express Logistics (WH-03),1683,46,$654.50
+COMP-1647,Cooling Fan - Intel Core i7,East Coast Fulfillment,1790,176,$212.04
+COMP-46365,RAM - Mid-Tower,Express Logistics (WH-03),1711,309,$739.07
+COMP-11280,CPU - Wireless,Regional Depot (WH-02),1647,467,$15.26
+COMP-67066,CPU - Mid-Tower,Central Hub (WH-01),1616,444,$222.32
+PRD-HW-10636,Motherboard - 850W Gold,Regional Depot (WH-02),2908,177,$750.37
+PRD-HW-23608,HDD - Wireless,Regional Depot (WH-02),4384,468,$198.52
+SKU-EL-12434,Keyboard - USB-C 2m,Express Logistics (WH-03),2409,50,$634.76
+COMP-39468,CPU - Mechanical RGB,Express Logistics (WH-03),3274,436,$31.34
+SKU-EL-39200,Keyboard - 32GB DDR5,West Coast Dist,4200,62,$114.70
+SKU-EL-43335,Monitor - 2TB 7200RPM,Regional Depot (WH-02),3246,66,$225.52
+SKU-EL-4938,Cable - 120mm PWM,Central Hub (WH-01),3875,41,$658.51
+SKU-EL-99570,Monitor - 32GB DDR5,Regional Depot (WH-02),2719,435,$84.69
+PWR-81723,Mouse - USB-C 2m,East Coast Fulfillment,3219,352,$246.07
+COMP-62018,Cable - 1TB NVMe,Regional Depot (WH-02),2321,393,$734.91
+PRD-HW-72722,Power Supply - USB-C 2m,Express Logistics (WH-03),3397,242,$260.86
+MOD-96656,Power Supply - 2TB 7200RPM,West Coast Dist,3232,276,$42.53
+COMP-82043,Monitor - Mid-Tower,Express Logistics (WH-03),50,147,$385.12
+SKU-EL-67493,Cable - RTX 4070,Central Hub (WH-01),4233,39,$502.97
+MOD-9399,CPU - Intel Core i7,Central Hub (WH-01),545,397,$386.75
+PWR-34925,Monitor - Mid-Tower,Express Logistics (WH-03),777,269,$29.48
+MOD-9077,RAM - 27-inch 4K,West Coast Dist,38,263,$690.62
+COMP-32046,RAM - RTX 4070,East Coast Fulfillment,4405,245,$254.93
+COMP-28894,Cable - 2TB 7200RPM,Regional Depot (WH-02),4966,162,$268.68
+SKU-EL-48778,CPU - 120mm PWM,West Coast Dist,947,412,$720.56
+COMP-89747,HDD - USB-C 2m,East Coast Fulfillment,3165,389,$712.62
+MOD-71174,GPU - RTX 4070,Central Hub (WH-01),3266,238,$730.36
+MOD-71155,Cable - 1TB NVMe,West Coast Dist,1262,236,$578.88
+COMP-97454,GPU - 1TB NVMe,Express Logistics (WH-03),1203,129,$580.67
+PRD-HW-57959,HDD - ATX,Express Logistics (WH-03),3412,159,$252.24
+COMP-70558,Cable - Intel Core i7,Central Hub (WH-01),2160,25,$696.81
+MOD-96283,Cable - 27-inch 4K,Regional Depot (WH-02),1775,135,$355.71
+PWR-74333,Cooling Fan - 120mm PWM,Central Hub (WH-01),4600,338,$412.02
+SKU-EL-34391,Monitor - Intel Core i7,Express Logistics (WH-03),1360,265,$673.43
+MOD-79555,CPU - Mid-Tower,Central Hub (WH-01),4578,295,$42.27
+COMP-47337,Power Supply - 2TB 7200RPM,West Coast Dist,557,150,$711.87
+COMP-77102,SSD - Intel Core i7,Central Hub (WH-01),4855,472,$752.82
+PWR-7221,RAM - Intel Core i7,West Coast Dist,2218,37,$92.86
+MOD-60764,Motherboard - Wireless,Express Logistics (WH-03),2903,214,$566.17
+COMP-97865,Cooling Fan - 32GB DDR5,Express Logistics (WH-03),391,89,$446.47
+PRD-HW-65410,Cooling Fan - RTX 4070,West Coast Dist,1211,196,$799.03
+COMP-31883,Keyboard - RTX 4070,Regional Depot (WH-02),2329,182,$728.58
+PRD-HW-84851,GPU - Mid-Tower,East Coast Fulfillment,286,32,$561.15
+MOD-83735,SSD - 1TB NVMe,Regional Depot (WH-02),733,369,$681.48
+PRD-HW-62393,GPU - 850W Gold,Express Logistics (WH-03),4964,208,$753.96
+PRD-HW-17901,CPU - 27-inch 4K,Regional Depot (WH-02),3269,73,$637.69
+MOD-42787,Monitor - Mechanical RGB,West Coast Dist,739,500,$310.71
+COMP-7907,RAM - Intel Core i7,West Coast Dist,796,220,$121.98
+PRD-HW-9388,Cable - Mid-Tower,West Coast Dist,63,324,$424.67
+PRD-HW-59011,Cable - RTX 4070,Regional Depot (WH-02),2222,14,$479.05
+SKU-EL-34331,RAM - Wireless,West Coast Dist,3913,488,$159.68
+MOD-52871,CPU - 2TB 7200RPM,West Coast Dist,4516,97,$149.09
+PRD-HW-18857,Cable - 2TB 7200RPM,East Coast Fulfillment,815,381,$730.08
+MOD-17131,RAM - 32GB DDR5,Central Hub (WH-01),269,80,$743.00
+SKU-EL-25108,Power Supply - Mid-Tower,Regional Depot (WH-02),4953,49,$268.52
+PRD-HW-36303,Case - 1TB NVMe,East Coast Fulfillment,4656,166,$271.70
+PRD-HW-89830,Monitor - Mechanical RGB,East Coast Fulfillment,3342,428,$47.41
+COMP-50071,GPU - 32GB DDR5,Express Logistics (WH-03),4781,373,$686.50
+PRD-HW-24677,Power Supply - 32GB DDR5,East Coast Fulfillment,2904,126,$179.78
+MOD-70293,RAM - 32GB DDR5,East Coast Fulfillment,3811,15,$297.01
+COMP-83503,Mouse - 120mm PWM,Regional Depot (WH-02),2626,321,$500.47
+PRD-HW-18404,Monitor - Intel Core i7,East Coast Fulfillment,250,386,$199.38
+COMP-57209,RAM - 2TB 7200RPM,East Coast Fulfillment,2774,179,$705.51
+SKU-EL-44151,Mouse - Wireless,East Coast Fulfillment,2901,425,$343.49
+PRD-HW-56422,Mouse - 2TB 7200RPM,East Coast Fulfillment,4566,94,$711.16
+COMP-93162,Mouse - USB-C 2m,West Coast Dist,2288,410,$238.32
+COMP-14767,Power Supply - 27-inch 4K,Express Logistics (WH-03),3363,324,$263.94
+COMP-98208,Cable - 1TB NVMe,West Coast Dist,3397,286,$56.95
+SKU-EL-14253,Cooling Fan - 2TB 7200RPM,Express Logistics (WH-03),3068,434,$268.47
+SKU-EL-23736,Motherboard - 120mm PWM,West Coast Dist,2025,484,$796.74
+SKU-EL-54080,GPU - Wireless,West Coast Dist,1860,443,$754.09
+PWR-80510,Motherboard - ATX,West Coast Dist,3579,433,$294.53
+SKU-EL-7350,Mouse - Intel Core i7,Express Logistics (WH-03),294,114,$565.59
+COMP-13776,Cooling Fan - 120mm PWM,Central Hub (WH-01),1334,279,$570.52
+PWR-98377,Motherboard - Mechanical RGB,East Coast Fulfillment,3136,290,$260.29
+COMP-72449,Motherboard - 120mm PWM,West Coast Dist,4753,71,$55.22
+PRD-HW-77471,Power Supply - 2TB 7200RPM,West Coast Dist,1232,146,$282.40
+MOD-15105,SSD - 850W Gold,Regional Depot (WH-02),4425,257,$258.37
+SKU-EL-89070,Case - 2TB 7200RPM,East Coast Fulfillment,125,43,$348.67
+MOD-27926,RAM - Mid-Tower,West Coast Dist,1136,39,$97.35
+MOD-68610,Cable - 32GB DDR5,West Coast Dist,3805,350,$439.95
+COMP-38331,HDD - Mechanical RGB,Regional Depot (WH-02),1476,436,$138.39
+PRD-HW-81087,RAM - Mid-Tower,Regional Depot (WH-02),3288,332,$174.50
+MOD-67580,RAM - USB-C 2m,Central Hub (WH-01),4924,283,$478.74
+MOD-9526,HDD - 32GB DDR5,Central Hub (WH-01),1709,185,$762.20
+PRD-HW-39841,Motherboard - Mid-Tower,Regional Depot (WH-02),2401,305,$248.35
+COMP-36871,Monitor - Mechanical RGB,East Coast Fulfillment,1901,20,$16.92
+COMP-73909,Monitor - 2TB 7200RPM,Express Logistics (WH-03),4040,60,$608.98
+PRD-HW-29675,Power Supply - 1TB NVMe,West Coast Dist,1220,27,$698.21
+SKU-EL-73860,Keyboard - 32GB DDR5,Central Hub (WH-01),3538,110,$38.80
+COMP-16654,Mouse - RTX 4070,West Coast Dist,944,305,$133.25
+MOD-16393,Cable - RTX 4070,Central Hub (WH-01),2460,164,$89.64
+PRD-HW-69845,Motherboard - 1TB NVMe,Central Hub (WH-01),1716,431,$477.71
+PRD-HW-98062,CPU - 2TB 7200RPM,Central Hub (WH-01),3009,450,$153.80
+COMP-52113,SSD - ATX,Regional Depot (WH-02),1760,64,$258.03
+PRD-HW-20429,Cable - 850W Gold,West Coast Dist,3134,22,$310.74
+SKU-EL-45496,Cooling Fan - ATX,East Coast Fulfillment,1290,68,$666.78
+SKU-EL-10404,Mouse - 850W Gold,Central Hub (WH-01),3014,150,$623.48
+PWR-96631,Motherboard - Mid-Tower,East Coast Fulfillment,2909,417,$249.22
+MOD-16599,Monitor - RTX 4070,East Coast Fulfillment,1152,437,$384.93
+COMP-42360,Keyboard - ATX,Express Logistics (WH-03),2292,164,$284.66
+PRD-HW-36010,SSD - 2TB 7200RPM,East Coast Fulfillment,3448,378,$407.14
+PRD-HW-8923,Power Supply - ATX,West Coast Dist,419,158,$561.67
+PWR-88235,Cooling Fan - USB-C 2m,West Coast Dist,4449,273,$529.58
+PWR-84326,Power Supply - 120mm PWM,Express Logistics (WH-03),486,209,$505.12
+PRD-HW-72770,Motherboard - Wireless,Express Logistics (WH-03),4551,139,$264.54
+PWR-44191,Case - 32GB DDR5,Central Hub (WH-01),3356,152,$726.51
+SKU-EL-80009,Motherboard - 2TB 7200RPM,East Coast Fulfillment,1279,235,$317.20
+PRD-HW-29999,SSD - 1TB NVMe,West Coast Dist,1015,465,$624.12
+PRD-HW-5755,Cooling Fan - 1TB NVMe,Regional Depot (WH-02),3335,314,$381.05
+MOD-97101,Monitor - 2TB 7200RPM,Central Hub (WH-01),3484,263,$571.37
+COMP-78995,HDD - 120mm PWM,Central Hub (WH-01),1084,425,$583.76
+PWR-82757,Cable - RTX 4070,Regional Depot (WH-02),1401,50,$554.54
+SKU-EL-56169,SSD - 27-inch 4K,Express Logistics (WH-03),2666,337,$328.13
+SKU-EL-89351,Motherboard - ATX,Central Hub (WH-01),1963,194,$698.45
+COMP-47165,SSD - Mechanical RGB,West Coast Dist,2426,394,$740.98
+PRD-HW-86711,Power Supply - Mid-Tower,West Coast Dist,504,379,$453.84
+SKU-EL-51137,HDD - 850W Gold,West Coast Dist,4906,61,$758.74
+COMP-18651,CPU - 1TB NVMe,East Coast Fulfillment,4573,70,$131.90
+SKU-EL-60774,Motherboard - Wireless,Central Hub (WH-01),2520,293,$353.67
+PWR-26335,SSD - Mid-Tower,Regional Depot (WH-02),929,97,$334.33
+COMP-21168,Motherboard - 27-inch 4K,Regional Depot (WH-02),3107,247,$345.19
+PWR-48591,Power Supply - Mechanical RGB,Express Logistics (WH-03),535,78,$418.19
+COMP-40698,Keyboard - Mechanical RGB,Regional Depot (WH-02),3217,146,$570.16
+PWR-86902,Monitor - 27-inch 4K,East Coast Fulfillment,3199,419,$96.67
+SKU-EL-26459,CPU - 27-inch 4K,Express Logistics (WH-03),3795,36,$204.69
+PWR-2460,Mouse - 120mm PWM,Regional Depot (WH-02),898,343,$524.21
+PRD-HW-5796,Keyboard - 1TB NVMe,Express Logistics (WH-03),2073,57,$235.47
+PRD-HW-92418,RAM - 120mm PWM,Central Hub (WH-01),650,500,$719.78
+SKU-EL-77710,RAM - Wireless,Express Logistics (WH-03),4088,381,$429.30
+MOD-61402,SSD - USB-C 2m,Express Logistics (WH-03),2337,330,$569.52
+MOD-43635,Case - 2TB 7200RPM,West Coast Dist,1076,126,$767.26
+PWR-82789,Cable - USB-C 2m,Central Hub (WH-01),4335,163,$82.28
+PRD-HW-54306,Motherboard - Mid-Tower,Central Hub (WH-01),2664,311,$476.53
+PRD-HW-84182,Motherboard - RTX 4070,Express Logistics (WH-03),4945,34,$666.64
+PWR-45134,GPU - 2TB 7200RPM,Central Hub (WH-01),4909,239,$59.21
+SKU-EL-32640,SSD - ATX,West Coast Dist,556,198,$685.08
+SKU-EL-43497,Monitor - Wireless,Central Hub (WH-01),4162,12,$126.36
+COMP-12179,CPU - 27-inch 4K,Express Logistics (WH-03),4519,463,$297.85
+PWR-56826,HDD - 27-inch 4K,East Coast Fulfillment,945,53,$545.33
+SKU-EL-47859,RAM - 120mm PWM,Express Logistics (WH-03),165,318,$338.19
+MOD-93692,Case - 32GB DDR5,East Coast Fulfillment,3879,420,$681.45
+MOD-61945,SSD - 32GB DDR5,Central Hub (WH-01),4431,144,$796.58
+SKU-EL-57754,RAM - 850W Gold,West Coast Dist,4686,16,$422.87
+COMP-98505,Case - ATX,Regional Depot (WH-02),4277,238,$152.35
+PWR-99086,Monitor - USB-C 2m,Central Hub (WH-01),1570,432,$609.51
+PWR-18850,Cooling Fan - Wireless,Express Logistics (WH-03),2072,129,$391.95
+PRD-HW-97154,Power Supply - Wireless,Central Hub (WH-01),4732,121,$542.41
+COMP-55097,CPU - Mechanical RGB,Regional Depot (WH-02),1398,62,$405.17
+SKU-EL-85328,GPU - 120mm PWM,West Coast Dist,4539,96,$474.53
+COMP-51414,Mouse - Mechanical RGB,East Coast Fulfillment,1098,443,$618.71
+SKU-EL-86403,Motherboard - 1TB NVMe,West Coast Dist,2601,323,$419.11
+SKU-EL-4887,SSD - Mechanical RGB,Express Logistics (WH-03),4395,141,$767.97
+SKU-EL-66280,RAM - ATX,West Coast Dist,3832,145,$201.30
+PRD-HW-60383,SSD - 32GB DDR5,East Coast Fulfillment,957,448,$430.52
+PRD-HW-37396,Monitor - 1TB NVMe,Express Logistics (WH-03),4183,205,$51.68
+PRD-HW-62205,Cable - 2TB 7200RPM,East Coast Fulfillment,4050,314,$387.91
+SKU-EL-57909,Mouse - RTX 4070,West Coast Dist,688,237,$444.36
+PRD-HW-52863,GPU - 120mm PWM,Central Hub (WH-01),1969,278,$406.74
+COMP-36941,Motherboard - 27-inch 4K,Express Logistics (WH-03),409,194,$588.03
+PWR-44567,Motherboard - Mid-Tower,East Coast Fulfillment,4696,429,$357.37
+SKU-EL-38613,Cooling Fan - USB-C 2m,Express Logistics (WH-03),1334,12,$551.23
+SKU-EL-21487,CPU - Wireless,Express Logistics (WH-03),867,365,$84.65
+COMP-89901,SSD - 1TB NVMe,Central Hub (WH-01),2098,429,$586.34
+PWR-40642,Monitor - ATX,Central Hub (WH-01),233,407,$534.77
+COMP-35580,Power Supply - RTX 4070,Express Logistics (WH-03),590,213,$726.28
+PWR-1032,Mouse - 27-inch 4K,Central Hub (WH-01),4508,209,$463.50
+COMP-4452,CPU - 120mm PWM,Central Hub (WH-01),1314,320,$481.28
+COMP-39189,RAM - 1TB NVMe,East Coast Fulfillment,1152,397,$126.98
+PWR-65532,HDD - Mid-Tower,Regional Depot (WH-02),110,40,$706.02
+MOD-17992,Power Supply - 850W Gold,Central Hub (WH-01),2218,352,$403.18
+PRD-HW-44317,SSD - 32GB DDR5,Central Hub (WH-01),2666,141,$37.99
+COMP-84848,Mouse - 27-inch 4K,Regional Depot (WH-02),2550,81,$463.78
+MOD-99934,Case - 2TB 7200RPM,East Coast Fulfillment,87,296,$291.52
+PRD-HW-53495,Keyboard - 120mm PWM,Central Hub (WH-01),4756,262,$569.93
+SKU-EL-22407,GPU - 32GB DDR5,West Coast Dist,4066,168,$486.85
+SKU-EL-33045,HDD - 27-inch 4K,East Coast Fulfillment,2292,485,$295.15
+PWR-75969,Cooling Fan - Mid-Tower,West Coast Dist,2791,217,$112.85
+COMP-47986,Monitor - 850W Gold,Regional Depot (WH-02),1241,109,$428.49
+MOD-6299,Monitor - 2TB 7200RPM,Central Hub (WH-01),209,331,$148.34
+PWR-68063,Cable - Wireless,West Coast Dist,3169,90,$666.89
+PWR-47306,RAM - Intel Core i7,Regional Depot (WH-02),1477,96,$90.95
+SKU-EL-56577,Cooling Fan - 120mm PWM,East Coast Fulfillment,4543,177,$62.40
+SKU-EL-57147,Mouse - USB-C 2m,Central Hub (WH-01),1544,40,$263.59
+COMP-28359,Motherboard - RTX 4070,East Coast Fulfillment,1327,135,$493.28
+SKU-EL-48663,Motherboard - Mechanical RGB,East Coast Fulfillment,4585,454,$286.88
+COMP-28562,SSD - 120mm PWM,Regional Depot (WH-02),4516,86,$612.97
+MOD-45784,RAM - Mid-Tower,Regional Depot (WH-02),4385,469,$765.28
+PRD-HW-6306,Keyboard - RTX 4070,East Coast Fulfillment,2875,293,$768.93
+MOD-40521,Cable - 27-inch 4K,Express Logistics (WH-03),1935,174,$709.26
+MOD-27826,Monitor - 1TB NVMe,Regional Depot (WH-02),4303,63,$525.12
+MOD-9720,RAM - 850W Gold,East Coast Fulfillment,464,398,$755.62
+SKU-EL-2621,SSD - 120mm PWM,West Coast Dist,90,154,$63.38
+PWR-23307,Cooling Fan - Mechanical RGB,Express Logistics (WH-03),3096,228,$418.53
+SKU-EL-19214,HDD - Mechanical RGB,Express Logistics (WH-03),3661,88,$297.56
+COMP-98293,Motherboard - ATX,West Coast Dist,123,231,$369.65
+MOD-34411,Motherboard - 1TB NVMe,West Coast Dist,933,44,$353.01
+SKU-EL-89466,RAM - 32GB DDR5,Central Hub (WH-01),1354,56,$741.27
+PWR-87205,Mouse - 2TB 7200RPM,Express Logistics (WH-03),3722,153,$202.00
+COMP-77309,Case - USB-C 2m,West Coast Dist,2768,336,$531.92
+SKU-EL-71713,Cooling Fan - 850W Gold,East Coast Fulfillment,1613,197,$644.54
+PRD-HW-87141,SSD - 1TB NVMe,West Coast Dist,1377,417,$46.00
+PWR-8361,Case - 1TB NVMe,Regional Depot (WH-02),864,449,$185.05
+SKU-EL-77962,Monitor - 2TB 7200RPM,West Coast Dist,1859,278,$371.25
+MOD-84924,Cable - 120mm PWM,Central Hub (WH-01),1926,389,$250.93
+SKU-EL-29988,Mouse - 27-inch 4K,East Coast Fulfillment,3157,222,$282.01
+MOD-92591,GPU - Intel Core i7,Central Hub (WH-01),3483,307,$125.85
+SKU-EL-35026,Mouse - 2TB 7200RPM,West Coast Dist,4789,397,$307.06
+PWR-27950,Monitor - Mechanical RGB,Regional Depot (WH-02),1381,283,$185.94
+SKU-EL-21897,Motherboard - 32GB DDR5,West Coast Dist,4026,129,$470.59
+PRD-HW-78656,RAM - 32GB DDR5,Regional Depot (WH-02),45,408,$595.46
+SKU-EL-57391,Monitor - ATX,Express Logistics (WH-03),1183,299,$603.93
+PRD-HW-36220,GPU - Mid-Tower,West Coast Dist,4338,68,$719.88
+PWR-91641,Motherboard - 1TB NVMe,Express Logistics (WH-03),573,276,$320.18
+SKU-EL-53419,Cooling Fan - 27-inch 4K,East Coast Fulfillment,1672,41,$25.11
+PRD-HW-1080,GPU - ATX,East Coast Fulfillment,4223,85,$347.74
+SKU-EL-20420,Cooling Fan - Intel Core i7,Central Hub (WH-01),4498,108,$512.19
+SKU-EL-20415,RAM - Mechanical RGB,Express Logistics (WH-03),1698,217,$187.18
+COMP-90888,SSD - 32GB DDR5,East Coast Fulfillment,2423,332,$438.73
+COMP-66204,Cable - 120mm PWM,East Coast Fulfillment,3075,132,$248.75
+PRD-HW-82778,Monitor - Wireless,Regional Depot (WH-02),1489,71,$609.10
+PWR-4412,GPU - 2TB 7200RPM,Express Logistics (WH-03),1270,239,$510.48
+COMP-49666,SSD - RTX 4070,Express Logistics (WH-03),4167,288,$631.28
+MOD-9643,SSD - 2TB 7200RPM,Regional Depot (WH-02),3050,440,$547.58
+PRD-HW-56508,RAM - 32GB DDR5,Central Hub (WH-01),4868,273,$235.85
+COMP-23771,CPU - USB-C 2m,Regional Depot (WH-02),3630,406,$752.72
+COMP-21957,Case - Mid-Tower,West Coast Dist,672,173,$715.60
+PWR-37667,GPU - Mechanical RGB,Express Logistics (WH-03),3384,380,$737.03
+SKU-EL-93100,Monitor - Wireless,Express Logistics (WH-03),2760,416,$126.67
+PRD-HW-68164,CPU - RTX 4070,East Coast Fulfillment,3773,312,$34.60
+SKU-EL-82543,Motherboard - 850W Gold,West Coast Dist,1522,113,$197.25
+COMP-10769,Keyboard - USB-C 2m,Express Logistics (WH-03),2763,298,$757.53
+PRD-HW-3801,GPU - Intel Core i7,West Coast Dist,4176,153,$618.76
+COMP-51964,Cable - Mechanical RGB,West Coast Dist,1811,191,$286.29
+PWR-96260,Motherboard - 32GB DDR5,East Coast Fulfillment,4549,262,$96.53
+PWR-13516,Mouse - Mechanical RGB,West Coast Dist,2733,29,$299.68
+PWR-94654,HDD - RTX 4070,West Coast Dist,2273,77,$379.32
+COMP-76147,HDD - Intel Core i7,Express Logistics (WH-03),4706,62,$264.36
+COMP-12458,HDD - USB-C 2m,West Coast Dist,4854,478,$719.23
+PWR-15203,Motherboard - 1TB NVMe,Central Hub (WH-01),737,158,$556.53
+SKU-EL-93784,Monitor - 850W Gold,Central Hub (WH-01),3348,179,$510.83
+PRD-HW-32280,Power Supply - ATX,East Coast Fulfillment,914,469,$84.84
+COMP-93230,Cable - 120mm PWM,Central Hub (WH-01),4171,261,$755.75
+PWR-82202,RAM - 32GB DDR5,Central Hub (WH-01),4657,191,$46.93
+PRD-HW-7314,Cable - Wireless,Express Logistics (WH-03),3686,413,$46.43
+PRD-HW-21002,Cable - Mechanical RGB,Central Hub (WH-01),2106,231,$664.13
+SKU-EL-42507,HDD - Intel Core i7,Regional Depot (WH-02),4939,213,$484.17
+SKU-EL-96626,Keyboard - Mid-Tower,West Coast Dist,2997,129,$247.15
+SKU-EL-62873,SSD - 2TB 7200RPM,East Coast Fulfillment,3979,200,$151.82
+PWR-30261,Cooling Fan - Intel Core i7,Express Logistics (WH-03),3396,458,$333.31
+PWR-86252,Keyboard - 2TB 7200RPM,Express Logistics (WH-03),3649,255,$163.85
+PRD-HW-37703,SSD - Wireless,Express Logistics (WH-03),947,295,$536.64
+MOD-32098,Motherboard - 27-inch 4K,West Coast Dist,4064,36,$640.18
+PWR-72450,Cooling Fan - 1TB NVMe,East Coast Fulfillment,4012,236,$615.63
+COMP-42295,Motherboard - 1TB NVMe,Express Logistics (WH-03),2502,71,$83.35
+PRD-HW-18106,Cooling Fan - Mechanical RGB,East Coast Fulfillment,1821,29,$665.19
+PWR-61489,HDD - ATX,East Coast Fulfillment,953,328,$345.71
+PRD-HW-73622,Keyboard - 850W Gold,West Coast Dist,783,230,$156.26
+PWR-24681,GPU - Wireless,Express Logistics (WH-03),2512,283,$585.60
+MOD-56945,SSD - 850W Gold,Express Logistics (WH-03),2246,175,$437.40
+MOD-14748,Power Supply - RTX 4070,East Coast Fulfillment,3543,192,$261.50
+SKU-EL-8745,Cooling Fan - RTX 4070,Central Hub (WH-01),3377,29,$203.12
+SKU-EL-85496,Keyboard - Intel Core i7,Express Logistics (WH-03),4327,179,$578.91
+COMP-4281,Cooling Fan - Intel Core i7,Express Logistics (WH-03),1215,456,$192.83
+PRD-HW-79592,SSD - 850W Gold,Regional Depot (WH-02),3992,139,$305.44
+MOD-64807,Case - 2TB 7200RPM,East Coast Fulfillment,3184,189,$382.41
+PRD-HW-72479,Keyboard - 27-inch 4K,West Coast Dist,549,97,$179.10
+MOD-25838,HDD - 27-inch 4K,Regional Depot (WH-02),572,239,$684.04
+MOD-47922,Mouse - Intel Core i7,Regional Depot (WH-02),4127,125,$142.12
+MOD-42800,Monitor - Mid-Tower,Regional Depot (WH-02),3210,253,$350.68
+MOD-44426,Motherboard - 27-inch 4K,East Coast Fulfillment,440,262,$738.04
+SKU-EL-32969,CPU - Mechanical RGB,Express Logistics (WH-03),1788,186,$769.81
+PWR-27427,RAM - 2TB 7200RPM,Regional Depot (WH-02),1806,132,$468.37
+COMP-25795,Motherboard - 2TB 7200RPM,Central Hub (WH-01),3732,152,$408.67
+PWR-50139,Power Supply - Intel Core i7,East Coast Fulfillment,1738,455,$466.23
+PRD-HW-48327,Keyboard - USB-C 2m,West Coast Dist,3191,321,$491.79
+PWR-72806,Cooling Fan - 850W Gold,East Coast Fulfillment,1028,179,$321.83
+PRD-HW-52980,Monitor - 1TB NVMe,Central Hub (WH-01),298,60,$413.63
+COMP-99929,Cooling Fan - 120mm PWM,East Coast Fulfillment,3607,374,$791.30
+PRD-HW-53575,Mouse - Mechanical RGB,Express Logistics (WH-03),534,321,$213.87
+COMP-98270,Case - Mechanical RGB,Central Hub (WH-01),4440,121,$146.83
+SKU-EL-73163,Power Supply - 120mm PWM,East Coast Fulfillment,1788,170,$253.54
+PWR-12500,GPU - 1TB NVMe,West Coast Dist,3118,251,$468.79
+MOD-90234,Mouse - 2TB 7200RPM,Central Hub (WH-01),4680,148,$118.05
+PWR-98728,CPU - 32GB DDR5,East Coast Fulfillment,865,443,$153.62
+MOD-6474,Monitor - 32GB DDR5,Express Logistics (WH-03),20,381,$585.58
+MOD-1677,Mouse - 1TB NVMe,Regional Depot (WH-02),3240,298,$197.95
+SKU-EL-39957,HDD - 27-inch 4K,West Coast Dist,2809,24,$112.93
+MOD-24474,Cable - 2TB 7200RPM,Regional Depot (WH-02),973,483,$398.90
+MOD-20570,Monitor - ATX,Central Hub (WH-01),2032,100,$701.49
+SKU-EL-39070,Mouse - ATX,East Coast Fulfillment,3979,500,$310.43
+PRD-HW-84279,GPU - Intel Core i7,Express Logistics (WH-03),3398,497,$794.97
+MOD-36766,Monitor - ATX,West Coast Dist,4949,64,$754.49
+MOD-32097,CPU - ATX,West Coast Dist,423,70,$448.58
+COMP-80339,GPU - 27-inch 4K,Regional Depot (WH-02),914,494,$414.46
+PRD-HW-53127,GPU - RTX 4070,Central Hub (WH-01),2199,345,$130.86
+PRD-HW-30448,RAM - USB-C 2m,West Coast Dist,2521,306,$128.54
+MOD-5603,Cooling Fan - 120mm PWM,West Coast Dist,2977,494,$606.06
+PRD-HW-81590,Mouse - 27-inch 4K,West Coast Dist,648,231,$471.70
+COMP-84925,GPU - Wireless,East Coast Fulfillment,4455,244,$76.54
+PRD-HW-32211,Mouse - RTX 4070,Regional Depot (WH-02),3464,208,$509.16
+MOD-21045,Case - 2TB 7200RPM,East Coast Fulfillment,544,457,$636.06
+PWR-83021,Keyboard - 1TB NVMe,Express Logistics (WH-03),4760,35,$461.76
+MOD-81519,Monitor - Mechanical RGB,West Coast Dist,1809,243,$433.98
+MOD-37912,Power Supply - 1TB NVMe,Central Hub (WH-01),3526,349,$451.99
+COMP-26030,RAM - 2TB 7200RPM,East Coast Fulfillment,2732,193,$284.20
+PWR-73428,CPU - ATX,East Coast Fulfillment,3152,496,$546.53
+COMP-85178,RAM - 27-inch 4K,Express Logistics (WH-03),884,455,$361.26
+MOD-81615,Motherboard - Mechanical RGB,Central Hub (WH-01),1214,27,$316.05
+PWR-88904,Cable - Wireless,Regional Depot (WH-02),3742,135,$77.71
+MOD-81042,Mouse - Wireless,Central Hub (WH-01),1218,69,$217.77
+COMP-27254,GPU - 850W Gold,East Coast Fulfillment,4514,100,$163.19
+MOD-90269,GPU - Intel Core i7,Express Logistics (WH-03),1046,37,$143.38
+MOD-98099,Power Supply - ATX,Regional Depot (WH-02),3738,357,$743.36
+MOD-98098,Case - USB-C 2m,East Coast Fulfillment,865,11,$293.30
+MOD-48899,Cooling Fan - 2TB 7200RPM,East Coast Fulfillment,4652,292,$236.06
+SKU-EL-21810,RAM - 2TB 7200RPM,Regional Depot (WH-02),883,367,$79.98
+SKU-EL-80729,SSD - Wireless,East Coast Fulfillment,656,206,$210.93
+COMP-25477,Cable - 32GB DDR5,West Coast Dist,4550,356,$743.28
+PWR-52431,Cable - 120mm PWM,Express Logistics (WH-03),119,130,$758.20
+SKU-EL-89864,Keyboard - 27-inch 4K,Regional Depot (WH-02),2645,53,$595.08
+MOD-63846,Keyboard - 27-inch 4K,Express Logistics (WH-03),3145,226,$37.05
+COMP-24659,RAM - Intel Core i7,Regional Depot (WH-02),3091,455,$194.34
+MOD-88975,CPU - 850W Gold,Central Hub (WH-01),305,420,$101.53
+PRD-HW-28433,HDD - 1TB NVMe,Central Hub (WH-01),796,362,$127.09
+MOD-20169,SSD - ATX,West Coast Dist,2819,382,$359.11
+PRD-HW-72577,CPU - 1TB NVMe,Regional Depot (WH-02),2840,183,$320.41
+PWR-27096,Cable - 32GB DDR5,Regional Depot (WH-02),3190,234,$775.53
+COMP-97575,Motherboard - Mechanical RGB,West Coast Dist,3807,432,$377.90
+PRD-HW-74899,Mouse - 120mm PWM,East Coast Fulfillment,4787,470,$82.45
+SKU-EL-17830,Power Supply - Mechanical RGB,Express Logistics (WH-03),2050,141,$512.10
+PRD-HW-15479,Cable - 32GB DDR5,West Coast Dist,4013,330,$15.31
+SKU-EL-16097,Monitor - 27-inch 4K,Regional Depot (WH-02),319,477,$405.14
+SKU-EL-31149,RAM - 2TB 7200RPM,Regional Depot (WH-02),4180,316,$603.34
+COMP-86757,Cable - 1TB NVMe,Express Logistics (WH-03),750,295,$365.86
+PWR-96862,Cooling Fan - 1TB NVMe,Express Logistics (WH-03),4664,237,$142.84
+COMP-87137,HDD - USB-C 2m,Express Logistics (WH-03),4295,375,$640.59
+SKU-EL-76702,Keyboard - 850W Gold,Regional Depot (WH-02),61,15,$42.13
+SKU-EL-72628,CPU - 2TB 7200RPM,West Coast Dist,109,288,$176.55
+COMP-25005,Monitor - RTX 4070,Regional Depot (WH-02),2736,464,$43.31
+PWR-41275,Monitor - 850W Gold,East Coast Fulfillment,4200,94,$605.71
+PRD-HW-61906,HDD - 32GB DDR5,East Coast Fulfillment,1854,163,$174.35
+PWR-9488,HDD - Intel Core i7,Regional Depot (WH-02),1458,186,$306.60
+PRD-HW-8370,SSD - Wireless,West Coast Dist,4552,366,$275.90
+SKU-EL-22631,Motherboard - Wireless,Regional Depot (WH-02),1848,35,$345.27
+MOD-97427,GPU - Intel Core i7,Central Hub (WH-01),1252,209,$512.25
+PWR-59422,CPU - Intel Core i7,West Coast Dist,2908,305,$91.37
+PRD-HW-5723,RAM - ATX,Express Logistics (WH-03),2861,148,$412.94
+SKU-EL-48894,RAM - 120mm PWM,Regional Depot (WH-02),4542,225,$686.97
+PRD-HW-20927,Cable - 2TB 7200RPM,West Coast Dist,3768,449,$690.21
+COMP-1808,Motherboard - 1TB NVMe,Express Logistics (WH-03),2538,461,$178.26
+PRD-HW-36218,Power Supply - 120mm PWM,East Coast Fulfillment,3035,375,$583.34
+SKU-EL-99027,Motherboard - 32GB DDR5,Express Logistics (WH-03),3364,205,$430.75
+SKU-EL-52435,CPU - USB-C 2m,West Coast Dist,2258,194,$245.62
+COMP-6534,GPU - 850W Gold,East Coast Fulfillment,4667,155,$593.98
+SKU-EL-58854,RAM - 27-inch 4K,Express Logistics (WH-03),4684,415,$215.84
+MOD-79211,Keyboard - ATX,Central Hub (WH-01),3827,172,$314.77
+COMP-16321,SSD - USB-C 2m,East Coast Fulfillment,4745,430,$589.26
+COMP-14112,CPU - 1TB NVMe,West Coast Dist,1609,75,$77.25
+MOD-8029,Cable - Wireless,West Coast Dist,1900,90,$292.32
+PWR-94451,Monitor - 32GB DDR5,Express Logistics (WH-03),1035,84,$644.00
+COMP-66327,Monitor - ATX,Central Hub (WH-01),2222,69,$469.43
+SKU-EL-24587,CPU - ATX,Regional Depot (WH-02),226,149,$539.03
+SKU-EL-59346,Keyboard - 120mm PWM,Express Logistics (WH-03),1383,61,$575.93
+PRD-HW-20985,Motherboard - Mid-Tower,West Coast Dist,663,326,$406.87
+PRD-HW-37770,RAM - Wireless,Central Hub (WH-01),4130,235,$375.56
+SKU-EL-58472,RAM - 1TB NVMe,West Coast Dist,1887,381,$395.30
+PWR-17460,Cable - 120mm PWM,Central Hub (WH-01),3818,486,$401.05
+MOD-9787,CPU - 27-inch 4K,Express Logistics (WH-03),519,430,$630.30
+MOD-87451,CPU - 120mm PWM,Regional Depot (WH-02),3685,13,$757.55
+PRD-HW-66737,CPU - Mid-Tower,West Coast Dist,4453,312,$345.40
+PWR-5366,SSD - Intel Core i7,East Coast Fulfillment,2760,315,$426.12
+COMP-11529,Monitor - 850W Gold,Regional Depot (WH-02),2305,218,$547.62
+PRD-HW-24574,Mouse - 27-inch 4K,Central Hub (WH-01),950,190,$669.69
+PRD-HW-69704,Monitor - 32GB DDR5,East Coast Fulfillment,4454,455,$189.98
+MOD-72577,Cable - RTX 4070,Express Logistics (WH-03),12,292,$42.12
+MOD-40806,Mouse - ATX,West Coast Dist,4797,287,$497.76
+MOD-31411,Cooling Fan - 32GB DDR5,Central Hub (WH-01),3175,432,$662.34
+COMP-33483,Case - 2TB 7200RPM,Regional Depot (WH-02),2479,254,$58.93
+MOD-13493,RAM - Wireless,East Coast Fulfillment,1994,367,$234.27
+PRD-HW-58012,RAM - 27-inch 4K,East Coast Fulfillment,4788,154,$165.55
+PRD-HW-70548,Mouse - Wireless,West Coast Dist,197,331,$569.09
+MOD-92509,GPU - Mechanical RGB,Central Hub (WH-01),2185,457,$471.78
+PWR-22367,SSD - Wireless,East Coast Fulfillment,3959,315,$115.49
+MOD-89776,GPU - 27-inch 4K,Express Logistics (WH-03),2364,406,$543.16
+MOD-59842,Motherboard - 120mm PWM,East Coast Fulfillment,2327,338,$710.92
+COMP-13971,Power Supply - USB-C 2m,Regional Depot (WH-02),3212,494,$127.65
+PRD-HW-22331,CPU - 120mm PWM,East Coast Fulfillment,1671,44,$563.64
+PRD-HW-19351,Mouse - Intel Core i7,West Coast Dist,3643,409,$738.73
+SKU-EL-24798,SSD - 850W Gold,Central Hub (WH-01),1341,142,$670.12
+PWR-69720,Case - USB-C 2m,Regional Depot (WH-02),4022,150,$692.51
+PRD-HW-14483,HDD - Intel Core i7,East Coast Fulfillment,4827,56,$490.55
+PWR-30281,Cooling Fan - ATX,West Coast Dist,2062,233,$367.55
+PWR-50865,CPU - Mechanical RGB,Central Hub (WH-01),960,159,$202.94
+PWR-54324,SSD - 27-inch 4K,East Coast Fulfillment,4543,149,$471.59
+MOD-21911,Cooling Fan - 1TB NVMe,East Coast Fulfillment,1748,130,$527.41
+SKU-EL-17215,Power Supply - RTX 4070,West Coast Dist,4914,240,$471.91
+COMP-43742,Motherboard - 120mm PWM,Express Logistics (WH-03),1589,138,$41.28
+PRD-HW-6590,SSD - 27-inch 4K,Express Logistics (WH-03),742,233,$344.93
+PRD-HW-53133,HDD - USB-C 2m,East Coast Fulfillment,826,296,$272.82
+PWR-81305,Monitor - 850W Gold,Central Hub (WH-01),2967,91,$397.87
+COMP-5759,CPU - USB-C 2m,Express Logistics (WH-03),3125,196,$476.03
+COMP-45351,Motherboard - Mid-Tower,Express Logistics (WH-03),1525,132,$419.87
+PWR-91916,Case - 2TB 7200RPM,West Coast Dist,441,406,$632.28
+MOD-37418,GPU - 850W Gold,Regional Depot (WH-02),428,143,$520.34
+COMP-77392,Motherboard - USB-C 2m,Regional Depot (WH-02),3854,34,$423.80
+SKU-EL-19039,Cooling Fan - Intel Core i7,East Coast Fulfillment,3603,82,$741.50
+MOD-69049,RAM - 1TB NVMe,East Coast Fulfillment,2073,297,$354.30
+MOD-26766,Cable - Wireless,Central Hub (WH-01),1926,356,$717.17
+MOD-17711,Monitor - Wireless,Express Logistics (WH-03),128,482,$419.40
+SKU-EL-54012,Power Supply - Intel Core i7,Express Logistics (WH-03),3026,363,$282.59
+MOD-71748,Power Supply - 2TB 7200RPM,Regional Depot (WH-02),3608,196,$226.85
+SKU-EL-31587,GPU - 850W Gold,Express Logistics (WH-03),1304,219,$392.02
+COMP-10131,CPU - Intel Core i7,West Coast Dist,2818,36,$156.79
+COMP-17671,Cable - 120mm PWM,Central Hub (WH-01),3786,284,$239.67
+PWR-56293,Cable - 27-inch 4K,Central Hub (WH-01),4583,141,$400.08
+PWR-1672,Cooling Fan - 850W Gold,West Coast Dist,2157,316,$495.30
+MOD-35500,SSD - 120mm PWM,Express Logistics (WH-03),333,463,$590.12
+COMP-83263,Keyboard - Mid-Tower,East Coast Fulfillment,2002,140,$116.77
+COMP-93872,Monitor - Intel Core i7,Express Logistics (WH-03),240,486,$777.34
+MOD-38327,Keyboard - 850W Gold,Express Logistics (WH-03),1089,105,$143.91
+PRD-HW-59586,Motherboard - Intel Core i7,Express Logistics (WH-03),4090,13,$276.46
+MOD-60162,SSD - 27-inch 4K,Regional Depot (WH-02),807,63,$496.04
+PRD-HW-63581,SSD - Wireless,Express Logistics (WH-03),2601,427,$188.67
+MOD-42025,Cooling Fan - 32GB DDR5,Central Hub (WH-01),879,141,$203.33
+MOD-96630,Mouse - 120mm PWM,West Coast Dist,1798,457,$791.25
+SKU-EL-20803,Monitor - USB-C 2m,Express Logistics (WH-03),329,163,$786.99
+MOD-14259,RAM - Wireless,West Coast Dist,4833,165,$644.43
+SKU-EL-41071,Mouse - ATX,Central Hub (WH-01),4400,18,$376.09
+PRD-HW-10452,Cooling Fan - 32GB DDR5,Express Logistics (WH-03),3369,108,$476.37
+COMP-91471,Monitor - 32GB DDR5,West Coast Dist,934,425,$617.90
+COMP-44196,Cooling Fan - Mechanical RGB,West Coast Dist,1896,421,$435.78
+COMP-49588,GPU - Mechanical RGB,Express Logistics (WH-03),4983,467,$662.89
+SKU-EL-7701,GPU - 120mm PWM,West Coast Dist,4646,388,$277.88
+PWR-73114,RAM - 120mm PWM,East Coast Fulfillment,4807,20,$627.67
+SKU-EL-80569,Power Supply - 27-inch 4K,West Coast Dist,3765,417,$604.12
+MOD-1391,Mouse - Mechanical RGB,Express Logistics (WH-03),1343,426,$161.08
+SKU-EL-22892,Case - 120mm PWM,Central Hub (WH-01),2375,307,$673.33
+SKU-EL-78841,Cable - 120mm PWM,Express Logistics (WH-03),1435,173,$227.41
+COMP-27558,Monitor - USB-C 2m,West Coast Dist,393,475,$696.02
+MOD-34459,SSD - 850W Gold,Express Logistics (WH-03),369,179,$739.63
+SKU-EL-57031,GPU - ATX,Express Logistics (WH-03),553,34,$708.70
+SKU-EL-41582,RAM - 27-inch 4K,Regional Depot (WH-02),164,87,$720.26
+MOD-2531,Mouse - 2TB 7200RPM,Regional Depot (WH-02),3073,102,$214.23
+COMP-35764,CPU - ATX,Express Logistics (WH-03),1150,210,$713.85
+SKU-EL-71557,Case - Mechanical RGB,Express Logistics (WH-03),3731,130,$401.19
+MOD-13279,Cooling Fan - 850W Gold,East Coast Fulfillment,2912,255,$214.72
+COMP-67077,GPU - Wireless,East Coast Fulfillment,3879,424,$546.15
+SKU-EL-67953,Monitor - 850W Gold,Regional Depot (WH-02),4709,165,$10.31
+MOD-85319,Mouse - 27-inch 4K,Regional Depot (WH-02),4449,482,$13.86
+PRD-HW-80273,Mouse - 1TB NVMe,Regional Depot (WH-02),236,411,$122.92
+COMP-27713,Cooling Fan - 120mm PWM,Express Logistics (WH-03),1315,317,$539.86
+MOD-8200,SSD - RTX 4070,East Coast Fulfillment,1943,435,$705.44
+SKU-EL-9905,Cooling Fan - RTX 4070,West Coast Dist,3991,229,$604.72
+PWR-78685,SSD - USB-C 2m,Regional Depot (WH-02),2246,268,$348.43
+PRD-HW-69504,RAM - 32GB DDR5,East Coast Fulfillment,4103,184,$696.79
+MOD-64235,Keyboard - 32GB DDR5,Express Logistics (WH-03),327,437,$280.42
+COMP-22205,GPU - Wireless,East Coast Fulfillment,1800,193,$717.96
+PWR-70380,Motherboard - RTX 4070,Regional Depot (WH-02),3996,457,$582.05
+SKU-EL-43248,RAM - USB-C 2m,West Coast Dist,1645,343,$654.57
+PRD-HW-21929,RAM - Wireless,Regional Depot (WH-02),1299,291,$555.40
+PRD-HW-69783,Power Supply - 2TB 7200RPM,Regional Depot (WH-02),3716,175,$167.37
+PRD-HW-48514,Mouse - 2TB 7200RPM,Regional Depot (WH-02),1101,95,$62.67
+PWR-47999,Monitor - 2TB 7200RPM,East Coast Fulfillment,2415,418,$188.79
+PWR-97992,Motherboard - 32GB DDR5,Express Logistics (WH-03),1160,385,$714.83
+PRD-HW-1827,SSD - RTX 4070,Regional Depot (WH-02),2915,247,$553.20
+COMP-92168,RAM - 1TB NVMe,Express Logistics (WH-03),3299,71,$178.09
+SKU-EL-54385,Case - Mid-Tower,Regional Depot (WH-02),4386,492,$205.63
+PRD-HW-17720,RAM - 120mm PWM,East Coast Fulfillment,469,338,$66.50
+COMP-79499,SSD - 120mm PWM,East Coast Fulfillment,131,389,$217.18
+PRD-HW-74833,RAM - Mechanical RGB,Express Logistics (WH-03),554,86,$174.01
+COMP-38233,Keyboard - Mechanical RGB,Express Logistics (WH-03),4720,482,$165.75
+SKU-EL-8783,Cable - 32GB DDR5,Regional Depot (WH-02),3578,88,$124.06
+PWR-42732,GPU - 2TB 7200RPM,Central Hub (WH-01),3502,283,$705.04
+MOD-65683,Case - USB-C 2m,West Coast Dist,4331,440,$450.83
+MOD-60793,Keyboard - Intel Core i7,Regional Depot (WH-02),1013,72,$238.04
+MOD-38807,Mouse - Mechanical RGB,Regional Depot (WH-02),3555,470,$286.81
+MOD-13215,Cable - 32GB DDR5,East Coast Fulfillment,488,269,$234.40
+COMP-6464,SSD - 1TB NVMe,Express Logistics (WH-03),4689,251,$98.30
+PWR-99782,SSD - Mechanical RGB,Express Logistics (WH-03),1791,17,$579.39
+COMP-42127,SSD - 120mm PWM,Express Logistics (WH-03),1042,483,$237.52
+SKU-EL-36784,CPU - 32GB DDR5,Central Hub (WH-01),769,91,$660.36
+PWR-96643,RAM - Mechanical RGB,East Coast Fulfillment,4016,128,$96.42
+PWR-12179,Cable - Intel Core i7,East Coast Fulfillment,4523,464,$413.49
+PWR-45249,Cable - 120mm PWM,Regional Depot (WH-02),4034,95,$726.99
+PRD-HW-99113,Keyboard - Mechanical RGB,Express Logistics (WH-03),3589,74,$97.13
+PWR-12836,Power Supply - 2TB 7200RPM,Central Hub (WH-01),3098,341,$189.97
+SKU-EL-40256,Cable - 32GB DDR5,East Coast Fulfillment,4975,33,$369.01
+PRD-HW-28580,Keyboard - 850W Gold,Regional Depot (WH-02),4629,423,$486.39
+PRD-HW-31924,Monitor - 850W Gold,Central Hub (WH-01),701,439,$478.80
+PRD-HW-34263,CPU - Mechanical RGB,Regional Depot (WH-02),3774,289,$631.78
+PRD-HW-70487,CPU - Mid-Tower,Regional Depot (WH-02),104,443,$282.68
+SKU-EL-13978,Case - ATX,East Coast Fulfillment,119,392,$796.51
+PWR-72246,Keyboard - 850W Gold,West Coast Dist,4199,55,$489.14
+COMP-56987,Cooling Fan - Intel Core i7,West Coast Dist,4261,339,$351.49
+SKU-EL-13931,Cable - Wireless,East Coast Fulfillment,2923,123,$480.24
+COMP-39382,Motherboard - Wireless,West Coast Dist,300,481,$756.20
+COMP-18230,Motherboard - ATX,Central Hub (WH-01),4894,422,$100.54
+MOD-18194,CPU - 2TB 7200RPM,Express Logistics (WH-03),375,473,$80.07
+COMP-15688,Power Supply - Intel Core i7,Central Hub (WH-01),4946,325,$481.65
+PRD-HW-69349,Cable - ATX,Regional Depot (WH-02),3403,469,$181.26
+MOD-52345,CPU - Mechanical RGB,East Coast Fulfillment,4321,16,$674.36
+MOD-4582,CPU - 27-inch 4K,West Coast Dist,3648,226,$729.39
+SKU-EL-64638,HDD - 120mm PWM,West Coast Dist,1860,497,$594.92
+PWR-89338,GPU - 1TB NVMe,West Coast Dist,972,14,$463.75
+SKU-EL-50327,RAM - 2TB 7200RPM,West Coast Dist,90,413,$559.95
+SKU-EL-36574,Cable - 1TB NVMe,Express Logistics (WH-03),3266,258,$175.97
+COMP-53023,Mouse - 850W Gold,Express Logistics (WH-03),4428,113,$452.83
+COMP-91302,Motherboard - 120mm PWM,West Coast Dist,3762,358,$738.00
+COMP-45131,Motherboard - Intel Core i7,Express Logistics (WH-03),4665,43,$690.98
+PWR-98506,CPU - Wireless,East Coast Fulfillment,671,269,$66.35
+MOD-51892,RAM - Wireless,Central Hub (WH-01),232,494,$535.86
+PWR-91012,GPU - Intel Core i7,West Coast Dist,360,71,$589.35
+SKU-EL-40452,Mouse - 2TB 7200RPM,Central Hub (WH-01),3980,499,$506.45
+PRD-HW-9939,Monitor - Wireless,West Coast Dist,250,496,$61.10
+MOD-18398,Monitor - Mid-Tower,West Coast Dist,4824,148,$163.17
+COMP-46229,HDD - 120mm PWM,Express Logistics (WH-03),1815,354,$784.18
+MOD-20846,Monitor - ATX,Regional Depot (WH-02),2033,182,$760.20
+COMP-86762,RAM - 850W Gold,West Coast Dist,4119,248,$678.75
+PRD-HW-53504,GPU - 1TB NVMe,East Coast Fulfillment,692,470,$137.76
+MOD-33975,GPU - Intel Core i7,Express Logistics (WH-03),1499,471,$585.11
+PWR-43381,RAM - Wireless,East Coast Fulfillment,4572,291,$357.08
+COMP-67335,Case - Intel Core i7,Central Hub (WH-01),2610,413,$108.76
+PRD-HW-66883,Motherboard - 2TB 7200RPM,East Coast Fulfillment,118,266,$382.71
+MOD-7976,Cooling Fan - 850W Gold,Regional Depot (WH-02),1136,323,$774.91
+PRD-HW-38361,Monitor - 32GB DDR5,Express Logistics (WH-03),2827,487,$255.47
+MOD-80026,CPU - 27-inch 4K,Express Logistics (WH-03),1435,132,$40.61
+COMP-29440,Cable - 32GB DDR5,East Coast Fulfillment,96,333,$348.48
+SKU-EL-72422,Case - 1TB NVMe,West Coast Dist,3456,73,$783.33
+COMP-58160,Cooling Fan - 27-inch 4K,Express Logistics (WH-03),1084,407,$242.73
+COMP-1122,CPU - Intel Core i7,Regional Depot (WH-02),3250,203,$145.50
+SKU-EL-82024,CPU - 1TB NVMe,Central Hub (WH-01),3522,346,$492.93
+COMP-88459,RAM - 120mm PWM,West Coast Dist,3312,53,$585.34
+MOD-31333,Cable - Wireless,West Coast Dist,409,385,$467.41
+MOD-91257,Cooling Fan - 850W Gold,Express Logistics (WH-03),4940,437,$421.02
+MOD-52182,CPU - 850W Gold,East Coast Fulfillment,119,94,$415.50
+PRD-HW-72947,HDD - Wireless,Central Hub (WH-01),4092,423,$180.10
+MOD-87512,Cable - RTX 4070,Express Logistics (WH-03),2062,209,$668.74
+SKU-EL-4708,HDD - Intel Core i7,West Coast Dist,3728,122,$777.93
+PRD-HW-60425,SSD - Intel Core i7,East Coast Fulfillment,2640,342,$27.73
+PWR-88825,Monitor - 850W Gold,West Coast Dist,1363,335,$274.07
+SKU-EL-28934,Motherboard - 120mm PWM,East Coast Fulfillment,4107,434,$249.59
+SKU-EL-85711,HDD - Wireless,West Coast Dist,1534,312,$527.48
+MOD-67231,Cooling Fan - 2TB 7200RPM,Regional Depot (WH-02),4350,475,$487.33
+MOD-44351,SSD - 27-inch 4K,West Coast Dist,4031,335,$170.83
+PWR-25752,Keyboard - USB-C 2m,East Coast Fulfillment,4883,379,$30.54
+PWR-47415,Power Supply - 120mm PWM,Central Hub (WH-01),1311,237,$276.04
+PWR-67965,GPU - 1TB NVMe,East Coast Fulfillment,4782,153,$705.34
+PWR-88947,CPU - Intel Core i7,Central Hub (WH-01),227,415,$402.47
+PWR-6372,Motherboard - 2TB 7200RPM,East Coast Fulfillment,3580,82,$355.31
+PWR-92646,Monitor - 2TB 7200RPM,East Coast Fulfillment,2703,365,$22.70
+COMP-21766,SSD - 1TB NVMe,Central Hub (WH-01),3747,196,$341.38
+PRD-HW-30249,Power Supply - 27-inch 4K,Central Hub (WH-01),836,354,$110.51
+MOD-40530,Case - 27-inch 4K,West Coast Dist,2438,159,$202.19
+PRD-HW-29645,GPU - 32GB DDR5,East Coast Fulfillment,1661,61,$219.49
+PRD-HW-70281,SSD - 850W Gold,Central Hub (WH-01),3456,42,$32.53
+COMP-82145,Mouse - Mechanical RGB,Express Logistics (WH-03),4291,188,$588.55
+COMP-72104,Motherboard - 1TB NVMe,Regional Depot (WH-02),59,134,$611.45
+PWR-60275,HDD - 1TB NVMe,Regional Depot (WH-02),4658,13,$183.40
+PRD-HW-20032,Case - 120mm PWM,Regional Depot (WH-02),1706,100,$791.31
+MOD-95592,CPU - 32GB DDR5,Central Hub (WH-01),1655,495,$132.19
+MOD-47014,Cooling Fan - 2TB 7200RPM,Central Hub (WH-01),2104,223,$750.87
+PRD-HW-48006,Mouse - USB-C 2m,Express Logistics (WH-03),3386,187,$640.83
+MOD-28782,Cable - Mechanical RGB,East Coast Fulfillment,3061,79,$98.29
+SKU-EL-55184,CPU - ATX,Express Logistics (WH-03),466,315,$74.47
+PRD-HW-43269,Power Supply - 27-inch 4K,Central Hub (WH-01),1448,45,$465.32
+PRD-HW-24578,Mouse - Wireless,West Coast Dist,438,63,$472.93
+SKU-EL-47111,CPU - 32GB DDR5,Regional Depot (WH-02),3881,345,$612.65
+PWR-78356,Cable - Mid-Tower,Express Logistics (WH-03),485,463,$243.47
+COMP-89004,Keyboard - Mechanical RGB,Regional Depot (WH-02),3277,252,$552.09
+COMP-32825,Cooling Fan - RTX 4070,East Coast Fulfillment,4672,176,$223.66
+MOD-1123,SSD - 32GB DDR5,Express Logistics (WH-03),34,336,$184.71
+PRD-HW-53830,GPU - 120mm PWM,Regional Depot (WH-02),2265,353,$179.96
+MOD-15009,Mouse - 2TB 7200RPM,East Coast Fulfillment,635,184,$604.66
+COMP-38125,HDD - Mechanical RGB,Central Hub (WH-01),1563,268,$6.45
+COMP-38685,Cooling Fan - USB-C 2m,East Coast Fulfillment,4365,40,$489.52
+PRD-HW-92405,Mouse - Wireless,Regional Depot (WH-02),3029,220,$630.69
+SKU-EL-88906,Monitor - 27-inch 4K,West Coast Dist,3669,447,$100.77
+SKU-EL-75193,Cable - 850W Gold,East Coast Fulfillment,439,472,$350.59
+SKU-EL-27760,Case - RTX 4070,Regional Depot (WH-02),1775,364,$701.40
+PWR-42559,Mouse - USB-C 2m,Regional Depot (WH-02),2229,170,$505.93
+MOD-12597,GPU - ATX,Express Logistics (WH-03),3808,233,$509.40
+SKU-EL-29571,Case - Mid-Tower,East Coast Fulfillment,3036,417,$500.37
+COMP-37658,Keyboard - 120mm PWM,East Coast Fulfillment,3934,238,$792.94
+PRD-HW-45441,Case - ATX,West Coast Dist,3753,74,$719.39
+SKU-EL-23096,Power Supply - Mechanical RGB,West Coast Dist,1632,130,$376.60
+COMP-22584,Motherboard - Mechanical RGB,Regional Depot (WH-02),2983,446,$789.91
+PRD-HW-69772,Case - Mid-Tower,West Coast Dist,2856,108,$67.03
+PRD-HW-72032,Mouse - 2TB 7200RPM,West Coast Dist,3612,454,$756.76
+SKU-EL-33651,Monitor - Mid-Tower,West Coast Dist,1141,491,$613.57
+COMP-25922,Power Supply - Mechanical RGB,East Coast Fulfillment,229,23,$95.25
+SKU-EL-79893,Cooling Fan - 120mm PWM,Central Hub (WH-01),4536,50,$420.01
+MOD-3543,Cooling Fan - 2TB 7200RPM,East Coast Fulfillment,2527,276,$770.30
+MOD-40888,Monitor - Mid-Tower,Central Hub (WH-01),4499,96,$351.74
+COMP-25394,Power Supply - Wireless,Regional Depot (WH-02),2254,153,$397.88
+PWR-20638,Monitor - 32GB DDR5,Express Logistics (WH-03),2626,455,$716.48
+SKU-EL-81166,CPU - Intel Core i7,Express Logistics (WH-03),4202,191,$54.58
+COMP-73004,Cable - USB-C 2m,Express Logistics (WH-03),1366,66,$580.09
+SKU-EL-71213,Monitor - Mid-Tower,Express Logistics (WH-03),2148,110,$449.53
+MOD-66519,HDD - 1TB NVMe,Regional Depot (WH-02),2185,256,$263.23
+SKU-EL-61334,CPU - Intel Core i7,West Coast Dist,3249,134,$534.50
+COMP-25413,Mouse - 1TB NVMe,Regional Depot (WH-02),3245,458,$615.37
+SKU-EL-38848,Mouse - 850W Gold,Regional Depot (WH-02),1607,148,$180.33
+COMP-81731,Motherboard - 850W Gold,East Coast Fulfillment,2521,58,$730.16
+COMP-5612,RAM - 27-inch 4K,West Coast Dist,1703,203,$13.66
+COMP-98578,Keyboard - 32GB DDR5,West Coast Dist,2244,36,$143.48
+SKU-EL-66392,HDD - Intel Core i7,East Coast Fulfillment,190,450,$262.89
+PRD-HW-85441,Keyboard - RTX 4070,Central Hub (WH-01),2464,452,$558.81
+PWR-46618,Cable - 27-inch 4K,Express Logistics (WH-03),3961,99,$488.43
+SKU-EL-52056,Keyboard - 27-inch 4K,Regional Depot (WH-02),2293,201,$141.80
+SKU-EL-78000,SSD - 120mm PWM,East Coast Fulfillment,4102,273,$664.20
+COMP-39020,CPU - Mechanical RGB,Regional Depot (WH-02),4647,40,$639.61
+COMP-90058,Cable - 120mm PWM,East Coast Fulfillment,4188,79,$318.57
+SKU-EL-88203,Motherboard - 2TB 7200RPM,Express Logistics (WH-03),3443,164,$583.59
+PRD-HW-57390,HDD - Mechanical RGB,Express Logistics (WH-03),799,285,$683.26
+PRD-HW-4893,Keyboard - 2TB 7200RPM,East Coast Fulfillment,306,53,$617.78
+PWR-43449,Case - ATX,Express Logistics (WH-03),4476,83,$345.73
+PWR-92447,Cable - RTX 4070,West Coast Dist,3459,328,$511.59
+PWR-57424,GPU - Wireless,Regional Depot (WH-02),3193,237,$509.18
+PRD-HW-23552,Case - Wireless,East Coast Fulfillment,4463,26,$215.36
+PRD-HW-45998,Motherboard - 32GB DDR5,Regional Depot (WH-02),4704,101,$690.25
+PWR-25633,Mouse - 32GB DDR5,Regional Depot (WH-02),2937,424,$27.85
+SKU-EL-66226,Case - ATX,West Coast Dist,788,58,$423.59
+PRD-HW-57099,Case - 120mm PWM,Express Logistics (WH-03),4529,234,$34.86
+PWR-12842,Motherboard - Mid-Tower,Express Logistics (WH-03),3938,480,$139.23
+PRD-HW-19823,Motherboard - 32GB DDR5,Express Logistics (WH-03),3161,232,$274.36
+SKU-EL-33301,Mouse - USB-C 2m,West Coast Dist,4303,146,$84.06
+COMP-49508,Cooling Fan - 27-inch 4K,West Coast Dist,899,263,$102.36
+PWR-95515,Power Supply - 27-inch 4K,Central Hub (WH-01),2343,93,$710.00
+PWR-84511,Keyboard - USB-C 2m,West Coast Dist,4267,255,$623.96
+PRD-HW-63332,Monitor - 850W Gold,Central Hub (WH-01),2557,369,$280.59
+PRD-HW-83111,Motherboard - 1TB NVMe,Central Hub (WH-01),4106,469,$385.64
+PRD-HW-70103,SSD - 850W Gold,East Coast Fulfillment,3874,219,$693.22
+COMP-60961,CPU - ATX,Express Logistics (WH-03),3979,457,$744.62
+COMP-54302,GPU - 2TB 7200RPM,West Coast Dist,268,179,$309.83
+SKU-EL-38083,Cooling Fan - 120mm PWM,Central Hub (WH-01),2857,196,$14.73
+COMP-34180,Cable - USB-C 2m,West Coast Dist,3243,83,$104.79
+PWR-9106,Case - Intel Core i7,West Coast Dist,1033,484,$249.26
+PWR-82130,HDD - 120mm PWM,Express Logistics (WH-03),792,362,$519.29
+PRD-HW-20748,RAM - 1TB NVMe,Central Hub (WH-01),1339,160,$630.97
+PRD-HW-40778,Cable - RTX 4070,West Coast Dist,3368,160,$310.47
+PWR-75463,CPU - 850W Gold,East Coast Fulfillment,2078,255,$117.62
+PRD-HW-51060,Cooling Fan - 27-inch 4K,Central Hub (WH-01),2845,474,$343.72
+PWR-49968,HDD - Wireless,Central Hub (WH-01),2880,14,$719.08
+PRD-HW-38452,Power Supply - 1TB NVMe,Central Hub (WH-01),1241,474,$592.74
+PRD-HW-62532,RAM - 32GB DDR5,Regional Depot (WH-02),4331,237,$530.39
+SKU-EL-28392,Motherboard - RTX 4070,Central Hub (WH-01),4174,211,$159.32
+PRD-HW-47579,RAM - 32GB DDR5,East Coast Fulfillment,1100,101,$43.73
+PRD-HW-32024,CPU - 27-inch 4K,Regional Depot (WH-02),4528,379,$460.82
+SKU-EL-31040,RAM - 32GB DDR5,Central Hub (WH-01),2984,152,$158.79
+SKU-EL-39458,GPU - 2TB 7200RPM,Express Logistics (WH-03),2069,72,$346.47
+COMP-32100,CPU - Mid-Tower,West Coast Dist,4078,300,$482.96
+SKU-EL-45017,HDD - 2TB 7200RPM,Express Logistics (WH-03),683,438,$512.78
+PRD-HW-46386,HDD - 27-inch 4K,Central Hub (WH-01),401,55,$337.02
+COMP-95840,Case - Wireless,Central Hub (WH-01),2061,390,$333.73
+PWR-70627,Case - Mechanical RGB,Express Logistics (WH-03),519,111,$673.63
+COMP-47171,HDD - Mid-Tower,Express Logistics (WH-03),1332,33,$241.15
+PRD-HW-5579,Case - Intel Core i7,West Coast Dist,655,447,$108.30
+MOD-76538,Keyboard - 120mm PWM,West Coast Dist,1796,69,$515.28
+COMP-22598,Cable - Mechanical RGB,Regional Depot (WH-02),4475,131,$116.25
+PWR-85500,Motherboard - 850W Gold,West Coast Dist,1656,498,$62.69
+SKU-EL-54154,CPU - 1TB NVMe,Regional Depot (WH-02),3871,44,$468.37
+MOD-57721,Motherboard - Mechanical RGB,West Coast Dist,2488,390,$383.90
+SKU-EL-23229,HDD - 1TB NVMe,Regional Depot (WH-02),3254,432,$476.67
+COMP-11447,SSD - 850W Gold,East Coast Fulfillment,4566,95,$703.24
+MOD-57351,RAM - Intel Core i7,West Coast Dist,3518,330,$82.97
+MOD-3793,Power Supply - 1TB NVMe,West Coast Dist,2913,281,$387.32
+COMP-78460,SSD - RTX 4070,Central Hub (WH-01),3995,19,$700.46
+PWR-81218,Power Supply - 1TB NVMe,Central Hub (WH-01),1320,249,$410.87
+MOD-93589,Mouse - Mechanical RGB,Central Hub (WH-01),4696,121,$324.71
+MOD-61274,Mouse - USB-C 2m,West Coast Dist,630,440,$387.04
+COMP-60301,Cable - RTX 4070,Express Logistics (WH-03),2524,89,$562.93
+PWR-68514,Mouse - Mid-Tower,Central Hub (WH-01),2137,280,$746.60
+MOD-31356,HDD - Intel Core i7,West Coast Dist,673,417,$24.29
+PWR-66460,Monitor - Intel Core i7,Central Hub (WH-01),3550,345,$363.58
+PRD-HW-53420,SSD - 850W Gold,East Coast Fulfillment,930,105,$549.87
+SKU-EL-47278,Monitor - USB-C 2m,Central Hub (WH-01),3963,192,$352.29
+PWR-99046,Cable - 2TB 7200RPM,Express Logistics (WH-03),4824,326,$403.76
+PRD-HW-45709,GPU - ATX,Express Logistics (WH-03),4011,55,$283.56
+PRD-HW-40971,RAM - 120mm PWM,Central Hub (WH-01),3478,140,$85.16
+PRD-HW-36494,RAM - USB-C 2m,East Coast Fulfillment,747,177,$319.28
+PWR-35861,Cooling Fan - 120mm PWM,Express Logistics (WH-03),4135,187,$579.70
+SKU-EL-85550,GPU - Intel Core i7,West Coast Dist,191,174,$570.33
+COMP-84034,Power Supply - Wireless,Central Hub (WH-01),1249,353,$136.34
+COMP-5583,Cooling Fan - USB-C 2m,Regional Depot (WH-02),2906,332,$144.34
+COMP-79967,Mouse - 1TB NVMe,Central Hub (WH-01),4996,319,$660.77
+PWR-29296,Keyboard - Intel Core i7,Central Hub (WH-01),935,46,$265.54
+PRD-HW-88071,Keyboard - RTX 4070,East Coast Fulfillment,3485,286,$37.77
+COMP-98025,Monitor - 850W Gold,Express Logistics (WH-03),1726,344,$241.56
+PRD-HW-84346,Monitor - Mid-Tower,Central Hub (WH-01),2801,171,$787.31
+SKU-EL-61646,Cable - 32GB DDR5,East Coast Fulfillment,2944,286,$542.23
+SKU-EL-69897,Keyboard - 120mm PWM,West Coast Dist,3279,101,$544.36
+PRD-HW-50551,Case - 32GB DDR5,Regional Depot (WH-02),4768,500,$334.42
+MOD-38655,SSD - 1TB NVMe,Central Hub (WH-01),1720,399,$340.78
+COMP-17672,Case - RTX 4070,East Coast Fulfillment,1122,279,$665.91
+MOD-81457,Keyboard - Mechanical RGB,Regional Depot (WH-02),3118,103,$388.86
+COMP-78306,Keyboard - 27-inch 4K,Regional Depot (WH-02),1555,216,$182.22
+MOD-57614,HDD - ATX,West Coast Dist,2651,77,$251.36
+COMP-91107,Power Supply - USB-C 2m,Central Hub (WH-01),4453,444,$757.68
+COMP-5123,GPU - 1TB NVMe,East Coast Fulfillment,2141,150,$743.56
+SKU-EL-13684,SSD - RTX 4070,East Coast Fulfillment,1176,270,$210.09
+PRD-HW-72769,Case - 32GB DDR5,Regional Depot (WH-02),1971,147,$217.28
+COMP-2477,HDD - USB-C 2m,East Coast Fulfillment,1145,131,$472.29
+COMP-71380,GPU - Mechanical RGB,East Coast Fulfillment,2851,319,$272.41
+PRD-HW-48518,Cooling Fan - Intel Core i7,Regional Depot (WH-02),2766,84,$203.50
+PRD-HW-51404,CPU - ATX,West Coast Dist,1041,249,$412.56
+PWR-28845,Case - Intel Core i7,Regional Depot (WH-02),2868,342,$740.10
+PRD-HW-93772,GPU - 1TB NVMe,East Coast Fulfillment,1137,303,$708.80
+PWR-3670,Keyboard - USB-C 2m,Express Logistics (WH-03),2182,368,$655.96
+PRD-HW-53058,SSD - USB-C 2m,Central Hub (WH-01),2917,484,$87.24
+PRD-HW-23762,Keyboard - 32GB DDR5,Express Logistics (WH-03),2383,335,$231.14
+PWR-59736,Keyboard - 32GB DDR5,East Coast Fulfillment,1913,388,$118.47
+PWR-17989,CPU - 120mm PWM,Regional Depot (WH-02),1602,305,$255.20
+PRD-HW-98404,Case - USB-C 2m,East Coast Fulfillment,3628,37,$758.60
+PWR-55169,RAM - RTX 4070,Central Hub (WH-01),2270,184,$737.89
+PRD-HW-24326,Mouse - Mid-Tower,Regional Depot (WH-02),1871,382,$799.92
+PWR-62488,SSD - RTX 4070,West Coast Dist,2214,204,$115.75
+MOD-89442,Case - USB-C 2m,Regional Depot (WH-02),748,117,$249.76
+SKU-EL-2553,RAM - 2TB 7200RPM,East Coast Fulfillment,3744,155,$333.45
+PRD-HW-29906,Keyboard - Wireless,Central Hub (WH-01),1311,19,$703.70
+PWR-2176,Motherboard - 32GB DDR5,Regional Depot (WH-02),1161,170,$113.43
+SKU-EL-32312,Motherboard - Wireless,Central Hub (WH-01),2781,28,$613.80
+SKU-EL-3387,Mouse - ATX,West Coast Dist,4508,99,$613.79
+SKU-EL-19574,Cooling Fan - 850W Gold,West Coast Dist,468,46,$452.70
+SKU-EL-26159,CPU - 850W Gold,Regional Depot (WH-02),3304,34,$688.27
+MOD-11200,Cooling Fan - 2TB 7200RPM,Central Hub (WH-01),3044,260,$348.31
+MOD-7497,Power Supply - 2TB 7200RPM,Express Logistics (WH-03),3175,306,$37.22
+SKU-EL-1361,SSD - RTX 4070,Regional Depot (WH-02),2356,331,$101.55
+COMP-40127,Mouse - 32GB DDR5,Central Hub (WH-01),2186,287,$26.73
+MOD-18472,Monitor - 120mm PWM,Central Hub (WH-01),3542,187,$80.47
+SKU-EL-7941,RAM - Wireless,East Coast Fulfillment,1326,157,$466.69
+COMP-68227,Monitor - 32GB DDR5,Regional Depot (WH-02),847,72,$52.01
+MOD-84672,Case - 850W Gold,East Coast Fulfillment,4048,85,$396.54
+MOD-68275,CPU - RTX 4070,Express Logistics (WH-03),3773,229,$656.39
+PRD-HW-79510,Power Supply - ATX,East Coast Fulfillment,1294,342,$593.09
+COMP-9054,GPU - 32GB DDR5,West Coast Dist,997,151,$640.75
+PRD-HW-76297,Cooling Fan - Intel Core i7,Regional Depot (WH-02),1768,238,$268.69
+MOD-85672,Cable - 850W Gold,Express Logistics (WH-03),2370,188,$214.38
+SKU-EL-2382,Mouse - USB-C 2m,West Coast Dist,3555,453,$50.08
+PRD-HW-25965,Cable - Intel Core i7,Central Hub (WH-01),29,365,$479.18
+PRD-HW-73726,HDD - 32GB DDR5,Regional Depot (WH-02),2747,298,$711.79
+PRD-HW-96351,HDD - 32GB DDR5,Regional Depot (WH-02),4123,386,$165.36
+COMP-56958,HDD - 2TB 7200RPM,Central Hub (WH-01),4811,283,$526.74
+PWR-70170,Power Supply - 27-inch 4K,Regional Depot (WH-02),3227,112,$741.69
+COMP-20002,CPU - 32GB DDR5,Central Hub (WH-01),4847,166,$76.73
+PWR-93363,CPU - Intel Core i7,Central Hub (WH-01),3520,292,$745.11
+SKU-EL-87707,SSD - USB-C 2m,West Coast Dist,217,158,$38.04
+PRD-HW-50787,GPU - RTX 4070,Express Logistics (WH-03),1977,136,$780.08
+SKU-EL-89866,Cable - 1TB NVMe,East Coast Fulfillment,2225,417,$176.81
+PWR-86427,HDD - 2TB 7200RPM,Regional Depot (WH-02),462,11,$489.87
+MOD-57690,Power Supply - 850W Gold,East Coast Fulfillment,2016,93,$752.57
+PWR-95464,Monitor - 850W Gold,West Coast Dist,3201,342,$111.15
+MOD-9980,Mouse - 27-inch 4K,Central Hub (WH-01),4776,249,$723.85
+SKU-EL-6606,CPU - 27-inch 4K,Regional Depot (WH-02),4296,466,$530.16
+COMP-68549,Mouse - RTX 4070,Express Logistics (WH-03),3244,185,$208.45
+COMP-88088,CPU - Mechanical RGB,Central Hub (WH-01),3937,323,$604.46
+PWR-96733,Monitor - 120mm PWM,East Coast Fulfillment,2054,372,$247.25
+SKU-EL-20583,CPU - USB-C 2m,East Coast Fulfillment,2057,15,$432.32
+PRD-HW-28355,Mouse - 1TB NVMe,Regional Depot (WH-02),1625,487,$274.46
+MOD-21967,Cooling Fan - Intel Core i7,Regional Depot (WH-02),4700,474,$495.34
+COMP-47674,HDD - USB-C 2m,Express Logistics (WH-03),2184,168,$713.47
+COMP-1670,Motherboard - 27-inch 4K,Express Logistics (WH-03),3488,28,$153.62
+PRD-HW-25264,Case - RTX 4070,Regional Depot (WH-02),4686,471,$62.98
+MOD-24531,Cooling Fan - Mid-Tower,East Coast Fulfillment,4545,339,$522.90
+PRD-HW-35341,CPU - 120mm PWM,Regional Depot (WH-02),2718,395,$726.14
+MOD-74811,Motherboard - 2TB 7200RPM,East Coast Fulfillment,2476,362,$638.35
+MOD-33190,GPU - 120mm PWM,West Coast Dist,3769,154,$649.66
+MOD-34032,Power Supply - RTX 4070,West Coast Dist,3929,176,$553.50
+PWR-73457,Mouse - Wireless,East Coast Fulfillment,3371,403,$380.42
+PWR-9987,Keyboard - Mid-Tower,Central Hub (WH-01),3148,492,$40.06
+MOD-58924,Case - 27-inch 4K,Regional Depot (WH-02),3066,204,$736.51
+PRD-HW-90124,Cooling Fan - 1TB NVMe,Central Hub (WH-01),3914,393,$303.46
+PWR-99786,Keyboard - Wireless,East Coast Fulfillment,556,340,$788.25
+SKU-EL-66769,Monitor - RTX 4070,Regional Depot (WH-02),2191,111,$108.61
+SKU-EL-40864,Monitor - Mechanical RGB,Regional Depot (WH-02),683,56,$210.93
+PWR-67863,Mouse - 27-inch 4K,Express Logistics (WH-03),4822,65,$241.01
+PWR-14864,Monitor - Wireless,East Coast Fulfillment,4256,487,$149.94
+PWR-57763,Case - Mid-Tower,East Coast Fulfillment,3555,75,$149.26
+MOD-91018,CPU - 850W Gold,East Coast Fulfillment,791,161,$648.37
+PWR-63005,CPU - 32GB DDR5,Regional Depot (WH-02),681,404,$158.70
+PWR-59393,HDD - 120mm PWM,West Coast Dist,2567,424,$663.65
+COMP-58868,Keyboard - 850W Gold,Express Logistics (WH-03),4090,59,$253.97
+PWR-96956,Case - 32GB DDR5,Express Logistics (WH-03),1593,315,$445.08
+MOD-44830,GPU - 27-inch 4K,Regional Depot (WH-02),2616,495,$551.49
+SKU-EL-83968,CPU - 1TB NVMe,Express Logistics (WH-03),3288,23,$681.09
+PRD-HW-30365,Mouse - Wireless,Express Logistics (WH-03),1819,470,$655.39
+PWR-45286,Motherboard - 850W Gold,Central Hub (WH-01),2521,31,$655.25
+PRD-HW-7333,Monitor - 27-inch 4K,Central Hub (WH-01),4567,323,$762.70
+PRD-HW-93794,Monitor - ATX,East Coast Fulfillment,3849,313,$367.86
+MOD-25889,Mouse - RTX 4070,East Coast Fulfillment,4046,166,$441.26
+MOD-65415,SSD - Mechanical RGB,Express Logistics (WH-03),2802,254,$332.93
+COMP-53016,HDD - 2TB 7200RPM,East Coast Fulfillment,4460,396,$531.37
+SKU-EL-91319,Power Supply - 2TB 7200RPM,East Coast Fulfillment,2278,381,$477.12
+PRD-HW-27972,Cooling Fan - 32GB DDR5,Central Hub (WH-01),1573,456,$446.31
+PWR-26075,Monitor - 32GB DDR5,East Coast Fulfillment,912,397,$177.77
+PWR-26411,Power Supply - 850W Gold,East Coast Fulfillment,784,349,$677.51
+PRD-HW-45669,Monitor - Wireless,West Coast Dist,3215,390,$23.79
+SKU-EL-81243,HDD - Intel Core i7,West Coast Dist,4172,378,$474.34
+MOD-89172,Monitor - 1TB NVMe,Express Logistics (WH-03),2131,497,$739.95
+COMP-72823,GPU - 32GB DDR5,Express Logistics (WH-03),830,103,$320.87
+COMP-84973,Cable - 2TB 7200RPM,West Coast Dist,2917,415,$514.02
+PWR-74753,HDD - 120mm PWM,East Coast Fulfillment,4552,455,$722.71
+MOD-40029,HDD - RTX 4070,West Coast Dist,3162,144,$729.20
+MOD-73646,Keyboard - Wireless,East Coast Fulfillment,2395,427,$23.96
+COMP-25403,Mouse - RTX 4070,Regional Depot (WH-02),1559,145,$654.08
+SKU-EL-7271,Cooling Fan - Mid-Tower,Express Logistics (WH-03),2009,281,$69.01
+SKU-EL-48349,CPU - ATX,Express Logistics (WH-03),3398,441,$211.23
+MOD-49017,HDD - 32GB DDR5,East Coast Fulfillment,3870,60,$147.65
+SKU-EL-9068,CPU - 32GB DDR5,Express Logistics (WH-03),3772,408,$382.47
+SKU-EL-58480,GPU - Mechanical RGB,Regional Depot (WH-02),1135,318,$276.88
+MOD-47406,HDD - RTX 4070,Regional Depot (WH-02),4153,358,$5.54
+PWR-98169,Power Supply - Intel Core i7,Express Logistics (WH-03),4022,39,$25.86
+COMP-47025,Motherboard - Mechanical RGB,Regional Depot (WH-02),3752,496,$242.24
+COMP-57724,HDD - Mechanical RGB,West Coast Dist,4301,355,$277.04
+PWR-17117,Motherboard - 850W Gold,Express Logistics (WH-03),4475,159,$200.15
+MOD-49919,Case - 850W Gold,Regional Depot (WH-02),1804,376,$554.47
+MOD-42425,Motherboard - Wireless,Central Hub (WH-01),3852,160,$131.32
+COMP-42856,Case - RTX 4070,Central Hub (WH-01),3859,214,$315.28
+SKU-EL-25279,Mouse - 2TB 7200RPM,Regional Depot (WH-02),2100,264,$594.98
+COMP-96190,Motherboard - Intel Core i7,Express Logistics (WH-03),185,237,$364.27
+PRD-HW-77415,HDD - 850W Gold,Express Logistics (WH-03),3612,203,$714.96
+COMP-59811,Monitor - 120mm PWM,West Coast Dist,4313,75,$138.29
+PRD-HW-92616,Power Supply - 120mm PWM,West Coast Dist,4433,450,$767.64
+MOD-55386,CPU - 32GB DDR5,West Coast Dist,1773,257,$723.31
+SKU-EL-39858,HDD - ATX,East Coast Fulfillment,1518,33,$765.14
+PWR-37031,HDD - 120mm PWM,East Coast Fulfillment,107,211,$717.29
+SKU-EL-56238,Cable - Wireless,West Coast Dist,4261,192,$316.40
+COMP-8909,Keyboard - RTX 4070,Express Logistics (WH-03),2506,267,$698.49
+PRD-HW-4672,HDD - 1TB NVMe,East Coast Fulfillment,2120,384,$434.98
+MOD-30333,SSD - 32GB DDR5,Regional Depot (WH-02),4940,440,$524.17
+MOD-79598,RAM - Mechanical RGB,Central Hub (WH-01),3658,423,$362.47
+PRD-HW-8833,GPU - Wireless,East Coast Fulfillment,1742,56,$35.09
+PRD-HW-15950,Monitor - 32GB DDR5,Express Logistics (WH-03),3453,466,$462.96
+PRD-HW-86215,Cooling Fan - RTX 4070,Regional Depot (WH-02),2077,358,$224.48
+MOD-82488,Motherboard - 2TB 7200RPM,Express Logistics (WH-03),2997,72,$565.57
+SKU-EL-10053,Keyboard - 32GB DDR5,East Coast Fulfillment,4822,253,$530.65
+COMP-82884,Power Supply - 2TB 7200RPM,Central Hub (WH-01),4352,493,$636.62
+PRD-HW-84562,Power Supply - USB-C 2m,West Coast Dist,4080,205,$281.55
+COMP-88462,SSD - USB-C 2m,East Coast Fulfillment,3403,276,$427.68
+SKU-EL-52416,SSD - Mid-Tower,Central Hub (WH-01),260,175,$81.90
+COMP-3105,SSD - 27-inch 4K,West Coast Dist,4162,474,$465.58
+PWR-32181,Keyboard - 2TB 7200RPM,Central Hub (WH-01),4859,54,$617.42
+PRD-HW-51343,Mouse - ATX,West Coast Dist,3195,264,$772.64
+PRD-HW-63261,Keyboard - Mid-Tower,Regional Depot (WH-02),147,366,$738.06
+PWR-38737,GPU - Mid-Tower,West Coast Dist,3456,250,$708.12
+COMP-95427,GPU - 120mm PWM,West Coast Dist,1327,76,$661.97
+PWR-44756,Mouse - 27-inch 4K,Regional Depot (WH-02),4413,316,$186.22
+COMP-20631,Monitor - Wireless,Central Hub (WH-01),2996,485,$587.97
+SKU-EL-6336,SSD - 32GB DDR5,Central Hub (WH-01),2591,138,$557.35
+COMP-5659,Case - USB-C 2m,Central Hub (WH-01),3748,394,$616.62
+COMP-62493,Keyboard - Mid-Tower,Express Logistics (WH-03),1570,484,$135.68
+COMP-23093,HDD - 27-inch 4K,Regional Depot (WH-02),3669,247,$645.15
+MOD-15341,CPU - Intel Core i7,East Coast Fulfillment,595,362,$593.15
+SKU-EL-75814,Motherboard - 1TB NVMe,West Coast Dist,2640,22,$443.38
+MOD-35491,GPU - 32GB DDR5,Regional Depot (WH-02),714,43,$266.72
+PWR-40043,Power Supply - Intel Core i7,West Coast Dist,1259,354,$83.77
+COMP-78534,Cable - RTX 4070,East Coast Fulfillment,3947,13,$185.57
+PRD-HW-95407,Power Supply - 27-inch 4K,Regional Depot (WH-02),1346,191,$226.25
+PRD-HW-69616,Monitor - Intel Core i7,Regional Depot (WH-02),1037,225,$298.02
+SKU-EL-48210,SSD - 120mm PWM,Express Logistics (WH-03),1497,121,$669.01
+MOD-60095,Keyboard - 27-inch 4K,Regional Depot (WH-02),2972,329,$154.95
+COMP-63155,SSD - Mid-Tower,Central Hub (WH-01),2862,483,$598.61
+COMP-54004,Keyboard - Mechanical RGB,East Coast Fulfillment,746,363,$141.19
+COMP-62619,RAM - 850W Gold,Express Logistics (WH-03),2776,475,$251.82
+PRD-HW-65745,Motherboard - Wireless,Regional Depot (WH-02),975,146,$335.40
+SKU-EL-66672,Keyboard - 850W Gold,Regional Depot (WH-02),245,182,$550.88
+PWR-80607,Cable - Mid-Tower,Central Hub (WH-01),3615,68,$438.95
+COMP-88271,RAM - 850W Gold,Central Hub (WH-01),3433,338,$96.33
+MOD-58027,Keyboard - 1TB NVMe,Express Logistics (WH-03),3638,33,$97.34
+PRD-HW-73358,Mouse - Wireless,East Coast Fulfillment,1470,227,$670.88
+PRD-HW-94383,Mouse - Wireless,East Coast Fulfillment,632,35,$297.26
+MOD-30892,CPU - Wireless,Regional Depot (WH-02),4687,328,$488.70
+SKU-EL-55141,Cable - Intel Core i7,East Coast Fulfillment,3806,10,$7.30
+PWR-93564,Motherboard - 32GB DDR5,Central Hub (WH-01),2542,262,$373.84
+PWR-80171,Monitor - 32GB DDR5,Express Logistics (WH-03),1893,446,$332.58
+MOD-42499,HDD - Wireless,Regional Depot (WH-02),15,223,$14.83
+COMP-17013,CPU - Mid-Tower,Central Hub (WH-01),3359,243,$594.73
+MOD-94910,SSD - Wireless,West Coast Dist,898,495,$704.80
+PRD-HW-49102,CPU - Wireless,Regional Depot (WH-02),3329,497,$346.95
+MOD-76821,RAM - 2TB 7200RPM,Central Hub (WH-01),4777,265,$363.63
+COMP-86638,GPU - Mechanical RGB,West Coast Dist,3587,305,$311.58
+PRD-HW-58543,CPU - Mechanical RGB,East Coast Fulfillment,1349,346,$352.79
+PRD-HW-65342,Power Supply - RTX 4070,Regional Depot (WH-02),728,126,$89.71
+PRD-HW-77953,GPU - 32GB DDR5,Regional Depot (WH-02),4789,81,$634.73
+SKU-EL-2338,Cable - 32GB DDR5,Express Logistics (WH-03),3589,43,$425.93
+MOD-50961,RAM - ATX,West Coast Dist,584,406,$195.00
+SKU-EL-9638,Cable - 850W Gold,Regional Depot (WH-02),1851,444,$333.13
+SKU-EL-76058,GPU - Mid-Tower,East Coast Fulfillment,362,83,$57.56
+SKU-EL-61317,Mouse - USB-C 2m,Express Logistics (WH-03),83,220,$759.35
+COMP-38578,HDD - 850W Gold,Central Hub (WH-01),1577,57,$122.43
+PRD-HW-58426,HDD - 27-inch 4K,East Coast Fulfillment,4352,369,$397.79
+SKU-EL-43089,Case - 32GB DDR5,West Coast Dist,1765,178,$11.05
+PWR-56614,CPU - 27-inch 4K,East Coast Fulfillment,559,195,$798.04
+COMP-58490,SSD - Mid-Tower,Regional Depot (WH-02),2082,25,$34.18
+MOD-93072,Motherboard - 27-inch 4K,Regional Depot (WH-02),4165,53,$781.75
+COMP-47516,Cooling Fan - 27-inch 4K,East Coast Fulfillment,1600,444,$210.80
+PWR-20517,Cable - 2TB 7200RPM,Central Hub (WH-01),2807,170,$149.34
+MOD-44009,Monitor - 27-inch 4K,Regional Depot (WH-02),4061,122,$405.21
+COMP-84307,Cooling Fan - 2TB 7200RPM,West Coast Dist,63,452,$588.68
+SKU-EL-16426,Power Supply - 120mm PWM,East Coast Fulfillment,1637,313,$491.45
+PRD-HW-22706,Mouse - 2TB 7200RPM,Regional Depot (WH-02),1531,223,$403.21
+SKU-EL-16083,Monitor - 120mm PWM,Express Logistics (WH-03),2592,44,$198.39
+COMP-7500,Mouse - 120mm PWM,Express Logistics (WH-03),886,54,$275.73
+PRD-HW-50790,RAM - 1TB NVMe,East Coast Fulfillment,1877,140,$221.98
+MOD-58007,Case - USB-C 2m,West Coast Dist,4851,179,$496.46
+COMP-94304,SSD - 32GB DDR5,Regional Depot (WH-02),2373,144,$565.66
+COMP-91577,Keyboard - Mid-Tower,Express Logistics (WH-03),4966,78,$126.73
+COMP-56908,Keyboard - ATX,East Coast Fulfillment,3668,61,$194.47
+PRD-HW-26576,SSD - 32GB DDR5,Regional Depot (WH-02),4723,406,$711.94
+PRD-HW-77298,Cable - 32GB DDR5,Regional Depot (WH-02),135,214,$53.15
+MOD-60880,SSD - USB-C 2m,East Coast Fulfillment,3110,71,$491.06
+PWR-46819,Monitor - RTX 4070,West Coast Dist,2339,458,$584.90
+PRD-HW-6666,GPU - Mid-Tower,East Coast Fulfillment,860,190,$531.28
+PRD-HW-47176,RAM - 32GB DDR5,West Coast Dist,2179,349,$330.85
+MOD-31952,Cooling Fan - 1TB NVMe,Express Logistics (WH-03),90,204,$513.51
+MOD-20954,HDD - 32GB DDR5,Central Hub (WH-01),450,382,$246.69
+PWR-47238,HDD - Intel Core i7,Regional Depot (WH-02),4221,350,$425.95
+PWR-33108,Power Supply - ATX,East Coast Fulfillment,4746,303,$291.66
+SKU-EL-36858,CPU - RTX 4070,Express Logistics (WH-03),3055,198,$695.53
+MOD-59100,Keyboard - ATX,West Coast Dist,4724,85,$286.83
+PWR-13125,Case - USB-C 2m,Central Hub (WH-01),120,481,$511.45
+MOD-39344,SSD - 32GB DDR5,Central Hub (WH-01),3727,220,$785.09
+PWR-10283,GPU - Mechanical RGB,West Coast Dist,555,414,$548.69
+PRD-HW-26197,Power Supply - Wireless,East Coast Fulfillment,2371,155,$152.30
+COMP-34502,GPU - Mechanical RGB,Central Hub (WH-01),3974,198,$506.68
+COMP-63129,Case - 1TB NVMe,Express Logistics (WH-03),2205,349,$236.42
+PWR-11409,Cable - RTX 4070,Regional Depot (WH-02),4374,47,$484.02
+PRD-HW-13857,Monitor - 27-inch 4K,West Coast Dist,4356,61,$299.89
+PRD-HW-84120,Power Supply - Mechanical RGB,Regional Depot (WH-02),544,58,$776.68
+PWR-73970,Cable - 120mm PWM,Central Hub (WH-01),1489,176,$315.80
+PWR-87578,Power Supply - 27-inch 4K,West Coast Dist,4380,484,$120.18
+SKU-EL-76421,SSD - Mechanical RGB,Regional Depot (WH-02),3748,250,$629.65
+PWR-39520,RAM - 32GB DDR5,Central Hub (WH-01),4943,218,$153.40
+PRD-HW-12727,SSD - RTX 4070,Central Hub (WH-01),418,377,$723.17
+PRD-HW-73062,Monitor - USB-C 2m,Central Hub (WH-01),3982,436,$430.73
+PWR-37528,SSD - 27-inch 4K,Central Hub (WH-01),2190,161,$472.01
+COMP-49811,Cable - ATX,East Coast Fulfillment,2916,433,$421.32
+PWR-54383,Case - 1TB NVMe,East Coast Fulfillment,2716,264,$325.69
+SKU-EL-20282,Motherboard - 850W Gold,Central Hub (WH-01),3546,44,$463.85
+SKU-EL-76111,RAM - RTX 4070,West Coast Dist,1739,226,$424.12
+PRD-HW-74543,Case - 850W Gold,Central Hub (WH-01),2103,488,$120.83
+PRD-HW-94543,Mouse - ATX,Central Hub (WH-01),1536,345,$433.30
+PWR-84727,Cable - Mechanical RGB,Regional Depot (WH-02),4009,409,$641.51
+PWR-38459,RAM - RTX 4070,West Coast Dist,995,24,$252.72
+COMP-71392,GPU - Wireless,Express Logistics (WH-03),1296,337,$577.53
+SKU-EL-18916,GPU - 120mm PWM,Central Hub (WH-01),1923,188,$293.43
+PRD-HW-6059,Cable - 2TB 7200RPM,West Coast Dist,3844,349,$629.09
+PRD-HW-6382,Monitor - Intel Core i7,East Coast Fulfillment,4791,151,$535.26
+SKU-EL-28124,Power Supply - 120mm PWM,Central Hub (WH-01),2440,331,$575.94
+COMP-83019,Cooling Fan - Intel Core i7,Regional Depot (WH-02),2592,82,$397.14
+PRD-HW-77784,CPU - 850W Gold,West Coast Dist,2753,307,$453.39
+PRD-HW-95294,Mouse - 1TB NVMe,Central Hub (WH-01),2283,471,$765.27
+MOD-21510,RAM - 32GB DDR5,Regional Depot (WH-02),4100,53,$459.24
+PWR-28734,Monitor - ATX,Regional Depot (WH-02),1504,122,$749.14
+PWR-12879,RAM - 850W Gold,Express Logistics (WH-03),716,335,$790.83
+SKU-EL-65328,SSD - 32GB DDR5,East Coast Fulfillment,588,21,$52.20
+PWR-84953,SSD - 1TB NVMe,Regional Depot (WH-02),4152,382,$671.48
+MOD-44201,Keyboard - Mid-Tower,Central Hub (WH-01),2687,181,$506.90
+PRD-HW-20700,Power Supply - 2TB 7200RPM,Express Logistics (WH-03),1438,358,$85.94
+MOD-44437,HDD - Mechanical RGB,West Coast Dist,864,443,$266.00
+SKU-EL-69350,Case - Intel Core i7,East Coast Fulfillment,2840,106,$156.24
+COMP-64305,Cable - RTX 4070,East Coast Fulfillment,1283,351,$268.50
+PRD-HW-55521,Cooling Fan - RTX 4070,Express Logistics (WH-03),434,269,$79.77
+SKU-EL-79130,HDD - Mechanical RGB,West Coast Dist,3622,319,$487.66
+COMP-4802,Monitor - Mid-Tower,Regional Depot (WH-02),3843,416,$101.71
+MOD-2417,Mouse - USB-C 2m,Express Logistics (WH-03),4553,220,$204.18
+SKU-EL-86129,Keyboard - 1TB NVMe,Express Logistics (WH-03),3158,75,$728.17
+SKU-EL-56904,Motherboard - RTX 4070,East Coast Fulfillment,3166,299,$184.25
+PWR-35285,Keyboard - RTX 4070,Express Logistics (WH-03),4480,235,$474.86
+PWR-36863,Cooling Fan - USB-C 2m,Central Hub (WH-01),4856,101,$361.01
+PRD-HW-96804,Case - 27-inch 4K,Central Hub (WH-01),4642,434,$191.00
+SKU-EL-28048,RAM - 27-inch 4K,West Coast Dist,3482,433,$131.62
+COMP-61112,Case - Mechanical RGB,Express Logistics (WH-03),248,160,$257.76
+MOD-24533,HDD - 120mm PWM,West Coast Dist,662,400,$130.60
+PWR-39767,RAM - Wireless,West Coast Dist,4920,45,$220.63
+PRD-HW-83369,Keyboard - USB-C 2m,Regional Depot (WH-02),1000,403,$794.03
+COMP-89376,CPU - 32GB DDR5,East Coast Fulfillment,3579,359,$64.70
+PRD-HW-23694,SSD - Mid-Tower,East Coast Fulfillment,2414,363,$41.00
+MOD-53363,Cable - Wireless,East Coast Fulfillment,23,396,$120.88
+MOD-38915,RAM - 32GB DDR5,Express Logistics (WH-03),3578,445,$62.21
+PRD-HW-41288,Power Supply - Mechanical RGB,West Coast Dist,766,161,$461.56
+PWR-30671,SSD - Mid-Tower,East Coast Fulfillment,4286,151,$547.46
+MOD-15756,Monitor - ATX,East Coast Fulfillment,4027,89,$654.64
+MOD-83176,SSD - USB-C 2m,Regional Depot (WH-02),4084,305,$719.84
+PWR-74586,HDD - 120mm PWM,Regional Depot (WH-02),2724,174,$205.32
+PRD-HW-24204,Mouse - Mid-Tower,Regional Depot (WH-02),1570,15,$599.92
+PRD-HW-93802,Motherboard - 2TB 7200RPM,Central Hub (WH-01),4108,227,$110.08
+PRD-HW-80663,Mouse - USB-C 2m,Central Hub (WH-01),3814,88,$328.12
+COMP-21124,RAM - Wireless,West Coast Dist,1395,220,$54.64
+COMP-67664,SSD - 1TB NVMe,Express Logistics (WH-03),4647,200,$390.04
+COMP-27788,Monitor - ATX,Express Logistics (WH-03),3960,488,$288.55
+MOD-4287,HDD - RTX 4070,Central Hub (WH-01),4152,259,$620.63
+PWR-92027,Case - Intel Core i7,West Coast Dist,4301,102,$232.87
+PWR-88708,RAM - Intel Core i7,East Coast Fulfillment,4531,206,$579.84
+PWR-99195,SSD - RTX 4070,Regional Depot (WH-02),2574,213,$642.49
+SKU-EL-37706,RAM - RTX 4070,Regional Depot (WH-02),3173,98,$84.84
+PWR-24972,Case - RTX 4070,East Coast Fulfillment,2057,438,$772.86
+COMP-18487,Case - 1TB NVMe,Central Hub (WH-01),3928,351,$39.44
+PRD-HW-71525,GPU - 32GB DDR5,Regional Depot (WH-02),3666,304,$405.51
+SKU-EL-24080,Cooling Fan - 32GB DDR5,East Coast Fulfillment,4193,88,$142.44
+COMP-81302,Motherboard - USB-C 2m,East Coast Fulfillment,2520,127,$518.19
+COMP-74994,RAM - 850W Gold,Central Hub (WH-01),1926,121,$679.77
+COMP-42983,Cooling Fan - RTX 4070,East Coast Fulfillment,2617,112,$763.87
+COMP-30488,Power Supply - Mechanical RGB,East Coast Fulfillment,2109,31,$624.81
+PRD-HW-1961,Mouse - ATX,Express Logistics (WH-03),2924,36,$255.99
+MOD-68156,HDD - 850W Gold,East Coast Fulfillment,2152,139,$557.96
+COMP-20557,Mouse - 2TB 7200RPM,Regional Depot (WH-02),3132,379,$451.57
+COMP-70435,GPU - USB-C 2m,West Coast Dist,2116,257,$143.91
+MOD-47077,Keyboard - Mechanical RGB,Express Logistics (WH-03),3616,254,$631.32
+SKU-EL-77828,GPU - 2TB 7200RPM,East Coast Fulfillment,7,221,$463.50
+SKU-EL-20619,Case - 27-inch 4K,Central Hub (WH-01),173,190,$517.14
+MOD-51624,Keyboard - 1TB NVMe,East Coast Fulfillment,2619,104,$459.09
+MOD-87308,Cable - 2TB 7200RPM,East Coast Fulfillment,265,288,$439.02
+SKU-EL-7002,RAM - Mechanical RGB,Regional Depot (WH-02),4237,385,$111.77
+SKU-EL-14428,CPU - Mid-Tower,East Coast Fulfillment,4389,189,$73.82
+SKU-EL-55792,HDD - Wireless,East Coast Fulfillment,3999,176,$773.93
+PRD-HW-67501,RAM - RTX 4070,East Coast Fulfillment,3008,265,$235.35
+MOD-2452,Case - Mechanical RGB,Central Hub (WH-01),50,288,$702.50
+SKU-EL-71664,Power Supply - 27-inch 4K,Regional Depot (WH-02),1636,482,$727.13
+MOD-3956,Mouse - 850W Gold,Express Logistics (WH-03),1327,132,$643.81
+COMP-46583,SSD - 2TB 7200RPM,West Coast Dist,198,58,$145.26
+PRD-HW-67564,Cooling Fan - 1TB NVMe,Central Hub (WH-01),4026,134,$397.53
+SKU-EL-2596,Cable - USB-C 2m,Regional Depot (WH-02),1311,400,$413.51
+SKU-EL-9550,GPU - ATX,Central Hub (WH-01),4020,298,$544.10
+SKU-EL-96961,Power Supply - 850W Gold,Central Hub (WH-01),3353,223,$17.09
+PRD-HW-77332,RAM - 32GB DDR5,West Coast Dist,4999,434,$111.25
+MOD-10588,Monitor - Wireless,Regional Depot (WH-02),3091,364,$11.44
+PRD-HW-98864,GPU - 120mm PWM,East Coast Fulfillment,842,492,$394.73
+COMP-44096,RAM - RTX 4070,East Coast Fulfillment,3386,105,$74.78
+COMP-88231,Cooling Fan - 850W Gold,East Coast Fulfillment,4336,463,$751.51
+SKU-EL-86389,Case - 1TB NVMe,Central Hub (WH-01),1218,41,$121.30
+PWR-62649,Case - 1TB NVMe,Regional Depot (WH-02),22,331,$34.06
+SKU-EL-84354,Mouse - RTX 4070,Central Hub (WH-01),2318,416,$206.95
+MOD-66538,Mouse - 120mm PWM,Express Logistics (WH-03),2292,279,$150.09
+PRD-HW-35244,CPU - 32GB DDR5,Central Hub (WH-01),1672,248,$520.19
+PRD-HW-17525,Monitor - 120mm PWM,Express Logistics (WH-03),4642,259,$162.72
+MOD-9252,Cable - 2TB 7200RPM,Express Logistics (WH-03),2007,462,$527.79
+PRD-HW-65292,Mouse - 32GB DDR5,Regional Depot (WH-02),1576,102,$237.88
+SKU-EL-44653,SSD - 850W Gold,Regional Depot (WH-02),2373,229,$720.98
+SKU-EL-37471,Mouse - 850W Gold,Central Hub (WH-01),4035,154,$135.26
+MOD-9029,Cooling Fan - RTX 4070,Central Hub (WH-01),3722,201,$662.86
+MOD-92072,Monitor - 32GB DDR5,Central Hub (WH-01),4263,444,$705.02
+SKU-EL-71150,Keyboard - 120mm PWM,Central Hub (WH-01),1346,359,$100.07
+PWR-76035,HDD - 32GB DDR5,West Coast Dist,952,470,$126.06
+SKU-EL-86481,Motherboard - 850W Gold,Regional Depot (WH-02),1346,298,$578.89
+COMP-66042,GPU - ATX,Regional Depot (WH-02),730,260,$759.71
+COMP-15796,Keyboard - ATX,Regional Depot (WH-02),4519,378,$721.60
+SKU-EL-53984,RAM - 1TB NVMe,East Coast Fulfillment,1098,33,$232.30
+MOD-46846,GPU - RTX 4070,West Coast Dist,2037,324,$504.85
+SKU-EL-20738,RAM - 1TB NVMe,East Coast Fulfillment,1342,152,$164.47
+COMP-53574,RAM - ATX,Central Hub (WH-01),1167,459,$288.26
+SKU-EL-49577,Power Supply - RTX 4070,Regional Depot (WH-02),408,159,$256.63
+COMP-55821,CPU - RTX 4070,East Coast Fulfillment,745,50,$105.07
+MOD-36196,Cooling Fan - 27-inch 4K,Express Logistics (WH-03),4998,145,$173.20
+SKU-EL-44557,GPU - 27-inch 4K,Central Hub (WH-01),2077,471,$794.86
+SKU-EL-94125,Cooling Fan - Intel Core i7,East Coast Fulfillment,2135,29,$430.83
+PWR-63954,Monitor - 120mm PWM,Central Hub (WH-01),3302,16,$428.50
+COMP-97637,Motherboard - USB-C 2m,East Coast Fulfillment,1626,99,$711.85
+PRD-HW-41385,Monitor - 2TB 7200RPM,East Coast Fulfillment,1214,175,$648.98
+PWR-74323,SSD - 32GB DDR5,West Coast Dist,4204,449,$144.42
+COMP-28110,Case - 120mm PWM,West Coast Dist,237,227,$195.00
+SKU-EL-83612,RAM - RTX 4070,Central Hub (WH-01),2925,485,$312.19
+MOD-49220,HDD - 32GB DDR5,Express Logistics (WH-03),2193,484,$76.11
+PWR-74899,SSD - RTX 4070,Regional Depot (WH-02),4507,215,$684.97
+PWR-35445,SSD - Mechanical RGB,Central Hub (WH-01),966,205,$784.41
+PRD-HW-88053,Case - Intel Core i7,East Coast Fulfillment,3373,425,$282.33
+PRD-HW-77970,Power Supply - 27-inch 4K,Central Hub (WH-01),2756,388,$775.64
+COMP-33323,SSD - 1TB NVMe,East Coast Fulfillment,3164,415,$351.99
+SKU-EL-4699,Cable - Mid-Tower,West Coast Dist,3796,230,$395.70
+PRD-HW-96627,Monitor - Mechanical RGB,Regional Depot (WH-02),1985,103,$463.37
+PWR-81107,Mouse - 27-inch 4K,Regional Depot (WH-02),1747,252,$793.94
+COMP-72317,GPU - Mechanical RGB,West Coast Dist,2008,385,$256.99
+COMP-72958,Monitor - Wireless,East Coast Fulfillment,2049,105,$717.78
+COMP-23059,Mouse - 1TB NVMe,East Coast Fulfillment,1115,14,$788.83
+SKU-EL-41951,CPU - 2TB 7200RPM,East Coast Fulfillment,3644,224,$513.35
+SKU-EL-36043,Cooling Fan - 32GB DDR5,East Coast Fulfillment,4425,424,$520.88
+SKU-EL-92802,Cable - 850W Gold,West Coast Dist,2265,176,$187.03
+PWR-71592,SSD - 1TB NVMe,East Coast Fulfillment,1755,131,$776.25
+SKU-EL-90243,RAM - 120mm PWM,Regional Depot (WH-02),1786,33,$739.71
+PWR-24565,Monitor - 2TB 7200RPM,East Coast Fulfillment,4818,429,$356.30
+MOD-5994,HDD - 2TB 7200RPM,West Coast Dist,2422,164,$406.39
+MOD-34163,HDD - Wireless,Regional Depot (WH-02),3444,204,$197.92
+MOD-34327,Cooling Fan - Intel Core i7,Central Hub (WH-01),4414,83,$549.37
+COMP-37855,GPU - Intel Core i7,Regional Depot (WH-02),1284,157,$17.26
+PRD-HW-60979,Keyboard - Wireless,West Coast Dist,1459,283,$191.68
+COMP-4901,Motherboard - Mid-Tower,West Coast Dist,1640,24,$547.33
+MOD-58228,Keyboard - USB-C 2m,East Coast Fulfillment,3453,32,$68.37
+SKU-EL-3122,Power Supply - Intel Core i7,West Coast Dist,556,344,$122.01
+COMP-9979,Cooling Fan - 27-inch 4K,Central Hub (WH-01),218,314,$683.89
+SKU-EL-22627,GPU - 1TB NVMe,West Coast Dist,2938,411,$740.08
+MOD-33326,Cable - Wireless,West Coast Dist,1033,346,$20.90
+MOD-31368,Motherboard - ATX,Express Logistics (WH-03),1988,482,$426.42
+COMP-63762,Keyboard - 32GB DDR5,West Coast Dist,2724,383,$429.44
+PRD-HW-69302,Cooling Fan - 850W Gold,West Coast Dist,1900,252,$256.31
+PWR-88139,RAM - Mid-Tower,East Coast Fulfillment,3356,250,$776.02
+COMP-89129,Motherboard - Mid-Tower,West Coast Dist,1297,328,$593.81
+MOD-78390,Power Supply - 1TB NVMe,Central Hub (WH-01),3029,480,$144.91
+MOD-92181,Power Supply - 2TB 7200RPM,West Coast Dist,4744,204,$641.29
+COMP-23548,CPU - 32GB DDR5,Express Logistics (WH-03),709,385,$589.60
+MOD-46535,CPU - Wireless,West Coast Dist,1451,92,$579.30
+COMP-6448,Keyboard - 850W Gold,Regional Depot (WH-02),176,165,$288.75
+PRD-HW-89649,SSD - USB-C 2m,Express Logistics (WH-03),976,224,$406.46
+PWR-81955,Mouse - 2TB 7200RPM,Central Hub (WH-01),3440,309,$259.78
+PRD-HW-45949,SSD - Wireless,Express Logistics (WH-03),3588,44,$486.18
+SKU-EL-49234,Case - ATX,East Coast Fulfillment,3854,379,$598.62
+SKU-EL-92033,HDD - RTX 4070,West Coast Dist,145,361,$620.71
+PRD-HW-68810,Monitor - USB-C 2m,Express Logistics (WH-03),4331,287,$426.47
+PRD-HW-76910,Keyboard - Mechanical RGB,Express Logistics (WH-03),1191,127,$272.47
+MOD-46065,HDD - RTX 4070,Central Hub (WH-01),2834,43,$489.92
+PRD-HW-95146,Cooling Fan - RTX 4070,East Coast Fulfillment,2636,416,$734.65
+SKU-EL-10036,GPU - 32GB DDR5,West Coast Dist,587,130,$263.84
+MOD-76897,Cable - Mid-Tower,West Coast Dist,4853,474,$631.27
+PRD-HW-98152,Motherboard - 120mm PWM,Express Logistics (WH-03),474,461,$728.99
+COMP-44373,CPU - 120mm PWM,West Coast Dist,2206,85,$778.78
+PWR-32590,GPU - 120mm PWM,East Coast Fulfillment,3443,201,$536.06
+PWR-63156,Cooling Fan - 32GB DDR5,Express Logistics (WH-03),1965,383,$436.97
+MOD-77415,GPU - 32GB DDR5,West Coast Dist,2071,14,$307.53
+SKU-EL-48238,SSD - 32GB DDR5,West Coast Dist,2275,394,$477.63
+COMP-34269,Monitor - 32GB DDR5,Express Logistics (WH-03),258,11,$224.03
+PWR-62026,RAM - Mechanical RGB,Express Logistics (WH-03),3396,178,$523.92
+MOD-52610,Cooling Fan - 2TB 7200RPM,East Coast Fulfillment,1138,365,$62.98
+SKU-EL-88611,GPU - 850W Gold,Regional Depot (WH-02),4372,305,$521.43
+PWR-99125,Power Supply - RTX 4070,Regional Depot (WH-02),2650,186,$310.31
+COMP-1220,Case - Mechanical RGB,Regional Depot (WH-02),2494,490,$466.73
+MOD-16692,Monitor - 1TB NVMe,West Coast Dist,14,127,$412.78
+PWR-94244,Monitor - Mechanical RGB,Central Hub (WH-01),2828,117,$775.61
+PRD-HW-27814,HDD - Intel Core i7,Regional Depot (WH-02),1131,181,$345.37
+MOD-15833,Power Supply - Mechanical RGB,West Coast Dist,4534,448,$733.02
+PWR-22829,Keyboard - 120mm PWM,West Coast Dist,2290,130,$311.87
+COMP-74953,Case - 2TB 7200RPM,Regional Depot (WH-02),599,500,$622.63
+SKU-EL-6596,RAM - Mechanical RGB,Regional Depot (WH-02),2230,164,$228.33
+PRD-HW-34031,Cooling Fan - Mid-Tower,Express Logistics (WH-03),3569,10,$571.58
+PRD-HW-50025,HDD - 120mm PWM,Express Logistics (WH-03),2991,83,$256.67
+PRD-HW-58893,GPU - 27-inch 4K,Regional Depot (WH-02),4314,45,$489.92
+MOD-17178,Power Supply - Wireless,West Coast Dist,3468,61,$278.06
+PRD-HW-75391,Keyboard - USB-C 2m,Express Logistics (WH-03),2343,315,$649.38
+PRD-HW-43437,Monitor - 120mm PWM,East Coast Fulfillment,4787,471,$83.52
+COMP-21075,CPU - Mid-Tower,West Coast Dist,3870,254,$55.21
+SKU-EL-75101,HDD - 27-inch 4K,Regional Depot (WH-02),848,448,$224.02
+PWR-48983,Motherboard - 2TB 7200RPM,East Coast Fulfillment,4966,137,$413.97
+PWR-56683,Cable - 2TB 7200RPM,West Coast Dist,155,348,$657.25
+SKU-EL-69879,Monitor - 850W Gold,West Coast Dist,3634,137,$141.47
+SKU-EL-36056,CPU - Mechanical RGB,East Coast Fulfillment,4191,271,$740.04
+MOD-72517,Cable - 27-inch 4K,Express Logistics (WH-03),1393,376,$283.97
+PRD-HW-78395,SSD - 2TB 7200RPM,West Coast Dist,3331,308,$218.37
+COMP-58746,GPU - 27-inch 4K,West Coast Dist,1272,105,$394.18
+COMP-32755,Motherboard - 120mm PWM,West Coast Dist,3051,144,$154.14
+COMP-31172,RAM - RTX 4070,West Coast Dist,1798,465,$365.02
+PRD-HW-13123,Keyboard - Wireless,Central Hub (WH-01),3775,426,$136.69
+COMP-29595,Cooling Fan - USB-C 2m,Regional Depot (WH-02),305,155,$785.15
+MOD-59348,HDD - 2TB 7200RPM,Regional Depot (WH-02),3732,246,$428.19
+PRD-HW-99373,Cooling Fan - 120mm PWM,West Coast Dist,1087,472,$539.35
+PWR-26105,Motherboard - 32GB DDR5,Central Hub (WH-01),2660,135,$357.74
+SKU-EL-74510,Case - 850W Gold,Regional Depot (WH-02),2085,83,$213.70
+PRD-HW-72797,Power Supply - 27-inch 4K,West Coast Dist,411,393,$355.46
+SKU-EL-96494,SSD - 32GB DDR5,East Coast Fulfillment,3759,14,$726.48
+PWR-61429,Cooling Fan - RTX 4070,Regional Depot (WH-02),2639,160,$38.08
+MOD-22000,Motherboard - 1TB NVMe,Regional Depot (WH-02),3279,11,$127.95
+SKU-EL-38457,Monitor - 1TB NVMe,East Coast Fulfillment,2117,259,$620.30
+SKU-EL-63958,Mouse - Wireless,Central Hub (WH-01),3815,402,$190.82
+SKU-EL-89333,Mouse - 27-inch 4K,West Coast Dist,4719,453,$673.16
+MOD-86383,Power Supply - Mechanical RGB,West Coast Dist,4435,464,$679.87
+MOD-55249,Case - 2TB 7200RPM,Central Hub (WH-01),2702,373,$329.22
+PWR-50786,HDD - ATX,West Coast Dist,1431,61,$430.90
+PRD-HW-65110,Keyboard - Intel Core i7,Central Hub (WH-01),179,449,$228.62
+PRD-HW-6422,RAM - 1TB NVMe,West Coast Dist,1063,210,$736.63
+SKU-EL-80206,Power Supply - 850W Gold,East Coast Fulfillment,3071,120,$651.33
+PRD-HW-23177,CPU - Wireless,West Coast Dist,2952,286,$786.43
+PRD-HW-29047,Mouse - 2TB 7200RPM,Regional Depot (WH-02),4140,427,$55.14
+PWR-29967,Case - 32GB DDR5,East Coast Fulfillment,2594,299,$207.76
+PRD-HW-15166,Power Supply - 32GB DDR5,Central Hub (WH-01),2683,490,$45.24
+MOD-81751,Keyboard - ATX,East Coast Fulfillment,1666,400,$402.36
+PWR-49875,Cable - USB-C 2m,Express Logistics (WH-03),3422,485,$29.14
+PWR-78121,Cable - 850W Gold,Regional Depot (WH-02),4785,123,$533.63
+PRD-HW-59276,Mouse - 1TB NVMe,Central Hub (WH-01),2542,336,$655.13
+COMP-93056,Mouse - 32GB DDR5,Central Hub (WH-01),796,199,$204.31
+MOD-13961,CPU - 850W Gold,Central Hub (WH-01),1719,379,$766.03
+MOD-13569,Cooling Fan - Intel Core i7,Central Hub (WH-01),3799,137,$246.93
+PRD-HW-61209,Keyboard - 850W Gold,West Coast Dist,4631,485,$358.71
+PWR-8085,Cooling Fan - Wireless,West Coast Dist,1667,464,$236.92
+COMP-76704,GPU - 32GB DDR5,East Coast Fulfillment,1151,259,$649.32
+PRD-HW-4576,GPU - 32GB DDR5,East Coast Fulfillment,4925,285,$544.77
+PWR-14787,HDD - RTX 4070,Central Hub (WH-01),842,190,$578.81
+COMP-16703,Case - Wireless,Central Hub (WH-01),2451,216,$167.10
+PRD-HW-74157,Power Supply - 2TB 7200RPM,East Coast Fulfillment,4282,256,$194.50
+MOD-88578,CPU - 2TB 7200RPM,West Coast Dist,4759,122,$402.82
+SKU-EL-31981,Cable - 850W Gold,West Coast Dist,3924,432,$738.01
+PWR-69994,CPU - 27-inch 4K,Regional Depot (WH-02),1047,388,$340.71
+SKU-EL-89774,CPU - Mid-Tower,West Coast Dist,1152,437,$62.98
+MOD-38661,RAM - Mechanical RGB,Regional Depot (WH-02),952,202,$73.92
+COMP-19464,HDD - Wireless,East Coast Fulfillment,4699,70,$578.78
+PWR-66530,Keyboard - Wireless,West Coast Dist,545,456,$21.17
+PWR-7931,CPU - Mid-Tower,East Coast Fulfillment,1880,104,$399.47
+PWR-44559,HDD - 850W Gold,East Coast Fulfillment,1688,207,$607.29
+PWR-13984,Cable - Mid-Tower,Express Logistics (WH-03),934,238,$576.22
+PWR-46153,Case - 120mm PWM,Express Logistics (WH-03),2601,93,$82.25
+MOD-22139,CPU - 850W Gold,West Coast Dist,3053,59,$530.16
+SKU-EL-13157,RAM - Mid-Tower,Express Logistics (WH-03),672,313,$344.74
+COMP-70517,SSD - 120mm PWM,Central Hub (WH-01),3305,379,$398.45
+SKU-EL-34553,Cooling Fan - 32GB DDR5,West Coast Dist,1694,439,$17.27
+PRD-HW-70471,Mouse - Mechanical RGB,East Coast Fulfillment,3757,492,$373.98
+PWR-66399,CPU - USB-C 2m,Central Hub (WH-01),3668,208,$759.61
+SKU-EL-19198,Mouse - 120mm PWM,Central Hub (WH-01),3543,195,$59.48
+COMP-45690,Mouse - 850W Gold,Central Hub (WH-01),666,186,$510.22
+COMP-70914,Motherboard - USB-C 2m,Express Logistics (WH-03),3948,200,$219.08
+PWR-38904,Monitor - 2TB 7200RPM,Regional Depot (WH-02),895,286,$104.69
+SKU-EL-80840,Power Supply - 850W Gold,Express Logistics (WH-03),4199,449,$233.88
+COMP-60171,Cable - ATX,West Coast Dist,1074,78,$240.14
+PRD-HW-54489,GPU - 27-inch 4K,Central Hub (WH-01),348,140,$473.39
+COMP-18703,Mouse - Wireless,West Coast Dist,4354,395,$416.62
+PRD-HW-96263,Case - Mid-Tower,East Coast Fulfillment,4780,184,$135.48
+SKU-EL-38694,Cooling Fan - ATX,West Coast Dist,4008,376,$378.25
+PRD-HW-85600,HDD - 2TB 7200RPM,West Coast Dist,2664,202,$226.95
+PWR-64348,Case - Mechanical RGB,Central Hub (WH-01),4547,338,$743.41
+SKU-EL-8009,RAM - ATX,Regional Depot (WH-02),3695,443,$123.30
+PWR-69637,Cooling Fan - 120mm PWM,Central Hub (WH-01),4427,145,$372.10
+COMP-40124,HDD - USB-C 2m,Central Hub (WH-01),1727,402,$746.57
+COMP-22368,CPU - Mid-Tower,East Coast Fulfillment,1413,397,$637.98
+SKU-EL-67896,Cable - 1TB NVMe,Express Logistics (WH-03),1672,458,$506.74
+PRD-HW-45932,Mouse - USB-C 2m,Regional Depot (WH-02),4905,164,$337.47
+PWR-82275,Cooling Fan - Wireless,Express Logistics (WH-03),178,258,$48.87
+COMP-6568,Monitor - 1TB NVMe,Central Hub (WH-01),1628,470,$714.71
+PRD-HW-96936,HDD - 120mm PWM,Central Hub (WH-01),1559,295,$248.47
+SKU-EL-35677,Monitor - Mid-Tower,Central Hub (WH-01),4895,304,$485.71
+PRD-HW-16233,Monitor - USB-C 2m,Express Logistics (WH-03),4126,328,$585.13
+PWR-74143,Motherboard - 1TB NVMe,West Coast Dist,3474,253,$341.48
+MOD-45081,RAM - 1TB NVMe,Central Hub (WH-01),3351,191,$160.36
+SKU-EL-80934,Power Supply - Wireless,East Coast Fulfillment,3029,37,$228.98
+MOD-33709,CPU - Intel Core i7,Express Logistics (WH-03),3606,14,$519.71
+PRD-HW-65341,GPU - 2TB 7200RPM,Central Hub (WH-01),1230,307,$471.48
+PRD-HW-60170,SSD - Intel Core i7,West Coast Dist,2949,244,$51.29
+COMP-53805,RAM - Wireless,Central Hub (WH-01),3806,287,$224.77
+SKU-EL-72989,Keyboard - 32GB DDR5,East Coast Fulfillment,3472,412,$109.48
+COMP-45398,Monitor - 850W Gold,Express Logistics (WH-03),1168,298,$111.83
+SKU-EL-57854,GPU - 1TB NVMe,West Coast Dist,2595,443,$306.93
+PWR-41519,Cable - Mechanical RGB,Regional Depot (WH-02),769,120,$230.54
+PRD-HW-95603,Mouse - 1TB NVMe,East Coast Fulfillment,3996,256,$512.08
+MOD-68278,Monitor - 2TB 7200RPM,Central Hub (WH-01),2132,340,$210.48
+SKU-EL-95287,Keyboard - 27-inch 4K,Central Hub (WH-01),723,17,$221.94
+MOD-78553,Motherboard - RTX 4070,Central Hub (WH-01),2749,218,$663.58
+PRD-HW-91479,Power Supply - ATX,Regional Depot (WH-02),1011,342,$449.24
+PRD-HW-49274,Case - 850W Gold,East Coast Fulfillment,3783,108,$745.77
+COMP-96679,Case - Mid-Tower,Express Logistics (WH-03),2489,251,$215.82
+PRD-HW-83283,Keyboard - 850W Gold,Central Hub (WH-01),4453,125,$376.99
+PRD-HW-30040,Case - 32GB DDR5,Regional Depot (WH-02),912,462,$411.26
+COMP-36437,Keyboard - 1TB NVMe,East Coast Fulfillment,427,388,$265.97
+MOD-7004,SSD - Mechanical RGB,East Coast Fulfillment,170,352,$754.57
+PRD-HW-60886,SSD - 850W Gold,Central Hub (WH-01),879,30,$671.30
+PRD-HW-69299,SSD - 2TB 7200RPM,Central Hub (WH-01),3342,405,$390.04
+PWR-73555,Case - 2TB 7200RPM,Express Logistics (WH-03),2375,486,$131.42
+MOD-94115,CPU - 850W Gold,West Coast Dist,4083,470,$211.76
+COMP-43486,Cooling Fan - ATX,Regional Depot (WH-02),4687,233,$409.77
+MOD-7333,Cooling Fan - Wireless,Express Logistics (WH-03),3931,29,$782.96
+PRD-HW-24210,CPU - USB-C 2m,West Coast Dist,760,494,$376.07
+COMP-20406,RAM - 120mm PWM,East Coast Fulfillment,4188,477,$87.91
+PRD-HW-67134,Keyboard - Intel Core i7,West Coast Dist,1389,140,$321.36
+COMP-57261,Case - Wireless,Express Logistics (WH-03),2417,218,$126.25
+PWR-83673,SSD - 1TB NVMe,Express Logistics (WH-03),4710,400,$486.78
+PWR-57589,Motherboard - 2TB 7200RPM,West Coast Dist,1682,165,$305.88
+PRD-HW-68350,Monitor - 1TB NVMe,Regional Depot (WH-02),847,62,$551.91
+PRD-HW-50562,Keyboard - 120mm PWM,Central Hub (WH-01),3117,131,$475.83
+MOD-53079,Monitor - 120mm PWM,Regional Depot (WH-02),2909,145,$114.09
+PRD-HW-91944,RAM - Intel Core i7,West Coast Dist,500,256,$352.24
+SKU-EL-33303,Power Supply - 1TB NVMe,Express Logistics (WH-03),1369,92,$673.06
+MOD-67344,Power Supply - 27-inch 4K,West Coast Dist,2985,226,$554.74
+COMP-64131,SSD - 850W Gold,Regional Depot (WH-02),4573,405,$116.92
+COMP-76347,CPU - 1TB NVMe,Express Logistics (WH-03),3092,167,$56.80
+SKU-EL-73007,Case - Mid-Tower,Express Logistics (WH-03),278,88,$15.66
+PWR-75513,Case - 1TB NVMe,Regional Depot (WH-02),1951,32,$232.25
+PRD-HW-55452,Cooling Fan - Mid-Tower,Regional Depot (WH-02),2491,287,$288.87
+SKU-EL-83580,Motherboard - Intel Core i7,Regional Depot (WH-02),3598,353,$141.42
+COMP-95293,Cooling Fan - 32GB DDR5,East Coast Fulfillment,80,119,$201.50
+SKU-EL-82009,RAM - ATX,Central Hub (WH-01),1998,64,$262.77
+SKU-EL-89056,Monitor - Mid-Tower,East Coast Fulfillment,4373,333,$418.85
+COMP-27243,Keyboard - 32GB DDR5,Regional Depot (WH-02),3571,129,$191.89
+SKU-EL-87259,Cable - RTX 4070,Central Hub (WH-01),1409,233,$72.78
+SKU-EL-23272,CPU - Mid-Tower,West Coast Dist,1109,48,$150.53
+PRD-HW-63887,SSD - RTX 4070,Regional Depot (WH-02),2330,219,$558.86
+MOD-3113,Power Supply - RTX 4070,Central Hub (WH-01),3828,283,$732.75
+PWR-71106,Monitor - 2TB 7200RPM,Regional Depot (WH-02),1122,134,$223.30
+PWR-76275,Monitor - 120mm PWM,Regional Depot (WH-02),2412,369,$606.88
+SKU-EL-76244,HDD - ATX,Central Hub (WH-01),4171,465,$46.31
+COMP-11968,RAM - 2TB 7200RPM,Central Hub (WH-01),3556,379,$607.83
+SKU-EL-36304,Monitor - Mid-Tower,East Coast Fulfillment,3339,431,$675.13
+COMP-12120,SSD - 27-inch 4K,Central Hub (WH-01),4453,343,$420.09
+COMP-68102,HDD - 850W Gold,East Coast Fulfillment,1197,193,$590.11
+SKU-EL-8474,HDD - 850W Gold,West Coast Dist,3172,467,$518.20
+PRD-HW-22035,HDD - RTX 4070,East Coast Fulfillment,295,306,$693.10
+PWR-51000,Monitor - Wireless,Central Hub (WH-01),1666,282,$590.61
+PWR-35284,Case - 2TB 7200RPM,Express Logistics (WH-03),4942,454,$260.75
+PRD-HW-21892,RAM - 1TB NVMe,East Coast Fulfillment,3262,392,$278.07
+PRD-HW-19663,Cable - USB-C 2m,Express Logistics (WH-03),2860,326,$344.64
+PWR-13625,Mouse - 850W Gold,West Coast Dist,4614,312,$348.50
+COMP-80714,Cable - Wireless,Express Logistics (WH-03),3523,484,$118.32
+MOD-44955,Cooling Fan - 27-inch 4K,East Coast Fulfillment,3184,463,$17.66
+PRD-HW-43146,Motherboard - Mid-Tower,East Coast Fulfillment,4138,492,$729.50
+COMP-76772,Monitor - 27-inch 4K,Express Logistics (WH-03),1244,415,$440.29
+PRD-HW-98681,Case - 120mm PWM,Central Hub (WH-01),863,78,$94.89
+PRD-HW-53486,Cable - Intel Core i7,East Coast Fulfillment,3680,48,$642.35
+PRD-HW-46536,Keyboard - USB-C 2m,East Coast Fulfillment,199,212,$129.92
+SKU-EL-18000,Power Supply - Mechanical RGB,Central Hub (WH-01),4585,369,$112.52
+PWR-95281,Keyboard - ATX,Central Hub (WH-01),870,478,$642.01
+SKU-EL-25200,HDD - Intel Core i7,Central Hub (WH-01),3761,60,$245.08
+MOD-28455,RAM - 120mm PWM,Express Logistics (WH-03),4496,103,$671.10
+PWR-23290,Mouse - 1TB NVMe,Central Hub (WH-01),4580,85,$15.59
+COMP-24706,Mouse - 27-inch 4K,Express Logistics (WH-03),716,91,$295.38
+MOD-36345,Case - USB-C 2m,West Coast Dist,2184,420,$149.31
+PWR-31361,GPU - Wireless,Regional Depot (WH-02),2719,433,$43.18
+COMP-6852,HDD - 27-inch 4K,Express Logistics (WH-03),3152,452,$25.34
+MOD-94011,RAM - 27-inch 4K,Express Logistics (WH-03),2184,486,$323.11
+PWR-65575,Power Supply - Mid-Tower,Central Hub (WH-01),3822,430,$542.36
+PRD-HW-80002,HDD - ATX,East Coast Fulfillment,386,58,$139.85
+MOD-95992,SSD - USB-C 2m,West Coast Dist,3494,498,$608.94
+PRD-HW-19331,Cable - 32GB DDR5,Regional Depot (WH-02),1080,151,$65.50
+SKU-EL-4859,Motherboard - Wireless,East Coast Fulfillment,2258,87,$686.26
+PRD-HW-82760,Cable - 120mm PWM,Regional Depot (WH-02),923,331,$366.58
+MOD-97590,CPU - ATX,Regional Depot (WH-02),2984,404,$708.52
+MOD-55685,Cable - Intel Core i7,Central Hub (WH-01),4814,336,$540.32
+SKU-EL-72783,Cable - Mid-Tower,Central Hub (WH-01),226,417,$462.25
+PWR-58183,CPU - ATX,East Coast Fulfillment,1870,282,$589.37
+MOD-91945,CPU - Wireless,East Coast Fulfillment,1437,391,$526.88
+MOD-76247,RAM - Wireless,Express Logistics (WH-03),1806,449,$432.95
+SKU-EL-70882,CPU - 850W Gold,East Coast Fulfillment,4869,36,$727.61
+MOD-35614,Cooling Fan - 120mm PWM,East Coast Fulfillment,834,385,$615.53
+MOD-20488,RAM - RTX 4070,Central Hub (WH-01),4088,320,$467.16
+COMP-51837,Keyboard - 27-inch 4K,East Coast Fulfillment,3609,346,$753.63
+COMP-32655,HDD - 32GB DDR5,West Coast Dist,265,294,$294.93
+SKU-EL-91563,Power Supply - 27-inch 4K,West Coast Dist,3126,227,$216.63
+SKU-EL-28403,Case - 2TB 7200RPM,Express Logistics (WH-03),1200,460,$208.54
+PRD-HW-44819,Cable - Wireless,Central Hub (WH-01),1089,403,$585.70
+PWR-89170,HDD - 1TB NVMe,Regional Depot (WH-02),1439,272,$43.85
+PWR-56113,Keyboard - 850W Gold,West Coast Dist,616,100,$254.21
+PRD-HW-90051,Power Supply - Intel Core i7,East Coast Fulfillment,2055,128,$713.09
+MOD-98576,Keyboard - 120mm PWM,East Coast Fulfillment,3528,68,$154.59
+MOD-47889,RAM - ATX,West Coast Dist,757,441,$65.59
+PRD-HW-29802,CPU - Intel Core i7,Express Logistics (WH-03),4112,84,$318.11
+SKU-EL-97666,GPU - Mechanical RGB,East Coast Fulfillment,3732,439,$689.01
+PWR-41101,Mouse - 32GB DDR5,Express Logistics (WH-03),727,447,$275.88
+PWR-34381,Monitor - Wireless,Central Hub (WH-01),3555,212,$438.15
+PWR-53658,Case - USB-C 2m,Regional Depot (WH-02),689,154,$135.31
+COMP-80522,Cooling Fan - Mid-Tower,East Coast Fulfillment,635,164,$365.03
+PWR-16696,Power Supply - Mechanical RGB,West Coast Dist,3865,49,$10.56
+COMP-14375,Keyboard - 32GB DDR5,Central Hub (WH-01),23,306,$588.70
+SKU-EL-30653,Cooling Fan - 1TB NVMe,East Coast Fulfillment,828,461,$140.32
+PWR-49838,GPU - USB-C 2m,East Coast Fulfillment,621,275,$474.20
+SKU-EL-90311,Monitor - Mid-Tower,Regional Depot (WH-02),465,315,$180.10
+PWR-38970,RAM - USB-C 2m,Express Logistics (WH-03),747,191,$71.40
+SKU-EL-78629,RAM - 850W Gold,West Coast Dist,458,464,$171.92
+COMP-12252,GPU - 120mm PWM,Express Logistics (WH-03),722,91,$570.54
+MOD-85439,CPU - 27-inch 4K,Express Logistics (WH-03),1166,99,$365.63
+MOD-97578,RAM - 32GB DDR5,East Coast Fulfillment,1620,69,$113.74
+SKU-EL-14784,Monitor - Wireless,West Coast Dist,928,60,$162.98
+PRD-HW-13155,Monitor - 27-inch 4K,Central Hub (WH-01),3755,398,$697.41
+PWR-64624,Power Supply - RTX 4070,Regional Depot (WH-02),1144,498,$400.18
+MOD-44109,Cable - 1TB NVMe,Regional Depot (WH-02),4323,438,$192.31
+SKU-EL-65599,HDD - USB-C 2m,Central Hub (WH-01),2553,414,$106.98
+COMP-70121,SSD - USB-C 2m,East Coast Fulfillment,3133,405,$286.72
+PRD-HW-8802,Motherboard - 32GB DDR5,West Coast Dist,1751,295,$330.70
+MOD-70188,Monitor - RTX 4070,Regional Depot (WH-02),143,137,$233.00
+SKU-EL-63364,RAM - 27-inch 4K,West Coast Dist,4111,166,$239.03
+COMP-63836,CPU - Intel Core i7,East Coast Fulfillment,206,97,$781.16
+SKU-EL-73733,Motherboard - RTX 4070,Central Hub (WH-01),1005,349,$366.94
+COMP-1759,Case - 1TB NVMe,Express Logistics (WH-03),4281,432,$699.76
+COMP-18585,Keyboard - Mid-Tower,Regional Depot (WH-02),2452,12,$690.20
+PWR-7145,Power Supply - RTX 4070,Central Hub (WH-01),3630,361,$76.53
+SKU-EL-12523,Power Supply - Mid-Tower,West Coast Dist,4242,167,$345.62
+PWR-59250,HDD - 850W Gold,East Coast Fulfillment,3833,192,$290.61
+MOD-20330,HDD - 850W Gold,Central Hub (WH-01),54,424,$222.96
+SKU-EL-1085,Cooling Fan - ATX,West Coast Dist,2397,139,$773.77
+SKU-EL-12435,GPU - 32GB DDR5,East Coast Fulfillment,2798,328,$46.03
+PRD-HW-8342,Power Supply - RTX 4070,Express Logistics (WH-03),1810,420,$102.71
+PWR-29822,SSD - 120mm PWM,East Coast Fulfillment,4751,291,$748.06
+SKU-EL-51814,Mouse - 32GB DDR5,Central Hub (WH-01),2518,318,$404.54
+COMP-69788,HDD - Intel Core i7,Regional Depot (WH-02),3005,470,$101.41
+PWR-24247,HDD - ATX,West Coast Dist,2024,251,$382.07
+SKU-EL-80037,GPU - ATX,Express Logistics (WH-03),1470,75,$672.48
+SKU-EL-42952,RAM - 120mm PWM,East Coast Fulfillment,4421,302,$518.73
+MOD-11689,Cooling Fan - 850W Gold,East Coast Fulfillment,865,465,$144.79
+PRD-HW-7449,Power Supply - 32GB DDR5,Express Logistics (WH-03),1868,302,$758.13
+PWR-14259,GPU - Intel Core i7,West Coast Dist,880,274,$407.71
+COMP-52491,Keyboard - ATX,West Coast Dist,976,171,$482.92
+SKU-EL-13169,GPU - 2TB 7200RPM,Express Logistics (WH-03),129,66,$105.67
+PRD-HW-52645,SSD - 32GB DDR5,East Coast Fulfillment,3290,87,$526.12
+SKU-EL-89887,HDD - 120mm PWM,East Coast Fulfillment,2436,173,$403.38
+MOD-71853,Cooling Fan - Wireless,Regional Depot (WH-02),2165,45,$745.35
+COMP-37494,HDD - 32GB DDR5,Central Hub (WH-01),3078,406,$697.12
+SKU-EL-35393,CPU - 32GB DDR5,Regional Depot (WH-02),1161,328,$185.86
+SKU-EL-73996,GPU - 120mm PWM,Regional Depot (WH-02),2978,120,$311.01
+COMP-85577,Motherboard - Intel Core i7,Express Logistics (WH-03),105,58,$192.76
+SKU-EL-37485,Monitor - USB-C 2m,East Coast Fulfillment,997,302,$223.13
+MOD-72701,Cable - USB-C 2m,Regional Depot (WH-02),499,322,$602.67
+PWR-7959,Case - Intel Core i7,West Coast Dist,1436,136,$771.90
+COMP-69764,CPU - Intel Core i7,West Coast Dist,2210,244,$13.68
+MOD-65170,Monitor - USB-C 2m,Central Hub (WH-01),1612,316,$239.21
+PWR-57423,Mouse - 32GB DDR5,Central Hub (WH-01),2202,131,$740.10
+PRD-HW-41160,Power Supply - ATX,West Coast Dist,3497,483,$390.28
+PRD-HW-68577,HDD - Intel Core i7,Central Hub (WH-01),3086,270,$543.09
+MOD-20948,Cable - Intel Core i7,Central Hub (WH-01),1786,27,$532.80
+COMP-66191,HDD - Mid-Tower,Express Logistics (WH-03),2810,199,$135.99

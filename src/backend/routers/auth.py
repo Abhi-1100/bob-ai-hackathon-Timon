@@ -399,6 +399,12 @@ def get_current_user_obj(
                             hashed_password=mem_user["hashed_password"],
                             full_name=mem_user["full_name"],
                         )
+
+                # If we get here, the user was not found in the DB and not found in _MEM_USERS
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="User not found",
+                )
         except HTTPException:
             raise
         except Exception as exc:
@@ -412,7 +418,7 @@ def get_current_user_obj(
     # (e.g., local dev or background test invocation)
     try:
         fallback_user = db.query(UserDB).filter(
-            (UserDB.email == "analyst@threatintel.mil") | (UserDB.email == "analyst@sentinelforge.mil")
+            (UserDB.email.ilike("analyst@threatintel.mil")) | (UserDB.email == "analyst@sentinelforge.mil")
         ).first()
         if fallback_user:
             return fallback_user
@@ -501,6 +507,6 @@ def get_current_user(authorization: Optional[str] = Header(None), db: Session = 
     return UserResponse(
         id=user_id or "default-operator-id",
         name=payload.get("name", "Chief SOC Analyst"),
-        email=email or "analyst@sentinelforge.mil",
+        email=email or "analyst@ThreatIntel.mil",
     )
 

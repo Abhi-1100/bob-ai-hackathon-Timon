@@ -64,7 +64,7 @@ def db_session():
 
     user = UserDB(
         id=TEST_USER_ID,
-        email="analyst@sentinelforge.mil",
+        email="analyst@ThreatIntel.mil",
         full_name="SOC Analyst",
         hashed_password="mock_password",
     )
