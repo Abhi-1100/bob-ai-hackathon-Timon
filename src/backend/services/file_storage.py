@@ -45,7 +45,7 @@ class FileStorageService:
             logger.critical(f"Failed to create uploads directory at {self.upload_dir}: {exc}")
             raise
 
-    def generate_filename(self) -> str:
+    def generate_filename(self, extension: str = ".csv") -> str:
         """
         Generates a unique timestamp-based filename.
         Format: alerts_YYYYMMDD_HHMMSS.csv (with microsecond/hex suffix if conflict arises).
@@ -53,13 +53,13 @@ class FileStorageService:
         now = datetime.now()
         timestamp = now.strftime("%Y%m%d_%H%M%S")
         base_name = f"alerts_{timestamp}"
-        candidate = f"{base_name}.csv"
+        candidate = f"{base_name}{extension}"
 
         target_path = self.upload_dir / candidate
         # Prevent collisions if multiple uploads arrive within the same second
         if target_path.exists():
             short_id = uuid.uuid4().hex[:6]
-            candidate = f"{base_name}_{short_id}.csv"
+            candidate = f"{base_name}_{short_id}{extension}"
 
         return candidate
 
@@ -91,7 +91,18 @@ class FileStorageService:
         """
         self.validate_file_extension(upload_file)
 
-        generated_filename = self.generate_filename()
+        return await self._save_file(upload_file, ".csv")
+
+    async def save_json_file(self, upload_file: UploadFile) -> Tuple[str, str]:
+        """Persist a JSON alert feed without changing CSV upload validation."""
+        if not upload_file or not upload_file.filename or not upload_file.filename.lower().endswith(".json"):
+            raise StorageValidationError("Only JSON files are allowed")
+        return await self._save_file(upload_file, ".json")
+
+    async def _save_file(self, upload_file: UploadFile, extension: str) -> Tuple[str, str]:
+        """Shared streaming implementation for already validated upload types."""
+
+        generated_filename = self.generate_filename(extension)
         destination_path = self.upload_dir / generated_filename
         relative_path = f"uploads/{generated_filename}"
 

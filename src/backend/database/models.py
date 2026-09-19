@@ -73,6 +73,7 @@ class Alert(Base):
     dst_ip = Column(String(100), nullable=False)
     event = Column(String(255), nullable=False)
     severity = Column(String(50), nullable=False)
+    source_type = Column(String(20), nullable=False, default="csv", server_default="csv")
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Relationship back to upload

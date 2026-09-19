@@ -58,6 +58,14 @@ Security Operations Centers (SOCs) and defence analysts face severe **alert fati
 - **Interactive SOC Analyst Copilot:** LangGraph + Qdrant grounded retrieval-augmented chat assistant.
 - **Real-Time Glassmorphic SOC Dashboard:** Dark-mode React/Vite interface with live metrics, attack chain visualizer, and MITRE matrix.
 
+## Supported ingestion methods
+
+1. **CSV Upload** for batch CSV alert files (the original workflow).
+2. **JSON Upload** for an alert array or an `{ "alerts": [...] }` / `{ "data": [...] }` wrapper.
+3. **API URL** for a public HTTP(S) JSON alert feed fetched by the backend.
+
+Each source normalizes into the same canonical alert model before alert correlation, attack-chain generation, MITRE mapping, deterministic risk scoring, AI/RAG, Qdrant, and the SOC dashboard. API URL ingestion has a 10-second timeout, a 5 MB cap, disabled redirects, and blocks localhost, private, and non-HTTP(S) targets. This is connector-ready rather than a direct vendor integration.
+
 ---
 
 ## 🛠️ Tech Stack

@@ -3,9 +3,13 @@ Upload router for Threat Intelligence alerts.
 Handles multipart CSV uploads, performs file-level validation, and stores files safely.
 """
 
-import io
+import ipaddress
 import logging
+import socket
 import uuid
+from pathlib import Path
+from urllib.parse import urlparse
+import httpx
 from fastapi import APIRouter, BackgroundTasks, Depends, File, UploadFile, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -13,17 +17,19 @@ from sqlalchemy.orm import Session
 try:
     from database.session import get_db
     from database.models import Alert as AlertDB, UserDB
-    from schemas.upload import UploadResponse, ErrorResponse, IngestResponse
+    from schemas.upload import UploadResponse, ErrorResponse, IngestResponse, URLIngestRequest
     from services.file_storage import FileStorageService, StorageValidationError, BASE_DIR
     from services.csv_parser import CSVParser, CSVParserError
+    from services.json_parser import JSONAlertParser, JSONParserError
     from repositories.alert_repository import AlertRepository
     from routers.auth import get_current_user_obj
 except ImportError:
     from backend.database.session import get_db
     from backend.database.models import Alert as AlertDB, UserDB
-    from backend.schemas.upload import UploadResponse, ErrorResponse, IngestResponse
+    from backend.schemas.upload import UploadResponse, ErrorResponse, IngestResponse, URLIngestRequest
     from backend.services.file_storage import FileStorageService, StorageValidationError, BASE_DIR
     from backend.services.csv_parser import CSVParser, CSVParserError
+    from backend.services.json_parser import JSONAlertParser, JSONParserError
     from backend.repositories.alert_repository import AlertRepository
     from backend.routers.auth import get_current_user_obj
 
@@ -36,6 +42,8 @@ router = APIRouter(
 
 storage_service = FileStorageService()
 csv_parser = CSVParser()
+json_parser = JSONAlertParser()
+MAX_API_RESPONSE_BYTES = 5 * 1024 * 1024
 
 
 @router.post(
@@ -180,6 +188,62 @@ def _bg_qdrant_sync(user_id: uuid.UUID) -> None:
         logger.warning(f"Background Qdrant vector sync warning: {q_err}")
 
 
+async def _ingest_normalized_alerts(
+    parsed_alerts, source_type: str, file_name: str, file_path: str, current_user: UserDB,
+    db: Session, background_tasks: BackgroundTasks,
+):
+    """The single persistence and downstream-processing path for every ingestion source."""
+    alert_repo = AlertRepository(db)
+    upload_rec = alert_repo.create_upload(file_name=file_name, file_path=file_path, user_id=current_user.id)
+    orm_alerts = []
+    for a in parsed_alerts:
+        sev = a.severity.value if hasattr(a.severity, "value") else str(a.severity)
+        orm_alerts.append(AlertDB(
+            id=uuid.uuid4(), user_id=current_user.id, upload_id=upload_rec.id,
+            timestamp=a.timestamp, src_ip=a.src_ip, dst_ip=a.dst_ip, event=a.event,
+            severity=sev, source_type=source_type,
+        ))
+    count = alert_repo.bulk_insert_alerts(upload_id=upload_rec.id, alerts=orm_alerts, user_id=current_user.id)
+    chains_count = mitre_count = scored_count = 0
+    try:
+        from services.alert_correlation import AlertCorrelationEngine
+        from services.mitre_mapping import MitreMappingService
+        from services.risk_scoring import RiskScoringEngine
+        corr_result = AlertCorrelationEngine(db=db).correlate(user_id=current_user.id, persist=True)
+        chains_count = len(corr_result.chains)
+        mitre_count = MitreMappingService(db=db).map_all_chains(user_id=current_user.id).total_techniques
+        scored_count = len(RiskScoringEngine(db=db).score_all_chains(user_id=current_user.id))
+        background_tasks.add_task(_bg_qdrant_sync, current_user.id)
+    except Exception as pipe_err:
+        logger.warning("Correlation pipeline post-ingest warning: %s", pipe_err)
+    try:
+        from services.cache_service import cache
+        for key in ("dashboard_stats", "analytics_overview", "all_attack_chains"):
+            cache.delete(f"{key}_{current_user.id}")
+    except Exception:
+        pass
+    return IngestResponse(
+        success=True, message=f"Successfully ingested {count} alerts and correlated {chains_count} attack chains",
+        upload_id=str(upload_rec.id), file_name=file_name, alerts_ingested=count,
+        chains_correlated=chains_count, mitre_mapped=mitre_count, risk_scored=scored_count,
+        source_type=source_type,
+    )
+
+
+def _validate_external_url(url: str) -> None:
+    """Resolve and reject non-public targets before making an outbound request (SSRF guard)."""
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password:
+        raise ValueError("Invalid URL")
+    try:
+        addresses = socket.getaddrinfo(parsed.hostname, parsed.port or (443 if parsed.scheme == "https" else 80), type=socket.SOCK_STREAM)
+    except socket.gaierror as exc:
+        raise ValueError("Unable to resolve API host") from exc
+    for address in addresses:
+        if not ipaddress.ip_address(address[4][0]).is_global:
+            raise ValueError("API URL must resolve to a public address")
+
+
 @router.post(
     "/upload/ingest",
     response_model=IngestResponse,
@@ -230,6 +294,11 @@ async def upload_and_ingest_alerts(
                     message="CSV contains no valid alert rows",
                 ).model_dump(),
             )
+
+        response = await _ingest_normalized_alerts(
+            parsed_alerts, "csv", file_name, file_path, current_user, db, background_tasks
+        )
+        return JSONResponse(status_code=status.HTTP_201_CREATED, content=response.model_dump())
 
         # 3. Create upload record in DB with user_id
         alert_repo = AlertRepository(db)
@@ -337,5 +406,72 @@ async def upload_and_ingest_alerts(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=ErrorResponse(success=False, message=f"Ingestion failed: {str(exc)}").model_dump(),
         )
+
+
+@router.post("/upload-json", response_model=IngestResponse, status_code=status.HTTP_201_CREATED)
+async def upload_and_ingest_alerts_json(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(..., description="JSON alert array or {alerts: [...]} wrapper"),
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Upload JSON, normalize it to canonical Alert records, and use the CSV pipeline's persistence path."""
+    try:
+        file_name, file_path = await storage_service.save_json_file(file)
+        raw = (BASE_DIR / file_path).read_bytes()
+        result = json_parser.parse_bytes(raw, source_type="json")
+        response = await _ingest_normalized_alerts(
+            result["alerts"], "json", file_name, file_path, current_user, db, background_tasks
+        )
+        return JSONResponse(status_code=status.HTTP_201_CREATED, content=response.model_dump())
+    except (StorageValidationError, JSONParserError) as exc:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=ErrorResponse(success=False, message=str(exc)).model_dump())
+    except Exception as exc:
+        logger.error("JSON ingestion failed", exc_info=True)
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=ErrorResponse(success=False, message="JSON ingestion failed").model_dump())
+
+
+@router.post("/ingest-url", response_model=IngestResponse, status_code=status.HTTP_201_CREATED)
+async def ingest_alerts_url(
+    request: URLIngestRequest,
+    background_tasks: BackgroundTasks,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Safely fetch a public JSON feed and send its normalized alerts through the shared pipeline."""
+    try:
+        _validate_external_url(request.url)
+        # Header support is intentionally limited; callers cannot alter routing or request framing.
+        headers = {k: v for k, v in (request.headers or {}).items() if k.lower() not in {"host", "content-length", "transfer-encoding"}}
+        async with httpx.AsyncClient(timeout=httpx.Timeout(10.0), follow_redirects=False) as client:
+            async with client.stream("GET", request.url, headers=headers) as upstream:
+                if 300 <= upstream.status_code < 400:
+                    raise JSONParserError("API redirects are not allowed")
+                if upstream.status_code >= 400:
+                    raise JSONParserError(f"API returned HTTP {upstream.status_code}")
+                size_header = upstream.headers.get("content-length")
+                if size_header and int(size_header) > MAX_API_RESPONSE_BYTES:
+                    raise JSONParserError("API response is too large")
+                chunks, total = [], 0
+                async for chunk in upstream.aiter_bytes():
+                    total += len(chunk)
+                    if total > MAX_API_RESPONSE_BYTES:
+                        raise JSONParserError("API response is too large")
+                    chunks.append(chunk)
+        result = json_parser.parse_bytes(b"".join(chunks), source_type="api")
+        generated_name = f"api_{uuid.uuid4().hex[:12]}.json"
+        response = await _ingest_normalized_alerts(
+            result["alerts"], "api", generated_name, request.url, current_user, db, background_tasks
+        )
+        return JSONResponse(status_code=status.HTTP_201_CREATED, content=response.model_dump())
+    except ValueError as exc:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=ErrorResponse(success=False, message=str(exc)).model_dump())
+    except (httpx.TimeoutException, httpx.NetworkError):
+        return JSONResponse(status_code=status.HTTP_502_BAD_GATEWAY, content=ErrorResponse(success=False, message="Unable to connect to API").model_dump())
+    except JSONParserError as exc:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=ErrorResponse(success=False, message=str(exc)).model_dump())
+    except Exception:
+        logger.error("URL ingestion failed", exc_info=True)
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=ErrorResponse(success=False, message="API ingestion failed").model_dump())
 
 

@@ -109,6 +109,15 @@ async def root_health_check():
     }
 
 
+@app.get("/api/demo/security-alerts", tags=["Demo"])
+async def demo_security_alerts():
+    """Local demonstration feed. URL ingestion still rejects localhost to preserve SSRF controls."""
+    return {"alerts": [
+        {"alert_id": "AC001-01", "timestamp": "2026-09-19T10:00:00Z", "src_ip": "45.20.10.5", "dst_ip": "10.0.0.5", "event_type": "PORT_SCAN", "severity": "MEDIUM", "description": "Multiple ports scanned"},
+        {"alert_id": "AC001-02", "timestamp": "2026-09-19T10:05:00Z", "src_ip": "45.20.10.5", "dst_ip": "10.0.0.5", "event_type": "FAILED_LOGIN", "severity": "HIGH", "description": "Multiple failed login attempts"},
+    ]}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

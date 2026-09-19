@@ -46,6 +46,7 @@ class Alert(BaseModel):
         ...,
         description="Standardized severity level (Low, Medium, High, Critical)",
     )
+    source_type: str = Field(default="csv", pattern="^(csv|json|api)$")
     metadata: Optional[Dict[str, Any]] = Field(
         default_factory=dict,
         description="Additional context for LangGraph agents, MITRE mapping, or scoring",

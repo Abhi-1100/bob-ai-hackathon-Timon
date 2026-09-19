@@ -1,0 +1,4 @@
+[
+  {"alert_id":"AC001-01","timestamp":"2026-09-19T10:00:00Z","src_ip":"45.20.10.5","dst_ip":"10.0.0.5","event_type":"PORT_SCAN","severity":"MEDIUM","description":"Multiple ports scanned"},
+  {"alert_id":"AC001-02","timestamp":"2026-09-19T10:05:00Z","src_ip":"45.20.10.5","dst_ip":"10.0.0.5","event_type":"FAILED_LOGIN","severity":"HIGH","description":"Multiple failed login attempts"}
+]

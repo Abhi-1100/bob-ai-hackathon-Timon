@@ -172,6 +172,7 @@ def get_attack_chain_by_id(
                 "severity": alert.severity,
                 "src_ip": alert.src_ip,
                 "dst_ip": alert.dst_ip,
+                "source_type": alert.source_type,
                 "protocol": "TCP",
             })
 

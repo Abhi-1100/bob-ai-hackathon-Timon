@@ -294,6 +294,30 @@ api.uploadAndIngest = async (file) => {
   }
 };
 
+api.uploadJsonAndIngest = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const response = await axiosClient.post('/api/v1/upload-json', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }, timeout: 120000,
+    });
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || 'JSON ingest failed. Please check the alert schema.');
+  }
+};
+
+api.ingestUrl = async (url) => {
+  try {
+    const response = await axiosClient.post('/api/v1/ingest-url', { url }, { timeout: 120000 });
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || 'Unable to fetch alerts from the API.');
+  }
+};
+
 export function listFrom(obj, candidateKeys = ['items', 'results', 'data', 'chains', 'scores']) {
   if (Array.isArray(obj)) return obj;
   if (!obj || typeof obj !== 'object') return [];
