@@ -19,7 +19,7 @@ export function LandingFooter({ navigate }) {
               </div>
               <div>
                 <div className="brand-title">
-                  SENTINEL <span>FORGE</span>
+                  THREAT <span>INTEL</span>
                 </div>
                 <span className="brand-subtitle">THREAT INTELLIGENCE PLATFORM</span>
               </div>

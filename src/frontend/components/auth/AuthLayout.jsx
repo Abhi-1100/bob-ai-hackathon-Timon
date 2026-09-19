@@ -31,7 +31,7 @@ export function AuthLayout({
               </div>
               <div>
                 <div className="auth-brand-title">
-                  SENTINEL <span>FORGE</span>
+                  THREAT <span>INTEL</span>
                 </div>
               </div>
             </div>

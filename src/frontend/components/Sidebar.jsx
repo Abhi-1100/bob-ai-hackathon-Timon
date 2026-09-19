@@ -59,7 +59,7 @@ export function Sidebar({ currentRoute, navigate, collapsed, setCollapsed, hasUp
           {!collapsed && (
             <div>
               <div className="brand-title">
-                SENTINEL <span>FORGE</span>
+                THREAT <span>INTEL</span>
               </div>
               <span className="brand-subtitle">THREAT INTELLIGENCE PLATFORM</span>
             </div>
