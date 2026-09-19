@@ -18,7 +18,7 @@ from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 
 from database.session import get_db
-from database.models import UserDB
+from database.models import APIKeyDB, UserDB
 
 logger = logging.getLogger(__name__)
 
@@ -146,6 +146,17 @@ class AuthResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserResponse
+
+
+class APIKeyCreateRequest(BaseModel):
+    name: str = Field(default="ingestion", min_length=1, max_length=120)
+
+
+class APIKeyCreateResponse(BaseModel):
+    id: str
+    name: str
+    api_key: str
+    warning: str = "Store this key securely; it will not be shown again."
 
 
 # ---------------------------------------------------------------------------
@@ -381,6 +392,45 @@ def get_current_user_obj(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Authentication required. Please log in.",
     )
+
+
+def get_api_key_user(api_key: str, db: Session) -> UserDB:
+    """Resolve an X-API-Key value to its tenant without storing plaintext keys."""
+    if not api_key or len(api_key) > 256:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+    key_hash = hashlib.sha256(api_key.encode("utf-8")).hexdigest()
+    record = (
+        db.query(APIKeyDB)
+        .filter(APIKeyDB.key_hash == key_hash, APIKeyDB.revoked_at.is_(None))
+        .first()
+    )
+    if not record:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+    record.last_used_at = datetime.now(timezone.utc)
+    db.commit()
+    user = db.query(UserDB).filter(UserDB.id == record.user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="API key tenant not found")
+    return user
+
+
+@router.post("/api-keys", response_model=APIKeyCreateResponse, status_code=status.HTTP_201_CREATED)
+def create_api_key(
+    request: APIKeyCreateRequest,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Create a tenant-scoped ingestion key; plaintext is returned only once."""
+    plaintext = "tt_" + secrets.token_urlsafe(32)
+    record = APIKeyDB(
+        user_id=current_user.id,
+        name=request.name.strip(),
+        key_hash=hashlib.sha256(plaintext.encode("utf-8")).hexdigest(),
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return APIKeyCreateResponse(id=str(record.id), name=record.name, api_key=plaintext)
 
 
 @router.get("/me", response_model=UserResponse)

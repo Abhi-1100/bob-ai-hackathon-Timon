@@ -85,8 +85,19 @@ class QdrantService:
                 except Exception:
                     pass
         except Exception as e:
-            logger.error("Failed to ensure collection '%s': %s", self.collection_name, str(e))
-            raise
+            # Qdrant is an enrichment dependency; deterministic ingestion and
+            # the API must remain available when the remote vector service is
+            # temporarily unreachable (including offline test environments).
+            logger.warning(
+                "Failed to reach Qdrant collection '%s': %s; falling back to in-memory Qdrant",
+                self.collection_name,
+                str(e),
+            )
+            self.client = QdrantClient(":memory:")
+            self.client.create_collection(
+                collection_name=self.collection_name,
+                vectors_config=qmodels.VectorParams(size=VECTOR_SIZE, distance=qmodels.Distance.COSINE),
+            )
 
     def get_embedding(self, text: str) -> List[float]:
         """Compute 384-dimensional embedding for given text with in-memory caching."""

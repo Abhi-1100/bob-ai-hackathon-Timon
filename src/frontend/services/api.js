@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const rawApiBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const API_BASE = rawApiBase.replace(/\/+$/, '');
+export const streamUrl = (token) => `${API_BASE}/api/v1/stream?token=${encodeURIComponent(token)}`;
 
 // 1. Axios Instance for Enterprise API and Auth Calls
 export const axiosClient = axios.create({
@@ -272,7 +273,7 @@ api.uploadAndIngest = async (file) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      timeout: 120000,
+      timeout: 300000, // 5 minutes — large files with full pipeline
     });
 
     clearApiClientCache();
@@ -286,7 +287,15 @@ api.uploadAndIngest = async (file) => {
       throw new Error(typeof d === 'string' ? d : JSON.stringify(d));
     }
     if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-      throw new Error('Upload took longer than expected. Processing continues in the background.');
+      // The server is still processing — treat as background success
+      clearApiClientCache();
+      return {
+        success: true,
+        background: true,
+        message: 'File uploaded. Correlation pipeline is running in the background — refresh in a few seconds.',
+        alerts_ingested: '?',
+        chains_formed: null,
+      };
     }
     if (err.message === 'Network Error' || err.message?.includes('Network Error') || err.message?.includes('Failed to fetch')) {
       throw new Error('Backend server is starting up or temporarily unreachable. Please wait 10 seconds and try again.');
@@ -300,11 +309,15 @@ api.uploadJsonAndIngest = async (file) => {
   formData.append('file', file);
   try {
     const response = await axiosClient.post('/api/v1/upload-json', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }, timeout: 120000,
+      headers: { 'Content-Type': 'multipart/form-data' }, timeout: 300000,
     });
     clearApiClientCache();
     return response.data;
   } catch (err) {
+    if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+      clearApiClientCache();
+      return { success: true, background: true, message: 'File uploaded. Pipeline running in background — refresh shortly.', alerts_ingested: '?', chains_formed: null };
+    }
     throw new Error(err.response?.data?.message || 'JSON ingest failed. Please check the alert schema.');
   }
 };

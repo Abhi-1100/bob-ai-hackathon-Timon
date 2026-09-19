@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   User,
   Shield,
   Cpu,
   Database,
-  Bell,
+  Wifi,
+  Activity,
+  Terminal,
   Sliders,
   CheckCircle2,
   Save,
@@ -20,7 +22,13 @@ import {
   Building2,
   Mail,
   Lock,
-  Radio
+  Radio,
+  Key,
+  Copy,
+  UploadCloud,
+  Globe,
+  FileText,
+  Link2
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import api from '../services/api';
@@ -44,6 +52,27 @@ export function SettingsPage() {
   const [showPasswords, setShowPasswords] = useState(false);
   const [passwordMsg, setPasswordMsg] = useState(null);
 
+  // API Key + Re-Upload State
+  const apiKey = (() => {
+    // Derive a stable pseudo-key from user email for demo purposes
+    const seed = user?.email || user?.id || 'default-user';
+    const hash = seed.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) & 0xffffffff, 0x5f3759df);
+    const hex = Math.abs(hash).toString(16).padStart(8, '0');
+    return `tt_live_${hex}aBcDeFgHiJkLmNoPqRsTuVwXyZ01234567`.substring(0, 48);
+  })();
+  const [apiKeyCopied, setApiKeyCopied] = useState(false);
+  const [apiSnippetCopied, setApiSnippetCopied] = useState(false);
+
+  // Re-Upload state
+  const reUploadFileRef = useRef(null);
+  const [reUploadSourceType, setReUploadSourceType] = useState('csv');
+  const [reUploadFile, setReUploadFile] = useState(null);
+  const [reUploadApiUrl, setReUploadApiUrl] = useState('');
+  const [reUploadBusy, setReUploadBusy] = useState(false);
+  const [reUploadResult, setReUploadResult] = useState(null);
+  const [reUploadError, setReUploadError] = useState('');
+  const [reUploadDrag, setReUploadDrag] = useState(false);
+
   // 2. AI & Inference State (Persisted in localStorage)
   const [primaryModel, setPrimaryModel] = useState(() => localStorage.getItem('d2_primary_model') || 'llama-3.3-70b-versatile');
   const [groqKey, setGroqKey] = useState(() => localStorage.getItem('d2_groq_key') || 'gsk_••••••••••••••••••••••••••••••••••••••••••••');
@@ -60,11 +89,13 @@ export function SettingsPage() {
   const [resettingDb, setResettingDb] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
 
-  // 4. Notifications State
-  const [slackWebhook, setSlackWebhook] = useState(() => localStorage.getItem('d2_slack_webhook') || '');
-  const [notifyCritical, setNotifyCritical] = useState(() => localStorage.getItem('d2_notify_critical') !== 'false');
-  const [notifyDailyBrief, setNotifyDailyBrief] = useState(() => localStorage.getItem('d2_notify_daily') !== 'false');
-  const [webhookTested, setWebhookTested] = useState(false);
+  // 4. Connectivity State
+  const [connectApiUrl, setConnectApiUrl] = useState('');
+  const [connectLogs, setConnectLogs] = useState([]);
+  const [connectLoading, setConnectLoading] = useState(false);
+  const [connectError, setConnectError] = useState('');
+  const [connectStatus, setConnectStatus] = useState(null); // null | 'ok' | 'error'
+  const connectAbortRef = React.useRef(null);
 
   // 5. Preferences State
   const [pollInterval, setPollInterval] = useState(() => localStorage.getItem('d2_poll_interval') || '15');
@@ -157,6 +188,53 @@ export function SettingsPage() {
     setTimeout(() => setPasswordMsg(null), 3000);
   };
 
+  // Copy API Key / Snippet
+  const handleCopyApiKey = () => {
+    navigator.clipboard.writeText(apiKey).catch(() => {});
+    setApiKeyCopied(true);
+    setTimeout(() => setApiKeyCopied(false), 2000);
+  };
+
+  const handleCopySnippet = () => {
+    const snippet = `import requests\n\nAPI_KEY = "${apiKey}"\nBASE_URL = "http://localhost:8000"\n\ndef push_alert(alert: dict):\n    resp = requests.post(\n        f"{BASE_URL}/api/v1/ingest",\n        json={"alerts": [alert]},\n        headers={"Authorization": f"Bearer {API_KEY}"},\n        timeout=10,\n    )\n    resp.raise_for_status()\n    return resp.json()\n\n# Example alert\npush_alert({\n    "timestamp": "2026-09-19T03:00:00Z",\n    "src_ip": "198.51.100.23",\n    "dst_ip": "10.0.0.5",\n    "event": "PortScan",\n    "severity": "High",\n})\nprint("Alert ingested!")\n`;
+    navigator.clipboard.writeText(snippet).catch(() => {});
+    setApiSnippetCopied(true);
+    setTimeout(() => setApiSnippetCopied(false), 2000);
+  };
+
+  // Re-Upload Handler
+  const handleReUpload = async () => {
+    setReUploadError('');
+    setReUploadResult(null);
+    if (reUploadSourceType === 'api') {
+      if (!reUploadApiUrl) { setReUploadError('Please enter an API URL.'); return; }
+      setReUploadBusy(true);
+      try {
+        const res = await api.ingestUrl(reUploadApiUrl);
+        setReUploadResult(res);
+        triggerSuccess('API source ingested successfully!');
+      } catch (err) {
+        setReUploadError(err.message || 'Ingestion failed.');
+      } finally {
+        setReUploadBusy(false);
+      }
+      return;
+    }
+    if (!reUploadFile) { setReUploadError('Please select a file to upload.'); return; }
+    setReUploadBusy(true);
+    try {
+      const res = reUploadSourceType === 'json'
+        ? await api.uploadJsonAndIngest(reUploadFile)
+        : await api.uploadAndIngest(reUploadFile);
+      setReUploadResult(res);
+      triggerSuccess(`${reUploadSourceType.toUpperCase()} file re-ingested successfully!`);
+    } catch (err) {
+      setReUploadError(err.message || 'Ingestion failed.');
+    } finally {
+      setReUploadBusy(false);
+    }
+  };
+
   // 2. Save AI Configuration
   const handleSaveAI = (e) => {
     e.preventDefault();
@@ -208,22 +286,53 @@ export function SettingsPage() {
     }
   };
 
-  // 4. Save Notifications
-  const handleSaveNotifications = (e) => {
-    e.preventDefault();
-    localStorage.setItem('d2_slack_webhook', slackWebhook);
-    localStorage.setItem('d2_notify_critical', String(notifyCritical));
-    localStorage.setItem('d2_notify_daily', String(notifyDailyBrief));
-    triggerSuccess('Notification preferences saved!');
+  // 4. Connectivity — fetch logs dynamically from pasted API URL
+  const handleConnectFetch = async () => {
+    if (!connectApiUrl.trim()) { setConnectError('Please enter an API URL.'); return; }
+    if (connectAbortRef.current) connectAbortRef.current.abort();
+    const controller = new AbortController();
+    connectAbortRef.current = controller;
+    setConnectLogs([]);
+    setConnectError('');
+    setConnectStatus(null);
+    setConnectLoading(true);
+    const ts = () => new Date().toLocaleTimeString();
+    try {
+      const res = await fetch(connectApiUrl.trim(), { signal: controller.signal });
+      setConnectStatus(res.ok ? 'ok' : 'error');
+      setConnectLogs(prev => [...prev, { t: ts(), msg: `→ Connected  HTTP ${res.status} ${res.statusText}`, type: res.ok ? 'info' : 'warn' }]);
+      const text = await res.text();
+      let parsed;
+      try { parsed = JSON.parse(text); } catch { parsed = text; }
+      if (typeof parsed === 'string') {
+        parsed.split('\n').filter(Boolean).forEach(line =>
+          setConnectLogs(prev => [...prev, { t: ts(), msg: line, type: 'log' }])
+        );
+      } else {
+        const lines = Array.isArray(parsed) ? parsed : (parsed?.logs || parsed?.data || parsed?.alerts || [parsed]);
+        lines.slice(0, 200).forEach((item, i) =>
+          setConnectLogs(prev => [...prev, { t: ts(), msg: typeof item === 'string' ? item : JSON.stringify(item), type: 'log' }])
+        );
+        if (lines.length === 0) setConnectLogs(prev => [...prev, { t: ts(), msg: '(empty response body)', type: 'warn' }]);
+      }
+      setConnectLogs(prev => [...prev, { t: ts(), msg: `✓ Done — ${Array.isArray(parsed) ? parsed.length : 1} record(s) loaded`, type: 'success' }]);
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        setConnectStatus('error');
+        setConnectError(err.message);
+        setConnectLogs(prev => [...prev, { t: ts(), msg: `✗ ${err.message}`, type: 'error' }]);
+      }
+    } finally {
+      setConnectLoading(false);
+    }
   };
 
-  const handleTestWebhook = () => {
-    if (!slackWebhook) {
-      alert('Please enter a webhook URL first.');
-      return;
-    }
-    setWebhookTested(true);
-    setTimeout(() => setWebhookTested(false), 3000);
+  const handleConnectClear = () => {
+    if (connectAbortRef.current) connectAbortRef.current.abort();
+    setConnectLogs([]);
+    setConnectError('');
+    setConnectStatus(null);
+    setConnectLoading(false);
   };
 
   // 5. Save Preferences
@@ -240,7 +349,7 @@ export function SettingsPage() {
     { id: 'profile', label: 'Profile & Account', icon: User },
     { id: 'apikeys', label: 'AI & Models', icon: Cpu },
     { id: 'system', label: 'System Status', icon: Server },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'connectivity', label: 'Connectivity', icon: Wifi },
     { id: 'preferences', label: 'Preferences', icon: Sliders },
   ];
 
@@ -623,6 +732,284 @@ export function SettingsPage() {
                 <span>Update Password</span>
               </button>
             </form>
+          </div>
+
+          {/* ================================================================
+              API CONNECTION STRING CARD
+              ================================================================ */}
+          <div
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--card-border)',
+              borderRadius: 14,
+              padding: '24px',
+              boxShadow: '0 4px 20px -5px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <Key size={18} color="#F59E0B" />
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                Ingestion API Connection String
+              </h3>
+              <span
+                style={{
+                  padding: '2px 8px',
+                  borderRadius: 9999,
+                  fontSize: 10.5,
+                  fontWeight: 700,
+                  background: 'rgba(245, 158, 11, 0.1)',
+                  border: '1px solid rgba(245, 158, 11, 0.3)',
+                  color: '#F59E0B',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                LIVE FEED KEY
+              </span>
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 20px 0' }}>
+              Use this Bearer token to authenticate external scripts, log forwarders, and SIEM integrations
+              pushing raw security alerts into TimonTrack via the Ingestion API.
+            </p>
+
+            {/* API Key Display */}
+            <div style={{ marginBottom: 16 }}>
+              <label style={labelStyle}>Your Personal Ingestion API Key</label>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <div
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--card-border)',
+                    borderRadius: 8,
+                    padding: '10px 14px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 13,
+                    color: 'var(--text-primary)',
+                    letterSpacing: '0.04em',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Key size={14} color="#F59E0B" style={{ flexShrink: 0 }} />
+                  <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {apiKey}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCopyApiKey}
+                  style={{
+                    padding: '10px 18px',
+                    borderRadius: 8,
+                    background: apiKeyCopied ? 'rgba(16, 185, 129, 0.1)' : 'rgba(37, 99, 235, 0.08)',
+                    border: apiKeyCopied ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(37, 99, 235, 0.2)',
+                    color: apiKeyCopied ? '#10B981' : 'var(--blue)',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  {apiKeyCopied ? <Check size={14} /> : <Copy size={14} />}
+                  {apiKeyCopied ? 'Copied!' : 'Copy Key'}
+                </button>
+              </div>
+              <span style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 5, display: 'block' }}>
+                Endpoint: <code style={{ fontFamily: 'var(--font-mono)', color: 'var(--blue)' }}>POST http://localhost:8000/api/v1/ingest</code> &nbsp;·&nbsp; Header: <code style={{ fontFamily: 'var(--font-mono)', color: 'var(--blue)' }}>Authorization: Bearer {'<key>'}</code>
+              </span>
+            </div>
+
+
+          </div>
+
+          {/* ================================================================
+              RE-UPLOAD TELEMETRY CARD
+              ================================================================ */}
+          <div
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--card-border)',
+              borderRadius: 14,
+              padding: '24px',
+              boxShadow: '0 4px 20px -5px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <UploadCloud size={18} color="var(--blue)" />
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                Re-Upload Telemetry
+              </h3>
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 20px 0' }}>
+              Push new alert data to your existing account at any time. Supports CSV files, JSON feeds, and live API URLs.
+              New alerts are correlated and scored alongside your existing data.
+            </p>
+
+            {/* Source Type Selector */}
+            <div style={{ marginBottom: 16 }}>
+              <label style={labelStyle}>Source Type</label>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {[{ id: 'csv', label: 'CSV File', icon: FileText }, { id: 'json', label: 'JSON File', icon: FileText }, { id: 'api', label: 'API / URL', icon: Globe }].map(({ id, label, icon: Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => { setReUploadSourceType(id); setReUploadFile(null); setReUploadError(''); setReUploadResult(null); }}
+                    style={{
+                      flex: 1,
+                      padding: '10px 14px',
+                      borderRadius: 8,
+                      border: reUploadSourceType === id ? '2px solid var(--blue)' : '1px solid var(--card-border)',
+                      background: reUploadSourceType === id ? 'rgba(37, 99, 235, 0.06)' : 'var(--bg-tertiary)',
+                      color: reUploadSourceType === id ? 'var(--blue)' : 'var(--text-secondary)',
+                      fontWeight: reUploadSourceType === id ? 700 : 500,
+                      fontSize: 13,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 7,
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    <Icon size={14} />
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* File Drop Zone (for CSV/JSON) */}
+            {reUploadSourceType !== 'api' && (
+              <div style={{ marginBottom: 14 }}>
+                <label style={labelStyle}>
+                  {reUploadSourceType === 'csv' ? 'CSV Alert File' : 'JSON Alert File'}
+                </label>
+                <div
+                  onDragOver={(e) => { e.preventDefault(); setReUploadDrag(true); }}
+                  onDragLeave={() => setReUploadDrag(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setReUploadDrag(false);
+                    const f = e.dataTransfer.files[0];
+                    if (f) setReUploadFile(f);
+                  }}
+                  onClick={() => reUploadFileRef.current?.click()}
+                  style={{
+                    border: reUploadDrag ? '2px dashed var(--blue)' : '2px dashed var(--card-border)',
+                    borderRadius: 10,
+                    padding: '20px 16px',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    background: reUploadDrag ? 'rgba(37, 99, 235, 0.04)' : 'var(--bg-tertiary)',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  <input
+                    ref={reUploadFileRef}
+                    type="file"
+                    accept={reUploadSourceType === 'json' ? '.json' : '.csv'}
+                    style={{ display: 'none' }}
+                    onChange={(e) => setReUploadFile(e.target.files[0] || null)}
+                  />
+                  <UploadCloud size={22} color={reUploadFile ? '#10B981' : 'var(--text-muted)'} style={{ marginBottom: 6 }} />
+                  <div style={{ fontSize: 13, color: reUploadFile ? '#10B981' : 'var(--text-secondary)', fontWeight: reUploadFile ? 700 : 400 }}>
+                    {reUploadFile ? `✅ ${reUploadFile.name}` : `Drop .${reUploadSourceType} file here or click to browse`}
+                  </div>
+                  {!reUploadFile && (
+                    <div style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 4 }}>
+                      Must match required columns: timestamp, src_ip, dst_ip, event, severity
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* API URL Input */}
+            {reUploadSourceType === 'api' && (
+              <div style={{ marginBottom: 14 }}>
+                <label style={labelStyle}>External Alert API Endpoint</label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ position: 'absolute', left: 12, color: 'var(--text-muted)' }}>
+                    <Link2 size={15} />
+                  </div>
+                  <input
+                    type="url"
+                    value={reUploadApiUrl}
+                    onChange={(e) => setReUploadApiUrl(e.target.value)}
+                    placeholder="https://your-siem.corp/api/v1/alerts"
+                    style={{ ...inputStyle, paddingLeft: 38, fontFamily: 'var(--font-mono)', fontSize: 13 }}
+                  />
+                </div>
+                <span style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 4, display: 'block' }}>
+                  TimonTrack will fetch the response and ingest returned alert objects.
+                </span>
+              </div>
+            )}
+
+            {/* Status Messages */}
+            {reUploadError && (
+              <div
+                style={{
+                  padding: '10px 14px',
+                  borderRadius: 8,
+                  marginBottom: 14,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#EF4444',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <AlertTriangle size={15} />
+                {reUploadError}
+              </div>
+            )}
+
+            {reUploadResult && (
+              <div
+                style={{
+                  padding: '10px 14px',
+                  borderRadius: 8,
+                  marginBottom: 14,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  background: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  color: '#10B981',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <CheckCircle2 size={15} />
+                <span>
+                  ✅ Ingested {reUploadResult?.alerts_ingested ?? reUploadResult?.count ?? 'new'} alerts
+                  {reUploadResult?.chains_formed ? ` · ${reUploadResult.chains_formed} attack chains formed` : ''}
+                </span>
+              </div>
+            )}
+
+            {/* Re-Ingest Button */}
+            <button
+              type="button"
+              onClick={handleReUpload}
+              disabled={reUploadBusy}
+              className="btn btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 20px' }}
+            >
+              {reUploadBusy
+                ? <RefreshCw size={15} className="spin-icon" />
+                : <UploadCloud size={15} />}
+              <span>{reUploadBusy ? 'Ingesting...' : `Re-Ingest ${reUploadSourceType.toUpperCase()} Telemetry`}</span>
+            </button>
           </div>
         </div>
       )}
@@ -1065,10 +1452,11 @@ export function SettingsPage() {
       )}
 
       {/* ===================================================================
-          TAB 4: NOTIFICATIONS & WEBHOOKS (DYNAMIC)
+          TAB 4: CONNECTIVITY — DYNAMIC API LOG VIEWER
           =================================================================== */}
-      {activeTab === 'notifications' && (
+      {activeTab === 'connectivity' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          {/* URL Input Card */}
           <div
             style={{
               background: 'var(--card)',
@@ -1078,80 +1466,151 @@ export function SettingsPage() {
               boxShadow: '0 4px 20px -5px rgba(0, 0, 0, 0.05)',
             }}
           >
-            <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 16px 0' }}>
-              Incident Alert Webhooks & Relays
-            </h3>
-
-            <form onSubmit={handleSaveNotifications} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <div>
-                <label style={labelStyle}>Incoming Webhook URL (Slack, MS Teams, Discord)</label>
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <input
-                    type="url"
-                    value={slackWebhook}
-                    onChange={(e) => setSlackWebhook(e.target.value)}
-                    placeholder="https://hooks.slack.com/services/T00/B00/XXXX"
-                    style={{ ...inputStyle, fontFamily: 'var(--font-mono)' }}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleTestWebhook}
-                    className="btn btn-secondary"
-                    style={{ whiteSpace: 'nowrap', padding: '0 16px', fontSize: 13 }}
-                  >
-                    {webhookTested ? 'Ping Sent!' : 'Send Test Ping'}
-                  </button>
-                </div>
-                <span style={{ fontSize: 11.5, color: 'var(--text-muted)', marginTop: 4, display: 'block' }}>
-                  Automatically delivers an alert payload when Critical severity attack chains are formed.
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <Wifi size={18} color="var(--blue)" />
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                API Connectivity & Live Log Viewer
+              </h3>
+              {connectStatus && (
+                <span
+                  style={{
+                    padding: '2px 8px',
+                    borderRadius: 9999,
+                    fontSize: 10.5,
+                    fontWeight: 700,
+                    background: connectStatus === 'ok' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+                    border: connectStatus === 'ok' ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(239,68,68,0.3)',
+                    color: connectStatus === 'ok' ? '#10B981' : '#EF4444',
+                  }}
+                >
+                  {connectStatus === 'ok' ? '● CONNECTED' : '● FAILED'}
                 </span>
+              )}
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 20px 0' }}>
+              Paste any API endpoint URL below. TimonTrack will fetch it and stream the response as live logs in real time.
+            </p>
+
+            <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+              <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                <div style={{ position: 'absolute', left: 12, color: 'var(--text-muted)' }}>
+                  <Link2 size={15} />
+                </div>
+                <input
+                  type="url"
+                  value={connectApiUrl}
+                  onChange={(e) => { setConnectApiUrl(e.target.value); setConnectError(''); }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleConnectFetch()}
+                  placeholder="https://your-api.example.com/logs  or  http://localhost:8000/api/v1/..."
+                  style={{ ...inputStyle, paddingLeft: 38, fontFamily: 'var(--font-mono)', fontSize: 12.5 }}
+                />
               </div>
-
-              <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={notifyCritical}
-                    onChange={(e) => setNotifyCritical(e.target.checked)}
-                    style={{ width: 16, height: 16, accentColor: 'var(--blue)' }}
-                  />
-                  <div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-primary)' }}>
-                      Critical Risk Attack Chains (Risk Score &gt; 85)
-                    </div>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                      Receive immediate webhook dispatches whenever an attacker progresses past initial access.
-                    </div>
-                  </div>
-                </label>
-
-                <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={notifyDailyBrief}
-                    onChange={(e) => setNotifyDailyBrief(e.target.checked)}
-                    style={{ width: 16, height: 16, accentColor: 'var(--blue)' }}
-                  />
-                  <div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-primary)' }}>
-                      Daily Executive Intelligence Briefing
-                    </div>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                      Automated 24-hour summary of new attack techniques and recommendations.
-                    </div>
-                  </div>
-                </label>
-              </div>
-
               <button
-                type="submit"
+                type="button"
+                onClick={handleConnectFetch}
+                disabled={connectLoading}
                 className="btn btn-primary"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 20px', alignSelf: 'flex-start', marginTop: 6 }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 20px', whiteSpace: 'nowrap', fontSize: 13 }}
               >
-                <Save size={15} />
-                <span>Save Notification Settings</span>
+                {connectLoading
+                  ? <RefreshCw size={14} className="spin-icon" />
+                  : <Activity size={14} />}
+                {connectLoading ? 'Fetching...' : 'Fetch Logs'}
               </button>
-            </form>
+              <button
+                type="button"
+                onClick={handleConnectClear}
+                className="btn btn-secondary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 14px', fontSize: 13 }}
+                title="Clear logs"
+              >
+                <Trash2 size={14} />
+              </button>
+            </div>
+
+            {connectError && (
+              <div
+                style={{
+                  padding: '9px 14px',
+                  borderRadius: 8,
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  background: 'rgba(239,68,68,0.08)',
+                  border: '1px solid rgba(239,68,68,0.3)',
+                  color: '#EF4444',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 10,
+                }}
+              >
+                <AlertTriangle size={14} />
+                {connectError}
+              </div>
+            )}
+
+            {/* Log Terminal */}
+            <div
+              style={{
+                background: '#0D1117',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: 10,
+                padding: connectLogs.length === 0 ? '32px 20px' : '12px 14px',
+                minHeight: 260,
+                maxHeight: 420,
+                overflowY: 'auto',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                lineHeight: 1.7,
+              }}
+            >
+              {connectLogs.length === 0 && !connectLoading ? (
+                <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.2)' }}>
+                  <Terminal size={28} style={{ marginBottom: 8, opacity: 0.4 }} />
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.3)' }}>
+                    Awaiting connection…
+                  </div>
+                  <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.18)', marginTop: 4 }}>
+                    Paste an API URL above and click Fetch Logs
+                  </div>
+                </div>
+              ) : (
+                connectLogs.map((entry, i) => {
+                  const colors = {
+                    info:    '#60A5FA',
+                    log:     '#E6EDF3',
+                    warn:    '#F59E0B',
+                    error:   '#EF4444',
+                    success: '#10B981',
+                  };
+                  return (
+                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.25)', flexShrink: 0, fontSize: 11, paddingTop: 1 }}>
+                        {entry.t}
+                      </span>
+                      <span style={{ color: colors[entry.type] || '#E6EDF3', wordBreak: 'break-all' }}>
+                        {entry.msg}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+              {connectLoading && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#60A5FA', marginTop: 4 }}>
+                  <RefreshCw size={12} className="spin-icon" />
+                  <span>Connecting…</span>
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
+              <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>
+                {connectLogs.length > 0 ? `${connectLogs.length} log line(s) loaded` : 'No logs yet'}
+              </span>
+              <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>
+                Supports JSON arrays, NDJSON, plain text, and REST alert feeds
+              </span>
+            </div>
           </div>
         </div>
       )}

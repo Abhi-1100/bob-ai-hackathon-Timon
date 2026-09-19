@@ -33,6 +33,7 @@ htmlcov/
 *.sqlite
 *.sqlite3
 **/uploads/*.csv
+**/uploads/*.json
 !**/uploads/.gitkeep
 
 
