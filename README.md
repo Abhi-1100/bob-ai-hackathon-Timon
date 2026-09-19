@@ -1,4 +1,5 @@
-# 🚀 Timon THRETINTAL
+# 🚀 TimonTrack — ThreatIntel
+### Threat Intelligence Correlation & Alert Prioritisation Assistant
 
 Threat Intelligence Correlation & Alert Prioritisation Assistant
 
@@ -6,22 +7,33 @@ Threat Intelligence Correlation & Alert Prioritisation Assistant
 
 | Field | Value |
 |---|---|
-| Team Name | TimonTrack |
-| Track | AI |
-| Team Lead | Abhi Kakadiya — abhikakadiya1043@gmail.com |
-| Members | Jaimin, Digisha, Om |
+| **Team Name** | TimonTrack |
+| **Track** | AI |
+| **Team Lead** | Abhi Kakadiya — 24it035@charusat.edu.in / abhikakadiya1043@gmail.com |
+| **Members** | Jaimin Parmar (24ce073@charusat.edu.in), Digisha Savaliya (24it087@charusat.edu.in), Om Ghori (24dce43@charusat.edu.in) |
+
+---
 
 ## 🎯 Problem Statement
 
-Security Operations Center teams receive large volumes of fragmented alerts from SIEMs, endpoint tools, network sensors, and intelligence feeds. Analysts spend too much time investigating false positives and manually connecting related events, which delays the identification and response to real multi-stage threats.
+Security Operations Center (SOC) teams receive large volumes of fragmented alerts from SIEMs, endpoint tools, network sensors, and intelligence feeds. Analysts spend too much time investigating false positives and manually connecting related events, which delays the identification and response to real multi-stage threats.
 
 ## 💡 Solution
 
-Sentinel Forge is an AI-assisted threat intelligence platform that ingests security alerts, normalizes and correlates them into attack chains, maps activity to MITRE ATT&CK, and prioritizes risk. It also generates BLUF intelligence reports, tactical recommendations, and provides an authenticated analyst copilot grounded in the project’s telemetry.
+**ThreatIntel** is an end-to-end, AI-driven threat intelligence and alert prioritization platform built with **FastAPI**, **LangGraph**, **Qdrant Vector Database**, and **React 18 + Vite**.
+
+1. **Multi-Source Ingestion & Normalization:** Ingests heterogeneous alert streams (CSV, JSON, streaming API) into a canonical schema.
+2. **Correlation & Campaign Reconstruction:** Groups related alerts into Attack Chains across time windows and host relationships.
+3. **Automated MITRE ATT&CK® Mapping:** Correlates observed attacker behavior to MITRE enterprise tactics and techniques.
+4. **Dynamic Risk Scoring:** Evaluates multi-factor risk scores (0–100) and classifies threats into Critical, High, Medium, and Low.
+5. **AI Executive BLUF Briefings & Recommendations:** Uses LLM agents (Llama 3.3 70B / watsonx foundation models) to deliver actionable commander briefs and tactical containment steps.
+6. **SOC Analyst Interactive Chat:** Grounded RAG-based analyst chatbot providing real-time question answering over attack chains and telemetry.
+
+---
 
 ## ✨ Key Features
 
-- Multi-source CSV/JSON alert ingestion and validation
+- Multi-source CSV/JSON/API alert ingestion and validation
 - Cross-alert correlation and attack-chain reconstruction
 - Automated MITRE ATT&CK tactic and technique mapping
 - Transparent 0–100 risk scoring and severity prioritization
@@ -42,93 +54,105 @@ Sentinel Forge is an AI-assisted threat intelligence platform that ingests secur
 ## 📁 Repository Structure
 
 ```text
-src/                  # All source code
-  backend/            # FastAPI API, AI workflows, services, and tests
-  frontend/           # React/Vite SOC application
-docs/                 # Written documentation
-  problem-statement.md
-  solution-overview.md
-  architecture.md
-  setup-guide.md
-demo/                 # Demo artifacts
-  screenshots/        # App screenshots
-  demo-video-link.txt # Link to demo video
-presentation/         # Slide deck and presentation assets
-submission.yaml       # Structured submission metadata
-main.py               # Root FastAPI entry point
-requirements.txt      # Backend dependencies
-README.md             # Project documentation
+bob-ai-hackathon-Timon/
+│
+├── submission.yaml          # Structured metadata — read by evaluators & validation CI
+├── README.md                # Project overview — human-readable entry point
+├── CONTRIBUTING.md          # Submission instructions & guidelines
+├── .gitignore               # Pre-configured gitignore
+│
+├── src/                     # All application source code
+│   ├── backend/             # FastAPI Application & LangGraph AI Pipeline
+│   │   ├── agents/          # AI Agents (BLUF report & tactical recommendations)
+│   │   ├── chat/            # Grounded RAG Analyst Chat service
+│   │   ├── database/        # Database models and session management
+│   │   ├── graph/           # LangGraph workflow definitions
+│   │   ├── nodes/           # Workflow processing nodes
+│   │   ├── repositories/    # Data access repositories
+│   │   ├── routers/         # FastAPI API routers
+│   │   ├── sample_data/     # Enterprise threat alerts datasets (1,000 alerts)
+│   │   ├── schemas/         # Pydantic data schemas
+│   │   ├── services/        # Core business logic (correlation, MITRE, risk, Qdrant)
+│   │   ├── tests/           # Comprehensive test suite (106 unit & integration tests)
+│   │   ├── main.py          # FastAPI application entry point
+│   │   └── requirements.txt # Python dependencies
+│   ├── frontend/            # React 18 + Vite SOC Dashboard
+│   │   ├── components/      # UI components & Attack Graph visualizers
+│   │   ├── pages/           # 12 SOC dashboard views
+│   │   ├── services/        # Backend API integration client
+│   │   ├── store/           # Zustand state management
+│   │   ├── package.json     # Node package manifest
+│   │   └── styles.css       # SOC glassmorphism UI styles
+│   ├── scripts/             # Telemetry generator and maintenance scripts
+│   ├── .env.example         # Template for environment variables
+│   └── README.md            # Brief note on src/ layout
+│
+├── docs/                    # Written documentation
+│   ├── problem-statement.md # Detailed problem context and pain points
+│   ├── solution-overview.md # Technical solution mechanism & design decisions
+│   ├── architecture.md      # Architecture diagrams & component interactions
+│   └── setup-guide.md       # Step-by-step local setup & deployment guide
+│
+├── demo/                    # Demo artifacts
+│   ├── demo-video-link.txt  # Link to 3-5 minute demonstration video
+│   ├── live-demo-url.txt    # Public URL to deployed live application
+│   └── screenshots/         # 10 platform screenshots + visual gallery
+│
+├── presentation/            # Slide deck
+│   ├── slides.pptx          # Hackathon presentation slide deck
+│   └── README.md            # Presentation guidelines
+│
+└── .github/
+    └── workflows/
+        └── validate.yml     # Automated submission validator
 ```
+
+---
 
 ## ⚡ How to Run
 
-### 1. Clone the repo
+### 1. Backend Setup (FastAPI)
 
 ```bash
-git clone https://github.com/Abhi-1100/bob-ai-hackathon-Timon.git
-cd bob-ai-hackathon-Timon
-```
+# Navigate to backend directory
+cd src/backend
 
-### 2. Install dependencies
+# Configure environment variables
+# Copy .env from template
+# Set GROQ_API_KEY, DATABASE_URL, etc.
 
-```bash
-python -m venv .venv
-# Linux/macOS
-source .venv/bin/activate
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-
+# Install dependencies
 pip install -r requirements.txt
 
+# Run backend with uvicorn
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+- **Interactive API Documentation:** `http://127.0.0.1:8000/docs`
+- **Health Check:** `http://127.0.0.1:8000/`
+
+### 2. Frontend Setup (React + Vite)
+
+```bash
+# Navigate to frontend directory
 cd src/frontend
+
+# Install dependencies
 npm install
-cd ../..
-```
 
-### 3. Configure environment
-
-```bash
-# Linux/macOS
-cp src/.env.example .env
-# Windows PowerShell
-Copy-Item src/.env.example .env
-```
-
-Edit `.env` with your values. At minimum, configure:
-
-```dotenv
-DATABASE_URL=sqlite:///./sentinel_forge.db
-GROQ_API_KEY=your_groq_api_key
-JWT_SECRET=replace_with_a_long_random_secret
-```
-
-For the frontend, create `src/frontend/.env` if the backend is not running at the default URL:
-
-```dotenv
-VITE_API_BASE_URL=http://localhost:8000
-```
-
-### 4. Run the project
-
-Start the backend from the repository root:
-
-```bash
-python main.py
-```
-
-In a second terminal, start the frontend:
-
-```bash
-cd src/frontend
+# Run Vite development server
 npm run dev
 ```
 
-Open `http://localhost:5173`. The backend API and Swagger documentation are available at `http://localhost:8000` and `http://localhost:8000/docs`.
+- **SOC Web Dashboard:** `http://localhost:5173`
 
-### Tests and production build
+### 3. Tests and Production Build
 
 ```bash
-python -m pytest src/backend/tests -v
+# Run backend test suite
+pytest src/backend/tests/ -v
+
+# Test frontend production build
 npm --prefix src/frontend run build
 ```
 
@@ -136,18 +160,19 @@ npm --prefix src/frontend run build
 
 | Artifact | Link |
 |---|---|
-| 📹 Demo Video | See [demo/demo-video-link.txt](demo/demo-video-link.txt) |
-| 🌐 Live Demo | See [demo/live-demo-url.txt](demo/live-demo-url.txt) |
-| 🖼 Screenshots | See [demo/screenshots/](demo/screenshots/) |
-| 📊 Presentation | See [presentation/](presentation/) |
+| 📹 Demo Video | [See demo/demo-video-link.txt](demo/demo-video-link.txt) |
+| 🌐 Live Demo | [bob-ai-hackathon-timon-puce.vercel.app](https://bob-ai-hackathon-timon-puce.vercel.app/) |
+| 🖼️ Screenshots | [See demo/screenshots/](demo/screenshots/) |
+| 📊 Presentation | [See presentation/](presentation/) |
+
+---
 
 ## ⚠️ Known Limitations
 
 - Local development uses in-memory Qdrant when no remote Qdrant URL is configured.
 - AI-generated reports, recommendations, and analyst chat require a configured model provider such as Groq or watsonx.ai.
 - The default development setup uses SQLite; production deployments should use a managed PostgreSQL-compatible database.
-- The frontend production bundle is currently large and may benefit from additional code splitting.
 
 ## 🏅 What We're Most Proud Of
 
-Sentinel Forge turns noisy, disconnected security alerts into explainable attack chains with MITRE ATT&CK context, transparent risk prioritization, and actionable BLUF summaries. The strongest part of the submission is the end-to-end workflow connecting ingestion, correlation, scoring, reporting, and analyst chat in one SOC experience.
+Sentinel Forge turns noisy, disconnected security alerts into explainable attack chains with MITRE ATT&CK context, transparent risk prioritization, and actionable BLUF summaries. The strongest part of the submission is the end-to-end workflow connecting ingestion, correlation, scoring, reporting, and analyst chat in one unified SOC experience.

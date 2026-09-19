@@ -167,10 +167,12 @@ def main():
     print(f"Generated {len(alerts)} alerts.")
 
     # Paths to output
+    base_dir = Path(__file__).resolve().parent.parent.parent
     out_paths = [
-        Path("enterprise_threat_alerts_1000.csv"),
-        Path("src/backend/sample_data/enterprise_threat_alerts_1000.csv"),
-        Path("src/frontend/public/sample_data/enterprise_threat_alerts_1000.csv"),
+        base_dir / "src" / "backend" / "sample_data" / "enterprise_threat_alerts_1000.csv",
+        base_dir / "src" / "backend" / "sample_data" / "realworld_threat_alerts_1000.csv",
+        base_dir / "src" / "frontend" / "public" / "sample_data" / "enterprise_threat_alerts_1000.csv",
+        base_dir / "src" / "frontend" / "public" / "sample_data" / "realworld_threat_alerts_1000.csv",
     ]
 
     for p in out_paths:
