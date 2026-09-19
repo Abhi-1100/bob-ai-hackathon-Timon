@@ -79,7 +79,7 @@ class AttackChainRepository:
         """Retrieve an attack chain by its human-readable chain_id (e.g. AC001), optionally scoped to a user."""
         query = self.db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id)
         if user_id:
-            query = query.filter(AttackChainDB.user_id == user_id)
+            query = query.filter((AttackChainDB.user_id == user_id) | (AttackChainDB.user_id.is_(None)))
         return query.first()
 
     get_by_chain_id = get_chain
@@ -88,14 +88,14 @@ class AttackChainRepository:
         """Retrieve an attack chain by its database UUID primary key."""
         query = self.db.query(AttackChainDB).filter(AttackChainDB.id == chain_uuid)
         if user_id:
-            query = query.filter(AttackChainDB.user_id == user_id)
+            query = query.filter((AttackChainDB.user_id == user_id) | (AttackChainDB.user_id.is_(None)))
         return query.first()
 
     def get_all_chains(self, limit: int = 200, offset: int = 0, user_id: Optional[UUID] = None) -> List[AttackChainDB]:
         """Return all attack chains ordered by start_time, paginated, optionally scoped to a user."""
         query = self.db.query(AttackChainDB)
         if user_id:
-            query = query.filter(AttackChainDB.user_id == user_id)
+            query = query.filter((AttackChainDB.user_id == user_id) | (AttackChainDB.user_id.is_(None)))
         return (
             query.order_by(AttackChainDB.start_time.desc())
             .limit(limit)

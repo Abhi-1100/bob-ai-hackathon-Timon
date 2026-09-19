@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const rawApiBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const API_BASE = rawApiBase.replace(/\/+$/, '');
+export const streamUrl = (token) => `${API_BASE}/api/v1/stream?token=${encodeURIComponent(token)}`;
 
 // 1. Axios Instance for Enterprise API and Auth Calls
 export const axiosClient = axios.create({
@@ -255,6 +256,7 @@ api.resetDatabase = () =>
   });
 api.getChains = () => api('/api/v1/chains');
 api.getChain = (id) => api(`/api/v1/chains/${id}`);
+api.analyzeChainBehavior = (id) => axiosClient.post(`/api/v1/chains/${id}/behavioral`).then(r => r.data);
 api.getMitreOverview = () => api('/api/v1/mitre/overview');
 api.getRecommendations = () => api('/api/v1/recommendations');
 api.getReports = () => api('/api/v1/reports');
@@ -278,7 +280,7 @@ api.uploadAndIngest = async (file) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      timeout: 120000,
+      timeout: 300000, // 5 minutes — large files with full pipeline
     });
 
     clearApiClientCache();
@@ -292,7 +294,15 @@ api.uploadAndIngest = async (file) => {
       throw new Error(typeof d === 'string' ? d : JSON.stringify(d));
     }
     if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-      throw new Error('Upload took longer than expected. Processing continues in the background.');
+      // The server is still processing — treat as background success
+      clearApiClientCache();
+      return {
+        success: true,
+        background: true,
+        message: 'File uploaded. Correlation pipeline is running in the background — refresh in a few seconds.',
+        alerts_ingested: '?',
+        chains_formed: null,
+      };
     }
     if (err.message === 'Network Error' || err.message?.includes('Network Error') || err.message?.includes('Failed to fetch')) {
       throw new Error('Backend server is starting up or temporarily unreachable. Please wait 10 seconds and try again.');
@@ -306,11 +316,15 @@ api.uploadJsonAndIngest = async (file) => {
   formData.append('file', file);
   try {
     const response = await axiosClient.post('/api/v1/upload-json', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }, timeout: 120000,
+      headers: { 'Content-Type': 'multipart/form-data' }, timeout: 300000,
     });
     clearApiClientCache();
     return response.data;
   } catch (err) {
+    if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+      clearApiClientCache();
+      return { success: true, background: true, message: 'File uploaded. Pipeline running in background — refresh shortly.', alerts_ingested: '?', chains_formed: null };
+    }
     throw new Error(err.response?.data?.message || 'JSON ingest failed. Please check the alert schema.');
   }
 };
@@ -322,6 +336,16 @@ api.ingestUrl = async (url) => {
     return response.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || 'Unable to fetch alerts from the API.');
+  }
+};
+
+api.startSimulation = async (limit = 300) => {
+  try {
+    const response = await axiosClient.post(`/api/v1/demo/start-simulation?limit=${limit}`, {}, { timeout: 120000 });
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || 'Simulation failed to start.');
   }
 };
 

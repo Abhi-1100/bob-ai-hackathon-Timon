@@ -480,3 +480,46 @@ async def ingest_alerts_url(
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=ErrorResponse(success=False, message="API ingestion failed").model_dump())
 
 
+@router.post(
+    "/demo/start-simulation",
+    response_model=IngestResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Start Live Simulation Ingestion",
+    description="Loads enterprise alert feed, correlates attack chains, maps MITRE tactics, analyzes behavioral anomalies, and scores risks in real time.",
+)
+async def start_demo_simulation(
+    background_tasks: BackgroundTasks,
+    limit: int = 300,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Run one-click live simulation with real enterprise threat alerts."""
+    sample_csv_path = Path(__file__).resolve().parent.parent / "sample_data" / "enterprise_threat_alerts_1000.csv"
+    if not sample_csv_path.exists():
+        sample_csv_path = Path(__file__).resolve().parent.parent / "sample_data" / "realworld_threat_alerts_1000.csv"
+
+    if not sample_csv_path.exists():
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content=ErrorResponse(success=False, message="Sample alert dataset not found").model_dump(),
+        )
+
+    with open(sample_csv_path, "r", encoding="utf-8") as f:
+        parse_result = csv_parser.parse(f)
+
+    parsed_alerts = parse_result.get("alerts", [])[:limit]
+    if not parsed_alerts:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content=ErrorResponse(success=False, message="No alerts found in dataset").model_dump(),
+        )
+
+    generated_name = f"simulated_enterprise_feed_{limit}.csv"
+    file_path = f"uploads/{generated_name}"
+
+    response = await _ingest_normalized_alerts(
+        parsed_alerts, "simulation", generated_name, file_path, current_user, db, background_tasks
+    )
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=response.model_dump())
+
+

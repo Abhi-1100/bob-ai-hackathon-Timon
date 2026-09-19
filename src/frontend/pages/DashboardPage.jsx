@@ -16,6 +16,8 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { api } from '../services/api';
+import { streamUrl } from '../services/api';
+import { useToast } from '../components/auth/Toast';
 import { SeverityBadge, MitreChip } from '../components/Common';
 import { AreaTrendChart, FrequencyBarChart, RiskDistributionChart } from '../components/Charts';
 
@@ -34,6 +36,8 @@ const DEFAULT_KPIS = {
 export function DashboardPage({ navigate, onOpenChain }) {
   const [stats, setStats] = useState(DEFAULT_KPIS);
   const [loading, setLoading] = useState(true);
+  const [liveConnected, setLiveConnected] = useState(false);
+  const { showToast } = useToast();
 
   const fetchStats = () => {
     setLoading(true);
@@ -52,6 +56,32 @@ export function DashboardPage({ navigate, onOpenChain }) {
   useEffect(() => {
     fetchStats();
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('d2_access_token');
+    if (!token || typeof EventSource === 'undefined') return undefined;
+    const stream = new EventSource(streamUrl(token));
+    const refresh = (event) => {
+      setLiveConnected(true);
+      try {
+        const payload = JSON.parse(event.data || '{}');
+        if (payload.tier === 'Critical') {
+          showToast(`Critical chain ${payload.chain_id} requires immediate triage.`, 'error');
+        }
+      } catch (error) {
+        console.warn('Invalid live stream event', error);
+      }
+      api.getStats().then((next) => next && setStats(next)).catch(() => {});
+    };
+    stream.addEventListener('chain_updated', refresh);
+    stream.addEventListener('chain_closed', refresh);
+    stream.onopen = () => setLiveConnected(true);
+    stream.onerror = () => setLiveConnected(false);
+    return () => {
+      stream.close();
+      setLiveConnected(false);
+    };
+  }, [showToast]);
 
   const totalAlerts = Number(stats.total_alerts || 0);
   const totalChains = Number(stats.total_chains || 0);
@@ -202,9 +232,9 @@ export function DashboardPage({ navigate, onOpenChain }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <span className="badge-severity low" style={{ padding: '2px 8px', fontSize: 10, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                  <span className="badge-dot" style={{ background: '#16A34A', width: 6, height: 6, borderRadius: '50%', display: 'inline-block' }} />
-                  LIVE TELEMETRY STREAM
+                <span className={`badge-severity ${liveConnected ? 'low' : 'medium'}`} style={{ padding: '2px 8px', fontSize: 10, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                  <span className="badge-dot" style={{ background: liveConnected ? '#16A34A' : '#F59E0B', width: 6, height: 6, borderRadius: '50%', display: 'inline-block' }} />
+                  {liveConnected ? 'LIVE TELEMETRY STREAM' : 'RECONNECTING STREAM'}
                 </span>
                 <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                   SOC COMMAND CENTER

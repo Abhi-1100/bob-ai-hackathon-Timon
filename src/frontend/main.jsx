@@ -289,7 +289,7 @@ function App() {
       case '/settings':
         pageTitle = 'Platform Settings & Preferences';
         breadcrumb = 'SETTINGS';
-        content = <SettingsPage />;
+        content = <SettingsPage navigate={navigate} />;
         break;
 
       case '/dashboard':
