@@ -19,7 +19,7 @@ from schemas.report import BlufReportOutput
 
 logger = logging.getLogger("bluf_report_agent")
 
-GROQ_MODEL_NAME = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL_NAME = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 
 class BlufReportError(Exception):

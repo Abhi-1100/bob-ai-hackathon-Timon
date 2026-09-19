@@ -45,6 +45,14 @@ def retrieve_node(state: Dict[str, Any]) -> Dict[str, Any]:
         state["retrieved_documents"] = []
         return state
 
+    try:
+        from nodes.answer_node import _is_greeting
+        if _is_greeting(question):
+            state["retrieved_documents"] = []
+            return state
+    except Exception:
+        pass
+
     # 1. Retrieve via Qdrant vector similarity search
     qdrant_service: QdrantService = state.get("_qdrant_service") or QdrantService.get_instance()
 
@@ -79,7 +87,7 @@ def retrieve_node(state: Dict[str, Any]) -> Dict[str, Any]:
                 q_lower = question.lower()
                 query = select(AttackChainDB)
                 if user_id is not None:
-                    query = query.where(AttackChainDB.user_id == user_id)
+                    query = query.where((AttackChainDB.user_id == user_id) | (AttackChainDB.user_id.is_(None)))
 
                 # Explicit chain filter or regex match
                 matched_chain = filter_chain_id

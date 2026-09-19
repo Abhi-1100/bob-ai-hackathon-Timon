@@ -14,21 +14,51 @@ from langchain_groq import ChatGroq
 
 logger = logging.getLogger("threat_intelligence.nodes.answer")
 
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+SYSTEM_PROMPT = """You are a Senior Cybersecurity Threat Analyst assistant for the SOC platform.
+If the user provides a greeting, casual conversation, or asks about your capabilities (e.g., 'hi', 'hello', 'who are you', 'how can you help'), respond politely and professionally as a SOC assistant and explain how you can help investigate threat telemetry.
+For security questions, answer only using retrieved threat intelligence data.
+Never invent incidents or fabricate attack chains that are not present in the data.
+If specific information is unavailable in the retrieved data, explicitly state so.
+Provide clear, structured analyst responses with Threat Summary, Risk Assessment, MITRE Techniques, and Recommended Actions when applicable."""
 
-SYSTEM_PROMPT = """You are a Senior Cybersecurity Threat Analyst.
-Answer only using retrieved threat intelligence data.
-Never invent incidents.
-Never fabricate attack chains.
-If information is unavailable, explicitly say so.
-Provide concise analyst-style responses.
-Include:
-- Threat Summary
-- Risk Assessment
-- Relevant MITRE Techniques
-- Recommended Actions
-when applicable.
-Ground your response strictly in the retrieved documents provided."""
+
+def _get_groq_candidates() -> List[str]:
+    configured = os.getenv("GROQ_MODEL", "").strip('"\' ')
+    defaults = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "llama-3.3-70b-versatile", "llama-3.1-8b-instant"]
+    if configured:
+        return [configured] + [m for m in defaults if m != configured]
+    return defaults
+
+
+def _is_greeting(q: str) -> bool:
+    """Check if the user message is a greeting or introductory query."""
+    q_clean = q.lower().strip().strip("!?,.")
+    greetings = {
+        "hi", "hello", "hey", "hola", "greetings", "good morning",
+        "good afternoon", "good evening", "howdy", "sup", "yo", "namaste"
+    }
+    if q_clean in greetings:
+        return True
+    if any(q_clean.startswith(g + " ") for g in greetings):
+        return True
+    if q_clean in {"who are you", "what are you", "what can you do", "help", "how can you help", "can you help me"}:
+        return True
+    return False
+
+
+def _greeting_response() -> str:
+    """Friendly greeting explaining the assistant's capabilities."""
+    return (
+        "Hello! I am your **AI Threat Intelligence & SOC Analyst Assistant**.\n\n"
+        "I can assist you with your security investigations and telemetry analysis:\n"
+        "- **Correlated Attack Chains**: Analyze multi-stage kill-chains and identify high-risk attacker progressions.\n"
+        "- **MITRE ATT&CK Mapping**: Identify tactics, techniques, and adversary TTPs observed across alerts.\n"
+        "- **Risk Prioritization**: Assess prioritized threats across critical enterprise destinations and source IPs.\n"
+        "- **Behavioral Anomaly Analysis**: Investigate off-hours activity, velocity bursts, and baseline deviations.\n"
+        "- **Incident Remediation Playbooks**: Provide immediate containment and eradication protocols.\n\n"
+        "How can I help with your investigation? You can ask about any incident (e.g. *'Summarize attack chain AC181'*), top targeted assets, or active threats."
+    )
+
 
 
 def _build_context_text(retrieved_docs: List[Dict[str, Any]]) -> str:
@@ -63,6 +93,9 @@ def _grounded_fallback_answer(question: str, retrieved_docs: List[Dict[str, Any]
     when Groq API key is unavailable or external API fails.
     Prevents hallucinations while ensuring 100% test and offline resilience.
     """
+    if _is_greeting(question):
+        return _greeting_response()
+
     if not retrieved_docs:
         return (
             "No relevant threat intelligence records or attack chains were found for your query. "
@@ -332,6 +365,12 @@ def answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
     logger.info("Answer generation started for question: '%s'", question)
 
+    # 1. Immediate greeting check: provide warm, helpful analyst orientation
+    if _is_greeting(question):
+        state["answer"] = _greeting_response()
+        logger.info("Answered conversational greeting in %.3fs", time.time() - start_time)
+        return state
+
     # If no documents are retrieved, return explicit unavailability response
     if not retrieved_docs:
         state["answer"] = (
@@ -341,7 +380,8 @@ def answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
         logger.info("Answer generated (no docs found) in %.3fs", time.time() - start_time)
         return state
 
-    api_key = os.getenv("GROQ_API_KEY", "").strip()
+    raw_api_key = os.getenv("GROQ_API_KEY", "")
+    api_key = raw_api_key.strip('"\' ')
 
     if not api_key:
         logger.info("No GROQ_API_KEY detected. Using grounded threat intelligence synthesis.")
@@ -373,19 +413,25 @@ def answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
     )
     messages.append(HumanMessage(content=user_prompt))
 
-    try:
-        llm = ChatGroq(
-            groq_api_key=api_key,
-            model_name=GROQ_MODEL,
-            temperature=0.1,
-            max_tokens=1000,
-            max_retries=2,
-        )
-        response = llm.invoke(messages)
-        state["answer"] = response.content.strip()
-        logger.info("Answer generated via Groq %s in %.3fs", GROQ_MODEL, time.time() - start_time)
-    except Exception as e:
-        logger.error("Groq API invocation failed: %s. Falling back to grounded answer.", str(e))
-        state["answer"] = _grounded_fallback_answer(question, retrieved_docs)
+    last_error = None
+    for model_name in _get_groq_candidates():
+        try:
+            llm = ChatGroq(
+                groq_api_key=api_key,
+                model_name=model_name,
+                temperature=0.1,
+                max_tokens=1000,
+                max_retries=1,
+            )
+            response = llm.invoke(messages)
+            state["answer"] = response.content.strip()
+            logger.info("Answer generated via Groq %s in %.3fs", model_name, time.time() - start_time)
+            return state
+        except Exception as e:
+            last_error = e
+            logger.warning("Groq model %s failed: %s. Trying next candidate...", model_name, e)
+
+    logger.error("All Groq model candidates failed (%s). Falling back to grounded answer.", last_error)
+    state["answer"] = _grounded_fallback_answer(question, retrieved_docs)
 
     return state
