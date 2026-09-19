@@ -70,7 +70,7 @@ export function AuthLayout({
             {/* Testimonial Quote */}
             <div className="auth-quote-card">
               <p className="auth-quote-text">
-                "Sentinel Forge transformed how our team handles security alerts. It connects related events and highlights what to fix first, saving us hours every day."
+                "Threat Intel transformed how our team handles security alerts. It connects related events and highlights what to fix first, saving us hours every day."
               </p>
               <div className="auth-quote-author">
                 <div className="auth-quote-avatar">JD</div>

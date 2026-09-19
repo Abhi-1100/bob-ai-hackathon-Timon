@@ -1,8 +1,8 @@
-# Architecture: Sentinel Forge
+# Architecture: Threat Intel
 
 ## System Architecture
 
-Sentinel Forge is architected as a decoupled, multi-tenant cloud-native application featuring an asynchronous FastAPI Python backend, a high-performance React (Vite) single-page frontend, a Neon PostgreSQL relational database, an Upstash Redis two-tier caching layer, a Qdrant vector database, and LangGraph-orchestrated LLM intelligence agents.
+Threat Intel is architected as a decoupled, multi-tenant cloud-native application featuring an asynchronous FastAPI Python backend, a high-performance React (Vite) single-page frontend, a Neon PostgreSQL relational database, an Upstash Redis two-tier caching layer, a Qdrant vector database, and LangGraph-orchestrated LLM intelligence agents.
 
 ```mermaid
 graph TD

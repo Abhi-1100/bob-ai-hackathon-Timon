@@ -56,7 +56,7 @@ export function SettingsPage({ navigate }) {
 
   // 1. Profile State (Initialized dynamically from user in auth store)
   const [name, setName] = useState(user?.name || 'Security Analyst');
-  const [email, setEmail] = useState(user?.email || 'analyst@sentinelforge.mil');
+  const [email, setEmail] = useState(user?.email || 'analyst@ThreatIntel.mil');
   const [organization, setOrganization] = useState(user?.organization || 'Security Operations Center');
 
   // Password Update State

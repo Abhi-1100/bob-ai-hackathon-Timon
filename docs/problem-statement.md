@@ -48,6 +48,6 @@ Security Operations Centers (SOCs) face **critical alert overload and operationa
 
 ---
 
-## The Sentinel Forge Vision
+## The Threat Intel Vision
 
-Sentinel Forge bridges this operational gap by delivering an **autonomous, end-to-end Threat Intelligence Correlation & Alert Prioritization Assistant**. By pairing deterministic graph correlation and MITRE ATT&CK mapping with stateful LangGraph orchestration, two-tier caching, and grounded Qdrant vector retrieval, Sentinel Forge slashes mean-time-to-triage by over **90%**, converting raw alert feeds into prioritized, executive-ready cyber intelligence.
+Threat Intel bridges this operational gap by delivering an **autonomous, end-to-end Threat Intelligence Correlation & Alert Prioritization Assistant**. By pairing deterministic graph correlation and MITRE ATT&CK mapping with stateful LangGraph orchestration, two-tier caching, and grounded Qdrant vector retrieval, Threat Intel slashes mean-time-to-triage by over **90%**, converting raw alert feeds into prioritized, executive-ready cyber intelligence.

@@ -100,11 +100,11 @@ def decode_access_token(token: str) -> dict:
 _MEM_USERS = {}
 
 # Seed default analyst account
-_DEFAULT_USER_EMAIL = "analyst@sentinelforge.mil"
+_DEFAULT_USER_EMAIL = "analyst@ThreatIntel.mil"
 _MEM_USERS[_DEFAULT_USER_EMAIL] = {
     "id": "11111111-1111-1111-1111-111111111111",
     "email": _DEFAULT_USER_EMAIL,
-    "hashed_password": hash_password("SentinelForge#2026"),
+    "hashed_password": hash_password("ThreatIntel#2026"),
     "full_name": "Chief SOC Analyst",
     "reset_token": None,
     "reset_token_expires": None,
@@ -409,7 +409,7 @@ def get_current_user_obj(
     # Fallback to seed analyst account if authorization header was not passed
     # (e.g., local dev or background test invocation)
     try:
-        fallback_user = db.query(UserDB).filter(UserDB.email == "analyst@sentinelforge.mil").first()
+        fallback_user = db.query(UserDB).filter(UserDB.email == "analyst@ThreatIntel.mil").first()
         if fallback_user:
             return fallback_user
 
@@ -497,6 +497,6 @@ def get_current_user(authorization: Optional[str] = Header(None), db: Session = 
     return UserResponse(
         id=user_id or "default-operator-id",
         name=payload.get("name", "Chief SOC Analyst"),
-        email=email or "analyst@sentinelforge.mil",
+        email=email or "analyst@ThreatIntel.mil",
     )
 
