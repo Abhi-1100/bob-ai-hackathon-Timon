@@ -33,6 +33,7 @@ htmlcov/
 *.sqlite
 *.sqlite3
 **/uploads/*.csv
+**/uploads/*.json
 !**/uploads/.gitkeep
 
 
@@ -90,6 +91,11 @@ demo/*.mkv
 
 # ── Docker volumes / local data ───────────────────────────────────────────────
 data/
+!data/
+!data/alerts.csv
+!data/alerts.json
+!data/api/
+!data/api/sample_alerts.json
 logs/
 *.log
 

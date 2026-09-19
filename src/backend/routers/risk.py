@@ -46,7 +46,10 @@ def calculate_chain_risk(
 ):
     """Calculate and store risk score for a single attack chain."""
     try:
-        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        chain = db.query(AttackChainDB).filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None)),
+        ).first()
         if not chain:
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -62,6 +65,8 @@ def calculate_chain_risk(
                 "score": score_obj.score,
                 "level": score_obj.level,
                 "reasoning": score_obj.reasoning,
+                "behavioral_score": score_obj.behavioral_score,
+                "behavioral_level": score_obj.behavioral_level,
                 "message": "Risk score calculated successfully",
             },
         )
@@ -103,7 +108,10 @@ def get_chain_risk(
 ):
     """Retrieve existing stored risk score for an attack chain."""
     try:
-        chain = db.query(AttackChainDB).filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id).first()
+        chain = db.query(AttackChainDB).filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None)),
+        ).first()
         if not chain:
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND,

@@ -351,6 +351,13 @@ def get_analytics_overview(
         )
         top_sources = [{"ip": sq.src_ip, "count": sq.count} for sq in src_query]
 
+        ingestion_source_query = (
+            db.query(AlertDB.source_type, func.count(AlertDB.id).label("count"))
+            .filter(AlertDB.user_id == current_user.id)
+            .group_by(AlertDB.source_type)
+        )
+        ingestion_sources = [{"source": row.source_type, "count": row.count} for row in ingestion_source_query]
+
         # Top target IPs for this user
         dst_query = (
             db.query(AlertDB.dst_ip, func.count(AlertDB.id).label("count"))
@@ -427,6 +434,7 @@ def get_analytics_overview(
             "attack_types": attack_types,
             "severity_breakdown": severity_breakdown,
             "top_sources": top_sources,
+            "ingestion_sources": ingestion_sources,
             "top_targets": top_targets,
             "mitre_frequency": mitre_frequency,
             "trend_data": trend_data,

@@ -18,7 +18,7 @@ from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 
 from database.session import get_db
-from database.models import UserDB
+from database.models import APIKeyDB, UserDB
 
 logger = logging.getLogger(__name__)
 
@@ -148,6 +148,17 @@ class AuthResponse(BaseModel):
     user: UserResponse
 
 
+class APIKeyCreateRequest(BaseModel):
+    name: str = Field(default="ingestion", min_length=1, max_length=120)
+
+
+class APIKeyCreateResponse(BaseModel):
+    id: str
+    name: str
+    api_key: str
+    warning: str = "Store this key securely; it will not be shown again."
+
+
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
@@ -271,6 +282,9 @@ def forgot_password(req: ForgotPasswordRequest, db: Session = Depends(get_db)):
             user.reset_token = reset_token
             user.reset_token_expires = expires
             db.commit()
+        elif clean_email in _MEM_USERS:
+            _MEM_USERS[clean_email]["reset_token"] = reset_token
+            _MEM_USERS[clean_email]["reset_token_expires"] = expires
     except Exception as exc:
         logger.warning(f"Database update error in forgot-password: {exc}")
         if clean_email in _MEM_USERS:
@@ -341,7 +355,7 @@ def get_current_user_obj(
     """
     FastAPI dependency to retrieve the authenticated UserDB model instance.
     Extracts the user from the Bearer JWT token.
-    Falls back to the seed analyst account if no header is provided (for dev/local test mode).
+    Falls back to memory cache or seed analyst account if DB is unavailable.
     """
     if authorization and authorization.startswith("Bearer "):
         token = authorization.split(" ")[1]
@@ -349,9 +363,34 @@ def get_current_user_obj(
             payload = decode_access_token(token)
             user_id = payload.get("sub")
             if user_id:
-                user = db.query(UserDB).filter(UserDB.id == user_id).first()
-                if user:
-                    return user
+                try:
+                    try:
+                        user_uuid = uuid.UUID(str(user_id)) if not isinstance(user_id, uuid.UUID) else user_id
+                    except Exception:
+                        user_uuid = user_id
+                    user = db.query(UserDB).filter(UserDB.id == user_uuid).first()
+                    if not user and payload.get("email"):
+                        user = db.query(UserDB).filter(UserDB.email == payload.get("email")).first()
+                    if user:
+                        return user
+                except Exception as db_exc:
+                    logger.warning(f"Database lookup error for user_id {user_id}: {db_exc}")
+
+                # Check memory fallback if database lookup returned None or failed
+                for mem_user in _MEM_USERS.values():
+                    if str(mem_user.get("id")) == str(user_id) or mem_user.get("email") == payload.get("email"):
+                        uid = mem_user["id"]
+                        if isinstance(uid, str):
+                            try:
+                                uid = uuid.UUID(uid)
+                            except Exception:
+                                pass
+                        return UserDB(
+                            id=uid,
+                            email=mem_user["email"],
+                            hashed_password=mem_user["hashed_password"],
+                            full_name=mem_user["full_name"],
+                        )
         except HTTPException:
             raise
         except Exception as exc:
@@ -363,18 +402,75 @@ def get_current_user_obj(
 
     # Fallback to seed analyst account if authorization header was not passed
     # (e.g., local dev or background test invocation)
-    fallback_user = db.query(UserDB).filter(UserDB.email == "analyst@sentinelforge.mil").first()
-    if fallback_user:
-        return fallback_user
+    try:
+        fallback_user = db.query(UserDB).filter(UserDB.email == "analyst@sentinelforge.mil").first()
+        if fallback_user:
+            return fallback_user
 
-    first_user = db.query(UserDB).first()
-    if first_user:
-        return first_user
+        first_user = db.query(UserDB).first()
+        if first_user:
+            return first_user
+    except Exception as exc:
+        logger.warning(f"Database query error during user fallback: {exc}")
+
+    if _DEFAULT_USER_EMAIL in _MEM_USERS:
+        mem_user = _MEM_USERS[_DEFAULT_USER_EMAIL]
+        uid = mem_user["id"]
+        if isinstance(uid, str):
+            try:
+                uid = uuid.UUID(uid)
+            except Exception:
+                pass
+        return UserDB(
+            id=uid,
+            email=mem_user["email"],
+            hashed_password=mem_user["hashed_password"],
+            full_name=mem_user["full_name"],
+        )
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Authentication required. Please log in.",
     )
+
+
+def get_api_key_user(api_key: str, db: Session) -> UserDB:
+    """Resolve an X-API-Key value to its tenant without storing plaintext keys."""
+    if not api_key or len(api_key) > 256:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+    key_hash = hashlib.sha256(api_key.encode("utf-8")).hexdigest()
+    record = (
+        db.query(APIKeyDB)
+        .filter(APIKeyDB.key_hash == key_hash, APIKeyDB.revoked_at.is_(None))
+        .first()
+    )
+    if not record:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+    record.last_used_at = datetime.now(timezone.utc)
+    db.commit()
+    user = db.query(UserDB).filter(UserDB.id == record.user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="API key tenant not found")
+    return user
+
+
+@router.post("/api-keys", response_model=APIKeyCreateResponse, status_code=status.HTTP_201_CREATED)
+def create_api_key(
+    request: APIKeyCreateRequest,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Create a tenant-scoped ingestion key; plaintext is returned only once."""
+    plaintext = "tt_" + secrets.token_urlsafe(32)
+    record = APIKeyDB(
+        user_id=current_user.id,
+        name=request.name.strip(),
+        key_hash=hashlib.sha256(plaintext.encode("utf-8")).hexdigest(),
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return APIKeyCreateResponse(id=str(record.id), name=record.name, api_key=plaintext)
 
 
 @router.get("/me", response_model=UserResponse)

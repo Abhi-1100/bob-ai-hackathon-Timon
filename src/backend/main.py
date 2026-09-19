@@ -40,6 +40,15 @@ from routers.workflow import router as workflow_router
 from routers.chat import router as chat_router
 from routers.dashboard import router as dashboard_router
 from routers.auth import router as auth_router
+from routers.ingest import router as ingest_router
+from routers.stream import router as stream_router
+from routers.connectors import router as connectors_router
+from routers.metrics import router as metrics_router
+from services.live_runtime import runtime
+from routers.ingest import router as ingest_router
+from services.live_runtime import runtime
+from routers.stream import router as stream_router
+from routers.connectors import router as connectors_router
 
 # Configure production-ready structured logging
 logging.basicConfig(
@@ -75,6 +84,10 @@ app.add_middleware(
 
 # Mount Routers
 app.include_router(auth_router)
+app.include_router(ingest_router)
+app.include_router(stream_router)
+app.include_router(connectors_router)
+app.include_router(metrics_router)
 app.include_router(upload_router)
 app.include_router(dashboard_router)
 app.include_router(correlation_router)
@@ -94,9 +107,22 @@ def on_startup():
         from database.models import Base
         engine = _get_engine()
         Base.metadata.create_all(bind=engine)
+        from database.schema_upgrade import ensure_streaming_columns
+        ensure_streaming_columns(engine)
         logger.info("Database tables verified on startup.")
     except Exception as exc:
         logger.warning(f"Database initialization warning on startup: {exc}")
+
+
+@app.on_event("startup")
+async def start_live_runtime():
+    """Start the in-process deterministic streaming worker."""
+    await runtime.start()
+
+
+@app.on_event("shutdown")
+async def stop_live_runtime():
+    await runtime.stop()
 
 
 @app.get("/", tags=["Health"])
@@ -107,6 +133,15 @@ async def root_health_check():
         "service": "Threat Intelligence Correlation & Alert Prioritisation Assistant",
         "version": "1.0.0",
     }
+
+
+@app.get("/api/demo/security-alerts", tags=["Demo"])
+async def demo_security_alerts():
+    """Local demonstration feed. URL ingestion still rejects localhost to preserve SSRF controls."""
+    return {"alerts": [
+        {"alert_id": "AC001-01", "timestamp": "2026-09-19T10:00:00Z", "src_ip": "45.20.10.5", "dst_ip": "10.0.0.5", "event_type": "PORT_SCAN", "severity": "MEDIUM", "description": "Multiple ports scanned"},
+        {"alert_id": "AC001-02", "timestamp": "2026-09-19T10:05:00Z", "src_ip": "45.20.10.5", "dst_ip": "10.0.0.5", "event_type": "FAILED_LOGIN", "severity": "HIGH", "description": "Multiple failed login attempts"},
+    ]}
 
 
 if __name__ == "__main__":

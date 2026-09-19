@@ -14,21 +14,51 @@ from langchain_groq import ChatGroq
 
 logger = logging.getLogger("threat_intelligence.nodes.answer")
 
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+SYSTEM_PROMPT = """You are a Senior Cybersecurity Threat Analyst assistant for the SOC platform.
+If the user provides a greeting, casual conversation, or asks about your capabilities (e.g., 'hi', 'hello', 'who are you', 'how can you help'), respond politely and professionally as a SOC assistant and explain how you can help investigate threat telemetry.
+For security questions, answer only using retrieved threat intelligence data.
+Never invent incidents or fabricate attack chains that are not present in the data.
+If specific information is unavailable in the retrieved data, explicitly state so.
+Provide clear, structured analyst responses with Threat Summary, Risk Assessment, MITRE Techniques, and Recommended Actions when applicable."""
 
-SYSTEM_PROMPT = """You are a Senior Cybersecurity Threat Analyst.
-Answer only using retrieved threat intelligence data.
-Never invent incidents.
-Never fabricate attack chains.
-If information is unavailable, explicitly say so.
-Provide concise analyst-style responses.
-Include:
-- Threat Summary
-- Risk Assessment
-- Relevant MITRE Techniques
-- Recommended Actions
-when applicable.
-Ground your response strictly in the retrieved documents provided."""
+
+def _get_groq_candidates() -> List[str]:
+    configured = os.getenv("GROQ_MODEL", "").strip('"\' ')
+    defaults = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "llama-3.3-70b-versatile", "llama-3.1-8b-instant"]
+    if configured:
+        return [configured] + [m for m in defaults if m != configured]
+    return defaults
+
+
+def _is_greeting(q: str) -> bool:
+    """Check if the user message is a greeting or introductory query."""
+    q_clean = q.lower().strip().strip("!?,.")
+    greetings = {
+        "hi", "hello", "hey", "hola", "greetings", "good morning",
+        "good afternoon", "good evening", "howdy", "sup", "yo", "namaste"
+    }
+    if q_clean in greetings:
+        return True
+    if any(q_clean.startswith(g + " ") for g in greetings):
+        return True
+    if q_clean in {"who are you", "what are you", "what can you do", "help", "how can you help", "can you help me"}:
+        return True
+    return False
+
+
+def _greeting_response() -> str:
+    """Friendly greeting explaining the assistant's capabilities."""
+    return (
+        "Hello! I am your **AI Threat Intelligence & SOC Analyst Assistant**.\n\n"
+        "I can assist you with your security investigations and telemetry analysis:\n"
+        "- **Correlated Attack Chains**: Analyze multi-stage kill-chains and identify high-risk attacker progressions.\n"
+        "- **MITRE ATT&CK Mapping**: Identify tactics, techniques, and adversary TTPs observed across alerts.\n"
+        "- **Risk Prioritization**: Assess prioritized threats across critical enterprise destinations and source IPs.\n"
+        "- **Behavioral Anomaly Analysis**: Investigate off-hours activity, velocity bursts, and baseline deviations.\n"
+        "- **Incident Remediation Playbooks**: Provide immediate containment and eradication protocols.\n\n"
+        "How can I help with your investigation? You can ask about any incident (e.g. *'Summarize attack chain AC181'*), top targeted assets, or active threats."
+    )
+
 
 
 def _build_context_text(retrieved_docs: List[Dict[str, Any]]) -> str:
@@ -63,6 +93,9 @@ def _grounded_fallback_answer(question: str, retrieved_docs: List[Dict[str, Any]
     when Groq API key is unavailable or external API fails.
     Prevents hallucinations while ensuring 100% test and offline resilience.
     """
+    if _is_greeting(question):
+        return _greeting_response()
+
     if not retrieved_docs:
         return (
             "No relevant threat intelligence records or attack chains were found for your query. "
@@ -155,56 +188,151 @@ def _grounded_fallback_answer(question: str, retrieved_docs: List[Dict[str, Any]
         ]
         return "\n".join(lines)
 
-    # Specific response for highest risk
-    if "highest" in q_lower or "critical" in q_lower:
-        top_doc = max(retrieved_docs, key=lambda d: risk_rank.get(d.get("risk", "Low"), 0))
-        c_id = top_doc.get("chain_id", "AC001")
-        r_level = top_doc.get("risk", "Critical")
-        summ = top_doc.get("summary", "")
-        return (
-            f"### Highest Risk Incident: {c_id} ({r_level})\n\n"
-            f"{summ}\n\n"
-            f"**Relevant MITRE Techniques**: {', '.join(top_doc.get('mitre', [])) or 'None'}\n\n"
-            f"**Immediate Containment**: Quarantine the host, invalidate target credentials, and block outbound C2 traffic."
-        )
+    # 1. Specific ordinal priority request ("second error", "second alert", "2nd priority", "third", "rank 2", etc.)
+    ordinal_map = {
+        "first": 0, "1st": 0, "top": 0, "highest": 0, "rank 1": 0, "#1": 0,
+        "second": 1, "2nd": 1, "rank 2": 1, "#2": 1,
+        "third": 2, "3rd": 2, "rank 3": 2, "#3": 2,
+        "fourth": 3, "4th": 3, "rank 4": 3, "#4": 3,
+        "fifth": 4, "5th": 4, "rank 5": 4, "#5": 4,
+    }
+    target_idx = None
+    ordinal_label = None
+    for word, idx in ordinal_map.items():
+        if word in q_lower:
+            target_idx = idx
+            ordinal_label = word.capitalize()
+            break
 
-    # Specific response for attack chains / incidents summary
-    if "chain" in q_lower or "incident" in q_lower or "target" in q_lower or "summary" in q_lower:
+    if target_idx is not None and target_idx > 0:
+        if target_idx < len(retrieved_docs):
+            doc = retrieved_docs[target_idx]
+            cid = doc.get("chain_id", f"Chain #{target_idx+1}")
+            risk = doc.get("risk", "High")
+            summ = doc.get("summary", "")
+            mitre_str = ", ".join(doc.get("mitre", [])) or "None specifically mapped"
+            meta = doc.get("metadata", {})
+            src_ip = meta.get("source_ip") or doc.get("source_ip", "Unknown")
+            dst_ips = meta.get("destination_ips") or doc.get("destination_ips", "Internal Assets")
+            alert_cnt = meta.get("alert_count") or doc.get("alert_count", "Multiple")
+            
+            return (
+                f"### {ordinal_label} Priority Incident: Attack Chain {cid} [{risk} Risk]\n\n"
+                f"- **Chain ID**: `{cid}`\n"
+                f"- **Assessed Severity**: **{risk}**\n"
+                f"- **Adversary Source IP**: `{src_ip}`\n"
+                f"- **Targeted Destination Assets**: `{dst_ips}`\n"
+                f"- **Total Correlated Alerts**: {alert_cnt} events\n"
+                f"- **Mapped MITRE Techniques**: `{mitre_str}`\n\n"
+                f"#### Progression Summary\n{summ}\n\n"
+                f"#### Immediate Action Protocol\n"
+                f"- Quarantine `{src_ip}` on perimeter ingress filters.\n"
+                f"- Audit process creation logs on `{dst_ips}` for unauthorized execution attempts."
+            )
+        else:
+            return (
+                f"The correlation engine evaluated {len(retrieved_docs)} active priority chains. "
+                f"No record at rank #{target_idx+1} was found in the current filtered telemetry."
+            )
+
+    # 2. Destination Assets and IP addresses query ("destination", "asset", "ip address", "under active attack", "targets")
+    if any(k in q_lower for k in ["destination", "asset", "ip address", "under active attack", "under attack", "targeted host", "victim", "impacted", "which host", "which ip", "what ip"]):
+        dest_map = {}
+        src_map = {}
+        import re
+        for d in retrieved_docs:
+            cid = d.get("chain_id", "")
+            risk = d.get("risk", "Medium")
+            meta = d.get("metadata", {})
+            dst = meta.get("destination_ips") or d.get("destination_ips") or ""
+            src = meta.get("source_ip") or d.get("source_ip") or ""
+            
+            if not dst and "targeting destination assets" in d.get("summary", ""):
+                m_dst = re.search(r"targeting destination assets \[([^\]]+)\]", d.get("summary", ""))
+                if m_dst:
+                    dst = m_dst.group(1)
+            if not src and "source IP" in d.get("summary", ""):
+                m_src = re.search(r"source IP ([^\s]+)", d.get("summary", ""))
+                if m_src:
+                    src = m_src.group(1)
+
+            if dst:
+                for ip in [i.strip() for i in dst.split(",") if i.strip()]:
+                    dest_map.setdefault(ip, []).append(f"{cid} ({risk})")
+            if src:
+                src_map.setdefault(src, []).append(cid)
+
         lines = [
-            "### Correlated Attack Chains & Active Threat Incidents",
-            f"The detection engine has synthesized **{len(retrieved_docs)} priority attack chain(s)** from the ingested telemetry:\n",
+            "### Destination Assets & IP Addresses Under Active Attack",
+            f"Correlation analysis identified **{len(dest_map)} critical internal destination assets** actively targeted across telemetry:\n",
+            "#### Impacted Destination Assets (Targets)",
         ]
-        for i, d in enumerate(retrieved_docs[:4], 1):
-            c_id = d.get("chain_id", "AC001")
-            r_level = d.get("risk", "High")
-            summ = d.get("summary", "")
-            mitre_str = ", ".join(d.get("mitre", [])) or "None"
-            lines.append(f"**{i}. Attack Chain {c_id} [{r_level} Risk]**\n- {summ}\n- *Techniques*: `{mitre_str}`\n")
+        for ip, chains in dest_map.items():
+            lines.append(f"- **`{ip}`**: Targeted by attack chain(s) **{', '.join(chains)}**")
+        
+        if src_map:
+            lines.append("\n#### Identified Adversary Origin IPs (Sources)")
+            for ip, chains in src_map.items():
+                lines.append(f"- **`{ip}`**: Originating source for chain(s) **{', '.join(chains)}**")
+
         lines.extend([
-            "### Posture Evaluation",
-            f"Current operational threat posture indicates **{highest_risk}** triage urgency. Review the highest risk chains first.",
+            "",
+            "#### Immediate Containment Protocol",
+            "1. **Isolate Target Hosts**: Temporarily partition impacted destination assets from sensitive VLANs.",
+            "2. **Block Adversary Sources**: Apply egress/ingress firewall drops against identified source IPs.",
+            "3. **Credential Cycling**: Reset access tokens and authentication credentials for affected servers.",
         ])
         return "\n".join(lines)
 
-    # Specific response for credential theft / credential dumping
-    if "credential" in q_lower:
-        cred_chains = [
-            d for d in retrieved_docs
-            if "t1003" in [m.lower() for m in d.get("mitre", [])]
-            or "t1110" in [m.lower() for m in d.get("mitre", [])]
-            or "credential" in d.get("summary", "").lower()
+    # 3. Behavioral & Anomaly queries
+    if any(k in q_lower for k in ["behavior", "anomaly", "velocity", "baseline", "unusual", "novel"]):
+        lines = [
+            "### Behavioral & Contextual Anomaly Assessment",
+            "The Behavioral Analysis Engine evaluates activity across 8 dimensions (Network Baseline, Velocity, Target Assets, Temporal Patterns, Entity Relations, Historical Baseline, Identity, and Device):\n",
         ]
-        if cred_chains:
-            c_names = [d.get("chain_id", "") for d in cred_chains]
-            lead = cred_chains[0]
-            return (
-                f"### Credential Access Analysis\n\n"
-                f"{len(cred_chains)} attack chain(s) involved credential access behavior: **{', '.join(c_names)}**.\n\n"
-                f"The most critical was **{lead.get('chain_id')}**, mapped to MITRE "
-                f"`{', '.join(lead.get('mitre', []))}`.\n\n"
-                f"{lead.get('summary')}\n\n"
-                f"**Mitigation**: Enforce MFA, reset compromised credentials, and monitor for unauthorized lateral authentication."
-            )
+        for d in retrieved_docs[:3]:
+            cid = d.get("chain_id", "AC001")
+            risk = d.get("risk", "High")
+            summ = d.get("summary", "")
+            lines.append(f"**Attack Chain {cid} [{risk} Priority]**:")
+            lines.append(f"- {summ}")
+        lines.extend([
+            "",
+            "### Key Contributing Behavioral Indicators",
+            "- **High-Velocity Bursting**: Rapid event grouping exceeding established baseline intervals.",
+            "- **First-Seen Entity Access**: External IPs communicating with internal hosts without prior historical baseline.",
+            "- **Temporal Off-Hours Shifts**: Critical operations initiated outside standard operational business hours.",
+        ])
+        return "\n".join(lines)
+
+    # 4. Specific response for attack events / error progression ("error", "alert", "alter", "event", "progression", "sequence")
+    if any(k in q_lower for k in ["error", "alert", "alter", "event", "progression", "sequence", "what happened"]):
+        lines = [
+            "### Correlated Security Events & Alert Progression",
+            f"The telemetry correlation engine processed alerts across **{len(retrieved_docs)} attack chain(s)**:\n",
+        ]
+        for i, d in enumerate(retrieved_docs[:4], start=1):
+            cid = d.get("chain_id", "AC001")
+            risk = d.get("risk", "High")
+            summ = d.get("summary", "")
+            mitre_str = ", ".join(d.get("mitre", [])) or "None"
+            
+            prog = "Security Event Sequence"
+            if "Progression sequence:" in summ:
+                prog_part = summ.split("Progression sequence:")[1].split(".")[0].strip()
+                prog = f"Kill-Chain: `{prog_part}`"
+            
+            lines.append(f"**{i}. Attack Chain {cid} [{risk} Priority]**")
+            lines.append(f"- {prog}")
+            lines.append(f"- MITRE Techniques: `{mitre_str}`")
+            lines.append(f"- Details: {summ.split('Progression sequence:')[0].strip()}\n")
+
+        lines.extend([
+            "### SOC Analyst Guidance",
+            "- Triage critical kill-chain stages (`CommandExecution`, `DataTransfer`, `Malware`) first.",
+            "- Check endpoint EDR telemetry for shell spawn arguments and outbound connection sockets.",
+        ])
+        return "\n".join(lines)
 
     # General grounded synthesis
     response_lines = [
@@ -237,6 +365,12 @@ def answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
     logger.info("Answer generation started for question: '%s'", question)
 
+    # 1. Immediate greeting check: provide warm, helpful analyst orientation
+    if _is_greeting(question):
+        state["answer"] = _greeting_response()
+        logger.info("Answered conversational greeting in %.3fs", time.time() - start_time)
+        return state
+
     # If no documents are retrieved, return explicit unavailability response
     if not retrieved_docs:
         state["answer"] = (
@@ -246,7 +380,8 @@ def answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
         logger.info("Answer generated (no docs found) in %.3fs", time.time() - start_time)
         return state
 
-    api_key = os.getenv("GROQ_API_KEY", "").strip()
+    raw_api_key = os.getenv("GROQ_API_KEY", "")
+    api_key = raw_api_key.strip('"\' ')
 
     if not api_key:
         logger.info("No GROQ_API_KEY detected. Using grounded threat intelligence synthesis.")
@@ -278,19 +413,25 @@ def answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
     )
     messages.append(HumanMessage(content=user_prompt))
 
-    try:
-        llm = ChatGroq(
-            groq_api_key=api_key,
-            model_name=GROQ_MODEL,
-            temperature=0.1,
-            max_tokens=1000,
-            max_retries=2,
-        )
-        response = llm.invoke(messages)
-        state["answer"] = response.content.strip()
-        logger.info("Answer generated via Groq %s in %.3fs", GROQ_MODEL, time.time() - start_time)
-    except Exception as e:
-        logger.error("Groq API invocation failed: %s. Falling back to grounded answer.", str(e))
-        state["answer"] = _grounded_fallback_answer(question, retrieved_docs)
+    last_error = None
+    for model_name in _get_groq_candidates():
+        try:
+            llm = ChatGroq(
+                groq_api_key=api_key,
+                model_name=model_name,
+                temperature=0.1,
+                max_tokens=2500,
+                max_retries=1,
+            )
+            response = llm.invoke(messages)
+            state["answer"] = response.content.strip()
+            logger.info("Answer generated via Groq %s in %.3fs", model_name, time.time() - start_time)
+            return state
+        except Exception as e:
+            last_error = e
+            logger.warning("Groq model %s failed: %s. Trying next candidate...", model_name, e)
+
+    logger.error("All Groq model candidates failed (%s). Falling back to grounded answer.", last_error)
+    state["answer"] = _grounded_fallback_answer(question, retrieved_docs)
 
     return state

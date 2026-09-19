@@ -2,7 +2,7 @@
 Pydantic V2 schemas for the File Upload module.
 """
 
-from typing import Optional
+from typing import Optional, Dict
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -50,4 +50,10 @@ class IngestResponse(BaseModel):
     chains_correlated: Optional[int] = Field(default=0, description="Number of attack chains produced")
     mitre_mapped: Optional[int] = Field(default=0, description="Total MITRE techniques mapped")
     risk_scored: Optional[int] = Field(default=0, description="Number of chains evaluated for risk")
+    source_type: str = Field(default="csv", description="Ingestion source: csv, json, or api")
+
+
+class URLIngestRequest(BaseModel):
+    url: str = Field(..., min_length=1, max_length=2048)
+    headers: Optional[Dict[str, str]] = None
 

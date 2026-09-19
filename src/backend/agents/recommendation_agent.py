@@ -18,7 +18,7 @@ from schemas.recommendation import RecommendationOutput
 
 logger = logging.getLogger("recommendation_agent")
 
-GROQ_MODEL_NAME = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL_NAME = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 
 class LLMRecommendationError(Exception):

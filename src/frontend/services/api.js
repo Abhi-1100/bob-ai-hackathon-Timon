@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const rawApiBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const API_BASE = rawApiBase.replace(/\/+$/, '');
+export const streamUrl = (token) => `${API_BASE}/api/v1/stream?token=${encodeURIComponent(token)}`;
 
 // 1. Axios Instance for Enterprise API and Auth Calls
 export const axiosClient = axios.create({
@@ -33,17 +34,16 @@ axiosClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       const url = error.config?.url || '';
-      if (!url.includes('/api/v1/auth/login') && !url.includes('/api/v1/auth/register')) {
-        console.warn('[API] 401 Unauthorized. Redirecting to login.');
+      // Don't clear tokens for login/register/me — those handle auth themselves
+      if (!url.includes('/api/v1/auth/login') && !url.includes('/api/v1/auth/register') && !url.includes('/api/v1/auth/me')) {
+        console.warn('[API] 401 Unauthorized — clearing stored credentials.');
         try {
           localStorage.removeItem('d2_access_token');
           localStorage.removeItem('d2_user_profile');
         } catch (e) {
           // ignore
         }
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-          window.location.href = '/login?expired=true';
-        }
+        // Let React route guard handle the redirect instead of hard page reload
       }
     }
     return Promise.reject(error);
@@ -121,10 +121,12 @@ export async function api(path, options = {}) {
       clearTimeout(timeoutId);
 
       if (response.status === 401) {
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+        // Don't hard-redirect; let React auth route guard handle navigation
+        try {
           localStorage.removeItem('d2_access_token');
           localStorage.removeItem('d2_user_profile');
-          window.location.href = '/login?expired=true';
+        } catch (e) {
+          // ignore
         }
         throw new Error('Unauthorized');
       }
@@ -254,10 +256,17 @@ api.resetDatabase = () =>
   });
 api.getChains = () => api('/api/v1/chains');
 api.getChain = (id) => api(`/api/v1/chains/${id}`);
+api.analyzeChainBehavior = (id) => axiosClient.post(`/api/v1/chains/${id}/behavioral`).then(r => r.data);
 api.getMitreOverview = () => api('/api/v1/mitre/overview');
 api.getRecommendations = () => api('/api/v1/recommendations');
 api.getReports = () => api('/api/v1/reports');
 api.getReport = (id) => api(`/api/v1/reports/${id}`);
+api.updateAnalystDisposition = (id, disposition) => 
+  api(`/api/v1/chains/${id}/disposition`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ disposition })
+  });
 
 /**
  * Upload CSV file and trigger end-to-end correlation & scoring
@@ -271,7 +280,7 @@ api.uploadAndIngest = async (file) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      timeout: 120000,
+      timeout: 300000, // 5 minutes — large files with full pipeline
     });
 
     clearApiClientCache();
@@ -285,12 +294,58 @@ api.uploadAndIngest = async (file) => {
       throw new Error(typeof d === 'string' ? d : JSON.stringify(d));
     }
     if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-      throw new Error('Upload took longer than expected. Processing continues in the background.');
+      // The server is still processing — treat as background success
+      clearApiClientCache();
+      return {
+        success: true,
+        background: true,
+        message: 'File uploaded. Correlation pipeline is running in the background — refresh in a few seconds.',
+        alerts_ingested: '?',
+        chains_formed: null,
+      };
     }
     if (err.message === 'Network Error' || err.message?.includes('Network Error') || err.message?.includes('Failed to fetch')) {
       throw new Error('Backend server is starting up or temporarily unreachable. Please wait 10 seconds and try again.');
     }
     throw err;
+  }
+};
+
+api.uploadJsonAndIngest = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const response = await axiosClient.post('/api/v1/upload-json', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }, timeout: 300000,
+    });
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+      clearApiClientCache();
+      return { success: true, background: true, message: 'File uploaded. Pipeline running in background — refresh shortly.', alerts_ingested: '?', chains_formed: null };
+    }
+    throw new Error(err.response?.data?.message || 'JSON ingest failed. Please check the alert schema.');
+  }
+};
+
+api.ingestUrl = async (url) => {
+  try {
+    const response = await axiosClient.post('/api/v1/ingest-url', { url }, { timeout: 120000 });
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || 'Unable to fetch alerts from the API.');
+  }
+};
+
+api.startSimulation = async (limit = 300) => {
+  try {
+    const response = await axiosClient.post(`/api/v1/demo/start-simulation?limit=${limit}`, {}, { timeout: 120000 });
+    clearApiClientCache();
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || 'Simulation failed to start.');
   }
 };
 

@@ -16,6 +16,7 @@ import pandas as pd
 from pydantic import ValidationError
 
 from schemas.alert import Alert, AlertSeverity, ParseResult
+from services.normalizer import AlertNormalizer
 
 logger = logging.getLogger("csv_parser")
 
@@ -77,6 +78,7 @@ class CSVParser:
 
     def __init__(self):
         self.required_columns = REQUIRED_COLUMNS
+        self.normalizer = AlertNormalizer("generic")
 
     def validate_columns(self, df: pd.DataFrame) -> None:
         """
@@ -236,13 +238,13 @@ class CSVParser:
 
             # Attempt Pydantic model construction
             try:
-                alert = Alert(
-                    timestamp=parsed_dt,
-                    src_ip=str(src_ip).strip(),
-                    dst_ip=str(dst_ip).strip(),
-                    event=str(event).strip(),
-                    severity=severity,
-                )
+                alert = self.normalizer.normalize({
+                    "timestamp": parsed_dt,
+                    "src_ip": str(src_ip).strip(),
+                    "dst_ip": str(dst_ip).strip(),
+                    "event": str(event).strip(),
+                    "severity": severity,
+                })
                 valid_alerts.append(alert)
             except ValidationError as val_err:
                 logger.warning(

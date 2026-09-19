@@ -41,6 +41,16 @@ Security Operations Center (SOC) teams receive large volumes of fragmented alert
 - Authenticated, user-isolated SOC dashboard with analytics and reports
 - RAG-powered AI analyst chat backed by Qdrant
 
+## Supported ingestion methods
+
+1. **CSV Upload** for batch CSV alert files (the original workflow).
+2. **JSON Upload** for an alert array or an `{ "alerts": [...] }` / `{ "data": [...] }` wrapper.
+3. **API URL** for a public HTTP(S) JSON alert feed fetched by the backend.
+
+Each source normalizes into the same canonical alert model before alert correlation, attack-chain generation, MITRE mapping, deterministic risk scoring, AI/RAG, Qdrant, and the SOC dashboard. API URL ingestion has a 10-second timeout, a 5 MB cap, disabled redirects, and blocks localhost, private, and non-HTTP(S) targets.
+
+---
+
 ## 🛠 Tech Stack
 
 | Category | Technologies |
@@ -110,6 +120,42 @@ bob-ai-hackathon-Timon/
 ---
 
 ## ⚡ How to Run
+
+### Real-time streaming demo
+
+The application supports CSV backfill plus JSON push ingestion. Start the full local stack with:
+
+```bash
+docker compose up --build
+```
+
+Then open `http://localhost:5173`, create an API key from the authenticated API, and replay telemetry:
+
+```bash
+python src/scripts/simulate_live.py \
+  --file src/backend/sample_data/enterprise_threat_alerts_1000.csv \
+  --api-key YOUR_API_KEY \
+  --min-delay 0.2 --max-delay 1.0
+```
+
+Push events are accepted at `POST /api/v1/ingest/events` with `X-API-Key`. The deterministic normalizer, correlation, MITRE mapping, and risk scoring stages run before events are published to the tenant-scoped SSE stream at `/api/v1/stream?token=JWT`.
+
+To tail a local Suricata or Wazuh JSON-lines file, create a connector with a tenant JWT:
+
+```json
+{
+  "type": "file_tail",
+  "config": {
+    "path": "C:/logs/suricata/eve.json",
+    "source": "suricata",
+    "interval": 2
+  }
+}
+```
+
+Enable it through `POST /api/v1/connectors/{id}/enable`. Enabled connectors resume their persisted inode/offset cursor after backend restarts; the cursor is committed only after the ingestion batch succeeds.
+
+The current worker uses an in-process asyncio queue for the demo. Production deployments can replace it with Redis Streams or Kafka and Celery/Arq workers.
 
 ### 1. Backend Setup (FastAPI)
 

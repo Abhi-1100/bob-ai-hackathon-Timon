@@ -28,6 +28,8 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
   const { user, logout } = useAuthStore();
   const { showToast } = useToast();
   const [file, setFile] = useState(null);
+  const [sourceType, setSourceType] = useState('csv');
+  const [apiUrl, setApiUrl] = useState('');
   const [busy, setBusy] = useState(false);
   const [currentStep, setCurrentStep] = useState('');
   const [result, setResult] = useState(null);
@@ -47,25 +49,26 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
     setError('');
     setResult(null);
     if (!f) return;
-    if (!f.name.toLowerCase().endsWith('.csv')) {
-      setError('Invalid file format: Only RFC 4180 compliant .csv security alert logs are accepted.');
+    const extension = sourceType === 'json' ? '.json' : '.csv';
+    if (!f.name.toLowerCase().endsWith(extension)) {
+      setError(`Invalid file format: choose a ${extension} security alert file.`);
       return;
     }
     setFile(f);
   };
 
-  const executeIngest = async (selectedFile = file) => {
+  const executeIngest = async (selectedFile = file, ingestType = sourceType) => {
     if (!selectedFile) return;
     setBusy(true);
     setError('');
-    setCurrentStep('Ingesting alerts from CSV & validating canonical schemas...');
+    setCurrentStep(`Ingesting alerts from ${ingestType.toUpperCase()} & validating canonical schemas...`);
 
     try {
       setTimeout(() => {
         setCurrentStep('Correlating multi-stage attack chains across IP clusters...');
       }, 700);
 
-      const response = await api.uploadAndIngest(selectedFile);
+      const response = ingestType === 'json' ? await api.uploadJsonAndIngest(selectedFile) : await api.uploadAndIngest(selectedFile);
       setResult(response);
       try {
         localStorage.setItem('d2_has_uploaded', 'true');
@@ -87,6 +90,22 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
       setBusy(false);
       setCurrentStep('');
     }
+  };
+
+  const executeUrlIngest = async () => {
+    if (!apiUrl.trim()) return setError('Enter an API URL.');
+    setBusy(true); setError('');
+    setCurrentStep('Fetching JSON alerts from API & validating canonical schemas...');
+    try {
+      const response = await api.ingestUrl(apiUrl.trim());
+      setResult(response);
+      localStorage.setItem('d2_has_uploaded', 'true');
+      showToast('API alerts successfully ingested! Launching Dashboard...', 'success');
+      if (onUploadSuccess) onUploadSuccess();
+      setTimeout(() => navigate?.('/dashboard'), 1500);
+    } catch (err) {
+      setError(err.message || 'Unable to fetch alerts from API.');
+    } finally { setBusy(false); setCurrentStep(''); }
   };
 
   const loadEnterpriseSampleData = async () => {
@@ -131,7 +150,7 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
       const sampleBlob = new Blob([csvContent], { type: 'text/csv' });
       const sampleFile = new File([sampleBlob], 'enterprise_threat_alerts_1000.csv', { type: 'text/csv' });
       setFile(sampleFile);
-      await executeIngest(sampleFile);
+      await executeIngest(sampleFile, 'csv');
     } catch (e) {
       setError(e.message || 'Failed to load enterprise sample dataset.');
       setBusy(false);
@@ -357,6 +376,25 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
         ) : (
           /* Primary Intake Form */
           <div className="onboarding-card-primary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }} aria-label="Data source">
+              {[['csv', 'CSV File'], ['json', 'JSON File'], ['api', 'API URL']].map(([value, label]) => (
+                <button key={value} type="button" className={`btn ${sourceType === value ? 'btn-primary' : 'btn-secondary'}`}
+                  style={{ padding: '8px 14px', fontSize: 13 }}
+                  onClick={() => { setSourceType(value); setFile(null); setError(''); }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            {sourceType === 'api' ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <label style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>API URL</label>
+                <input className="auth-input" type="url" value={apiUrl} onChange={e => setApiUrl(e.target.value)} placeholder="https://example.com/api/alerts" />
+                <button className="btn btn-primary" style={{ width: '100%', padding: '14px', fontSize: 15, fontWeight: 700 }} onClick={executeUrlIngest}>
+                  <Zap size={18} /><span>Fetch & Process Alerts</span>
+                </button>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-muted)' }}>Public HTTP(S) JSON endpoints only. Local and private network addresses are blocked.</p>
+              </div>
+            ) : <>
             {/* Drag & Drop Upload Zone */}
             <div
               className={`onboarding-dropzone ${dragOver ? 'drag-over' : ''} ${file ? 'file-ready' : ''}`}
@@ -375,7 +413,7 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
               <input
                 type="file"
                 ref={fileInputRef}
-                accept=".csv,text/csv"
+                accept={sourceType === 'json' ? '.json,application/json' : '.csv,text/csv'}
                 hidden
                 onChange={e => handleFile(e.target.files[0])}
               />
@@ -408,7 +446,7 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
               ) : (
                 <div>
                   <h3 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
-                    Drag & drop your security alert CSV here
+                    Drag & drop your security alert {sourceType.toUpperCase()} here
                   </h3>
                   <p style={{ fontSize: 13.5, color: 'var(--text-muted)', marginBottom: 16 }}>
                     or click to browse from local file system
@@ -438,6 +476,7 @@ export function UploadPage({ navigate, theme = 'dark', toggleTheme, onUploadSucc
                 <span>Ingest {file.name} & Launch Platform</span>
               </button>
             )}
+            </>}
 
             {/* Evaluator Fast-Track: 1-Click Enterprise Test Dataset */}
             <div className="onboarding-sample-box">

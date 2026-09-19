@@ -8,6 +8,7 @@ This module does NOT use LLMs, LangGraph, or any AI. Correlation is fully determ
 """
 
 import logging
+import json
 import time
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -85,6 +86,76 @@ class AlertCorrelationEngine:
         self.db = db
         self.time_window = timedelta(minutes=time_window_minutes)
         self.chain_repo = AttackChainRepository(db)
+
+    def _next_chain_id(self, user_id: Optional[UUID]) -> str:
+        """Allocate the next tenant-local human-readable chain id."""
+        query = self.db.query(AttackChainDB)
+        if user_id:
+            query = query.filter(AttackChainDB.user_id == user_id)
+        ids = [c.chain_id for c in query.all()]
+        numbers = [int(value[2:]) for value in ids if value.startswith("AC") and value[2:].isdigit()]
+        return f"AC{(max(numbers, default=0) + 1):03d}"
+
+    def add_alert(self, alert: AlertDB, user_id: Optional[UUID] = None) -> AttackChainDB:
+        """Incrementally attach one alert to an open chain.
+
+        The bounds check is timestamp-based, so late-arriving events are placed
+        correctly as long as they belong within the existing 30-minute window.
+        """
+        owner_id = user_id or alert.user_id
+        query = self.db.query(AttackChainDB).filter(
+            AttackChainDB.source_ip == alert.src_ip,
+            AttackChainDB.status == "open",
+        )
+        if owner_id:
+            query = query.filter(AttackChainDB.user_id == owner_id)
+        chain = query.order_by(AttackChainDB.last_seen.desc()).first()
+
+        if chain and chain.first_seen and chain.last_seen:
+            outside_after = alert.timestamp > chain.last_seen + self.time_window
+            outside_before = alert.timestamp < chain.first_seen - self.time_window
+            if outside_after or outside_before:
+                chain.status = "closed"
+                self.db.flush()
+                chain = None
+
+        if chain is None:
+            chain = AttackChainDB(
+                id=uuid4(), user_id=owner_id, chain_id=self._next_chain_id(owner_id),
+                source_ip=alert.src_ip, destination_ips=alert.dst_ip, events=alert.event,
+                alert_count=0, start_time=alert.timestamp, end_time=alert.timestamp,
+                status="open", first_seen=alert.timestamp, last_seen=alert.timestamp,
+                event_counts=json.dumps({}),
+            )
+            self.db.add(chain)
+            self.db.flush()
+
+        linked = self.db.query(AttackChainEventDB).filter(
+            AttackChainEventDB.chain_id == chain.id,
+            AttackChainEventDB.alert_id == alert.id,
+        ).first()
+        if not linked:
+            self.db.add(AttackChainEventDB(chain_id=chain.id, alert_id=alert.id))
+            chain.alert_count = (chain.alert_count or 0) + 1
+
+        linked_alerts = [link.alert for link in chain.chain_events if link.alert is not None]
+        linked_alerts.append(alert)
+        unique_alerts = {str(item.id): item for item in linked_alerts}.values()
+        ordered = sorted(unique_alerts, key=lambda item: (item.timestamp, str(item.id)))
+        counts: dict[str, int] = {}
+        for item in ordered:
+            counts[item.event] = counts.get(item.event, 0) + 1
+        events = sorted(counts, key=lambda item: ATTACK_STAGE_ORDER.get(item, 999))
+        chain.first_seen = min(item.timestamp for item in ordered)
+        chain.last_seen = max(item.timestamp for item in ordered)
+        chain.start_time = chain.first_seen
+        chain.end_time = chain.last_seen
+        chain.destination_ips = ",".join(sorted({item.dst_ip for item in ordered}))
+        chain.events = ",".join(events)
+        chain.event_counts = json.dumps(counts, sort_keys=True)
+        self.db.commit()
+        self.db.refresh(chain)
+        return chain
 
     # ------------------------------------------------------------------
     # Step 1 – Fetch alerts
@@ -283,6 +354,10 @@ class AlertCorrelationEngine:
                         alert_count=chain.alert_count,
                         start_time=chain.start_time,
                         end_time=chain.end_time,
+                        status="open",
+                        first_seen=chain.start_time,
+                        last_seen=chain.end_time,
+                        event_counts=json.dumps({event: sum(1 for item in alert_group if item.event == event) for event in chain.events}, sort_keys=True),
                     )
                 )
                 for aid in alert_ids:

@@ -67,7 +67,7 @@ graph TD
 
 ## Data Flow & Pipeline Execution
 
-1. **Telemetry Ingestion**: The analyst uploads a raw alert CSV file. The CSV parser streams records, validates headers (`timestamp`, `src_ip`, `dst_ip`, `event`, `severity`), trims whitespace, normalizes severity representations, and bulk-inserts rows tagged with the operator's `user_id`.
+1. **Telemetry Ingestion**: CSV, JSON file, and public API URL inputs normalize into one canonical alert model (`timestamp`, `src_ip`, `dst_ip`, `event`, `severity`, `source_type`) before bulk insertion. CSV keeps its existing parser; JSON/API accept an array or `alerts`/`data` wrapper. API fetches are server-side with SSRF guards, no redirects, a 10-second timeout, and a 5 MB response limit.
 2. **Temporal Correlation**: The correlation engine filters unassigned alerts for that `user_id`, groups alerts sharing common source IPs, and partitions events into distinct Attack Chains whenever event gaps exceed the 30-minute correlation threshold.
 3. **MITRE Tactical Mapping**: Attack chain event sequences are mapped against the 14 MITRE ATT&CK enterprise tactics and specific technique IDs (e.g., Reconnaissance -> T1046 Network Service Scanning; Credential Access -> T1110 Brute Force).
 4. **Deterministic Risk Calculation**: The risk scoring engine evaluates:

@@ -129,6 +129,7 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                 <th>Destinations</th>
                 <th>Events</th>
                 <th>Risk Score</th>
+                <th>Behavioral</th>
                 <th>Risk Level</th>
                 <th>MITRE Techniques</th>
                 <th>Status</th>
@@ -139,15 +140,15 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
             <tbody>
               {filteredChains.length === 0 ? (
                 <tr>
-                  <td colSpan={10} style={{ textAlign: 'center', padding: '36px 0', color: 'var(--text-muted)' }}>
+                  <td colSpan={11} style={{ textAlign: 'center', padding: '36px 0', color: 'var(--text-muted)' }}>
                     No attack chains match the filter or search criteria.
                   </td>
                 </tr>
               ) : (
                 filteredChains.map(c => {
-                  const id = c.chain_id || 'AC001';
-                  const score = c.risk_score || c.final_score || 85;
-                  const sev = c.severity || 'Critical';
+                  const id = c.chain_id || '—';
+                  const score = c.risk_score ?? c.final_score ?? 0;
+                  const sev = c.severity || c.risk_level || 'Medium';
                   const techniques = c.mitre_techniques || [];
 
                   return (
@@ -158,17 +159,18 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           <Globe size={13} color="#64748B" />
-                          <code style={{ color: 'var(--text-primary)' }}>{c.source_ip || '198.51.100.24'}</code>
+                          <code style={{ color: 'var(--text-primary)' }}>{c.source_ip || '—'}</code>
                         </div>
                       </td>
                       <td>
                         <span className="mono" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-                          {c.dest_ips?.slice(0, 2).join(', ') || '10.0.4.12'}
-                          {c.dest_ips?.length > 2 ? ` (+${c.dest_ips.length - 2})` : ''}
+                          {(c.dest_ips && c.dest_ips.length > 0)
+                            ? `${c.dest_ips.slice(0, 2).join(', ')}${c.dest_ips.length > 2 ? ` (+${c.dest_ips.length - 2})` : ''}`
+                            : '—'}
                         </span>
                       </td>
                       <td>
-                        <span className="mono" style={{ fontWeight: 600 }}>{c.alert_count || 8} events</span>
+                        <span className="mono" style={{ fontWeight: 600 }}>{c.alert_count ?? 0} events</span>
                       </td>
                       <td>
                         <span className="mono" style={{
@@ -178,6 +180,23 @@ export function AttackChainsPage({ onOpenChain, navigate }) {
                         }}>
                           {score}
                         </span>
+                      </td>
+                      <td>
+                        {c.behavioral_score !== undefined && c.behavioral_score !== null ? (
+                          <span style={{
+                            padding: '3px 8px',
+                            borderRadius: 4,
+                            fontSize: 11,
+                            fontWeight: 700,
+                            background: c.behavioral_score >= 60 ? 'rgba(239, 68, 68, 0.12)' : c.behavioral_score >= 30 ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+                            color: c.behavioral_score >= 60 ? 'var(--critical)' : c.behavioral_score >= 30 ? 'var(--yellow)' : 'var(--green)',
+                            border: `1px solid ${c.behavioral_score >= 60 ? 'rgba(239, 68, 68, 0.25)' : c.behavioral_score >= 30 ? 'rgba(245, 158, 11, 0.25)' : 'rgba(16, 185, 129, 0.25)'}`,
+                          }}>
+                            {c.behavioral_score}/100
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>—</span>
+                        )}
                       </td>
                       <td>
                         <SeverityBadge value={sev} />

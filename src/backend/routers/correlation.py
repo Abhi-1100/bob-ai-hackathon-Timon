@@ -18,6 +18,7 @@ from database.models import (
 from routers.auth import get_current_user_obj
 from schemas.attack_chain import CorrelationResult
 from schemas.upload import ErrorResponse
+from schemas.behavioral import DispositionUpdateRequest
 from services.alert_correlation import AlertCorrelationEngine, CorrelationError
 
 logger = logging.getLogger("correlation_router")
@@ -91,6 +92,8 @@ def get_attack_chains(
             "final_score": risk_score,
             "severity": severity,
             "risk_level": severity,
+            "behavioral_score": c.risk_score.behavioral_score if c.risk_score else None,
+            "behavioral_level": c.risk_score.behavioral_level if c.risk_score else None,
             "status": "Active",
             "mitre_techniques": mitre_list,
         })
@@ -153,11 +156,24 @@ def get_attack_chain_by_id(
     """Retrieve full details of an attack chain."""
     chain = (
         db.query(AttackChainDB)
-        .filter(AttackChainDB.chain_id == chain_id, AttackChainDB.user_id == current_user.id)
+        .filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None))
+        )
         .first()
     )
     if not chain:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Attack chain '{chain_id}' not found")
+
+    # On-demand behavioral context analysis if not yet generated
+    if not chain.behavioral_analysis:
+        try:
+            from services.behavioral_analysis import BehavioralAnalysisEngine
+            ba_engine = BehavioralAnalysisEngine(db=db)
+            ba_engine.analyze_chain(chain.chain_id, user_id=chain.user_id, persist=True)
+            db.refresh(chain)
+        except Exception as exc:
+            logger.warning(f"On-demand behavioral analysis generation failed for {chain_id}: {exc}")
 
     dest_ips = [ip.strip() for ip in (chain.destination_ips or "").split(",") if ip.strip()]
 
@@ -172,6 +188,7 @@ def get_attack_chain_by_id(
                 "severity": alert.severity,
                 "src_ip": alert.src_ip,
                 "dst_ip": alert.dst_ip,
+                "source_type": alert.source_type,
                 "protocol": "TCP",
             })
 
@@ -202,12 +219,57 @@ def get_attack_chain_by_id(
     # Risk score breakdown
     score = chain.risk_score.score if chain.risk_score else 50
     sev = chain.risk_score.level if chain.risk_score else "Medium"
+    behavioral_score_val = (
+        chain.risk_score.behavioral_score 
+        if (chain.risk_score and chain.risk_score.behavioral_score is not None) 
+        else (chain.behavioral_analysis.anomaly_score if chain.behavioral_analysis else None)
+    )
     breakdown = {
         "base_event_score": chain.risk_score.event_score if chain.risk_score else 25,
         "mitre_score": chain.risk_score.mitre_score if chain.risk_score else 15,
         "kill_chain_bonus": chain.risk_score.chain_bonus if chain.risk_score else 10,
+        "behavioral_score": behavioral_score_val,
         "final_score": score,
     }
+
+    # Contextual Behavioral Analysis
+    behavioral_context = None
+    if chain.behavioral_analysis:
+        ba = chain.behavioral_analysis
+        signals_list = []
+        if ba.signals:
+            try:
+                signals_list = json.loads(ba.signals) if isinstance(ba.signals, str) else ba.signals
+            except Exception:
+                pass
+        dim_breakdown = {}
+        if ba.dimension_breakdown:
+            try:
+                dim_breakdown = json.loads(ba.dimension_breakdown) if isinstance(ba.dimension_breakdown, str) else ba.dimension_breakdown
+            except Exception:
+                pass
+        # Derive behavioral_reasons from full dimension signal sentences (not just top signals)
+        behavioral_reasons_derived = []
+        for dim_key, dim_data in dim_breakdown.items():
+            if isinstance(dim_data, dict):
+                for sig in (dim_data.get("signals") or []):
+                    if sig and sig not in behavioral_reasons_derived:
+                        behavioral_reasons_derived.append(sig)
+        if not behavioral_reasons_derived:
+            behavioral_reasons_derived = signals_list if signals_list else ["Behavior consistent with baseline profile."]
+
+        behavioral_context = {
+            "anomaly_score": ba.anomaly_score,
+            "anomaly_level": ba.anomaly_level,
+            "behavior_status": getattr(ba, 'behavior_status', 'NORMAL') or 'NORMAL',
+            "signals": signals_list,
+            "contributing_signals": signals_list,
+            "dimension_breakdown": dim_breakdown,
+            "why_prioritized": ba.why_prioritized or "",
+            "context_tags": json.loads(ba.context_tags) if isinstance(getattr(ba, 'context_tags', None), str) else (getattr(ba, 'context_tags', []) or []),
+            "analyst_disposition": getattr(ba, 'analyst_disposition', 'NEEDS_REVIEW') or 'NEEDS_REVIEW',
+            "behavioral_reasons": behavioral_reasons_derived,
+        }
 
     # Recommendations
     recs_obj = None
@@ -247,6 +309,9 @@ def get_attack_chain_by_id(
         "risk_level": sev,
         "risk_score": score,
         "final_score": score,
+        "behavioral_score": behavioral_score_val if behavioral_score_val is not None else (chain.behavioral_analysis.anomaly_score if chain.behavioral_analysis else None),
+        "behavioral_level": (chain.risk_score.behavioral_level if chain.risk_score and chain.risk_score.behavioral_level else (chain.behavioral_analysis.anomaly_level if chain.behavioral_analysis else None)),
+        "behavioral_context": behavioral_context,
         "score_breakdown": breakdown,
         "events": linked_alerts,
         "mitre_techniques": mitre_techniques,
@@ -254,4 +319,68 @@ def get_attack_chain_by_id(
         "report": report_obj,
         "status": "Active",
     }
+
+
+@router.post(
+    "/{chain_id}/behavioral",
+    status_code=status.HTTP_200_OK,
+    summary="Generate or Refresh Behavioral Analysis for Chain",
+    description="Forces on-demand behavioral anomaly calculation for the specified attack chain."
+)
+def generate_behavioral_analysis(
+    chain_id: str,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    """Run on-demand behavioral analysis for a specific chain."""
+    chain = (
+        db.query(AttackChainDB)
+        .filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None))
+        )
+        .first()
+    )
+    if not chain:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Attack chain '{chain_id}' not found")
+
+    from services.behavioral_analysis import BehavioralAnalysisEngine
+    ba_engine = BehavioralAnalysisEngine(db=db)
+    result = ba_engine.analyze_chain(chain.chain_id, user_id=chain.user_id, persist=True)
+    cache.delete(f"all_attack_chains_{current_user.id}")
+    return JSONResponse(status_code=status.HTTP_200_OK, content=result.model_dump(mode="json"))
+
+
+@router.post(
+    "/{chain_id}/disposition",
+    status_code=status.HTTP_200_OK,
+    summary="Update Analyst Disposition",
+    description="Updates the analyst disposition for a specific attack chain."
+)
+def update_analyst_disposition(
+    chain_id: str,
+    payload: DispositionUpdateRequest,
+    current_user: UserDB = Depends(get_current_user_obj),
+    db: Session = Depends(get_db),
+):
+    chain = (
+        db.query(AttackChainDB)
+        .filter(
+            AttackChainDB.chain_id == chain_id,
+            (AttackChainDB.user_id == current_user.id) | (AttackChainDB.user_id.is_(None))
+        )
+        .first()
+    )
+    if not chain:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Attack chain '{chain_id}' not found")
+    
+    ba = chain.behavioral_analysis
+    if not ba:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Behavioral analysis not found for chain '{chain_id}'")
+        
+    ba.analyst_disposition = payload.disposition
+    db.commit()
+    
+    return {"message": "Disposition updated successfully", "disposition": ba.analyst_disposition}
+
 

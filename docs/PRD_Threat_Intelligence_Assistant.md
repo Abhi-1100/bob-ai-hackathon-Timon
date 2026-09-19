@@ -8,7 +8,7 @@
 | **Derived From** | SRS v1.0.0 (IEEE 830 / ISO/IEC/IEEE 29148) |
 | **Event** | IBM BoB AI Innovation Hackathon 2026 |
 | **Problem Statement** | Critical Now — Threat Intelligence Correlation & Alert Prioritisation Assistant |
-| **Owner** | [Team Name] |
+| **Owner** | TimonTrack |
 | **Audience** | Full team (Frontend, Backend, AI/ML, DevOps, Presentation) |
 
 ---

@@ -67,12 +67,15 @@ class Alert(Base):
 
     id = UUIDColumn()
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
-    upload_id = Column(PG_UUID(as_uuid=True), ForeignKey("uploads.id", ondelete="CASCADE"), nullable=False)
+    upload_id = Column(PG_UUID(as_uuid=True), ForeignKey("uploads.id", ondelete="CASCADE"), nullable=True)
     timestamp = Column(DateTime(timezone=True), nullable=False)
     src_ip = Column(String(100), nullable=False)
     dst_ip = Column(String(100), nullable=False)
     event = Column(String(255), nullable=False)
     severity = Column(String(50), nullable=False)
+    source_type = Column(String(20), nullable=False, default="csv", server_default="csv")
+    source = Column(String(80), nullable=False, default="csv")
+    dedupe_hash = Column(String(64), nullable=True, unique=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Relationship back to upload
@@ -88,6 +91,7 @@ class Alert(Base):
         Index("ix_alerts_timestamp", "timestamp"),
         Index("ix_alerts_severity", "severity"),
         Index("ix_alerts_event", "event"),
+        Index("ix_alerts_dedupe_hash", "dedupe_hash", unique=True),
     )
 
     def __repr__(self) -> str:
@@ -113,6 +117,15 @@ class AttackChainDB(Base):
     alert_count = Column(Integer, nullable=False, default=0)
     start_time = Column(DateTime(timezone=True), nullable=False)
     end_time = Column(DateTime(timezone=True), nullable=False)
+    status = Column(String(20), nullable=False, default="open")
+    first_seen = Column(DateTime(timezone=True), nullable=True)
+    last_seen = Column(DateTime(timezone=True), nullable=True)
+    event_counts = Column(Text, nullable=True)
+    risk_score_value = Column(Integer, nullable=True)
+    tier = Column(String(50), nullable=True)
+    bluf_json = Column(Text, nullable=True)
+    playbook_json = Column(Text, nullable=True)
+    last_llm_run = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Relationship to junction table
@@ -152,6 +165,15 @@ class AttackChainDB(Base):
     # Relationship to executive report (one-to-one)
     report = relationship(
         "ReportDB",
+        back_populates="attack_chain",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+
+    # Relationship to behavioral analysis (one-to-one)
+    behavioral_analysis = relationship(
+        "BehavioralAnalysisDB",
         back_populates="attack_chain",
         uselist=False,
         cascade="all, delete-orphan",
@@ -253,6 +275,8 @@ class RiskScoreDB(Base):
     event_score = Column(Integer, nullable=False, default=0)
     mitre_score = Column(Integer, nullable=False, default=0)
     chain_bonus = Column(Integer, nullable=False, default=0)
+    behavioral_score = Column(Integer, nullable=True)
+    behavioral_level = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Relationship back to attack chain
@@ -362,6 +386,52 @@ class ChatHistoryDB(Base):
         return f"<ChatHistoryDB id={self.id} user_id={self.user_id} session_id={self.session_id} role={self.role}>"
 
 
+class DeadLetterDB(Base):
+    """Stores rejected external events without interrupting a batch."""
+    __tablename__ = "dead_letters"
+
+    id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    source = Column(String(80), nullable=False)
+    payload = Column(Text, nullable=False)
+    error = Column(Text, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    __table_args__ = (Index("ix_dead_letters_user_id", "user_id"),)
+
+
+class ConnectorDB(Base):
+    """Tenant-owned connector configuration and cursor state."""
+    __tablename__ = "connectors"
+
+    id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    type = Column(String(80), nullable=False)
+    config = Column(Text, nullable=False, default="{}")
+    cursor = Column(Text, nullable=True)
+    status = Column(String(30), nullable=False, default="disabled")
+    last_sync = Column(DateTime(timezone=True), nullable=True)
+    events_ingested = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    __table_args__ = (Index("ix_connectors_user_id", "user_id"),)
+
+
+class APIKeyDB(Base):
+    """Hashed machine-ingestion key mapped to one tenant."""
+    __tablename__ = "api_keys"
+
+    id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(120), nullable=False, default="ingestion")
+    key_hash = Column(String(128), nullable=False, unique=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    last_used_at = Column(DateTime(timezone=True), nullable=True)
+    revoked_at = Column(DateTime(timezone=True), nullable=True)
+
+    __table_args__ = (Index("ix_api_keys_user_id", "user_id"),)
+
+
 # ---------------------------------------------------------------------------
 # User (Enterprise Authentication)
 # ---------------------------------------------------------------------------
@@ -379,5 +449,67 @@ class UserDB(Base):
 
     def __repr__(self) -> str:
         return f"<UserDB id={self.id} email={self.email}>"
+
+
+# ---------------------------------------------------------------------------
+# Behavioral + Context Analysis
+# ---------------------------------------------------------------------------
+class EntityBaselineDB(Base):
+    """Stores behavioral baselines per entity for anomaly detection."""
+    __tablename__ = "entity_baselines"
+
+    id = UUIDColumn()
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    entity_type = Column(String(50), nullable=False) # e.g. 'ip', 'user', 'device'
+    entity_value = Column(String(255), nullable=False)
+    observation_count = Column(Integer, nullable=False, default=0)
+    avg_events_per_hour = Column(Integer, nullable=False, default=0) # Storing as scaled integer or use Float
+    peak_events_per_hour = Column(Integer, nullable=False, default=0)
+    first_seen = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    last_seen = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    metadata_json = Column(Text, nullable=True)
+
+    __table_args__ = (
+        Index("ix_entity_baselines_user_id", "user_id"),
+        Index("ix_entity_baselines_type_value", "entity_type", "entity_value"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<EntityBaselineDB type={self.entity_type} value={self.entity_value}>"
+
+
+class BehavioralAnalysisDB(Base):
+    """Stores the full behavioral analysis result per attack chain."""
+    __tablename__ = "behavioral_analyses"
+
+    id = UUIDColumn()
+    attack_chain_id = Column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("attack_chains.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,
+    )
+    anomaly_score = Column(Integer, nullable=False, default=0)
+    anomaly_level = Column(String(50), nullable=False)
+    behavior_status = Column(String(50), nullable=True) # NORMAL, ANOMALOUS, SUSPICIOUS, HIGH RISK
+    context_tags = Column(Text, nullable=True) # JSON list of strings
+    analyst_disposition = Column(String(50), nullable=False, default="NEEDS_REVIEW", server_default="NEEDS_REVIEW")
+    signals = Column(Text, nullable=True) # JSON list
+    dimension_breakdown = Column(Text, nullable=True) # JSON dict
+    why_prioritized = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    # Relationship back to attack chain
+    attack_chain = relationship("AttackChainDB", back_populates="behavioral_analysis")
+
+    __table_args__ = (
+        Index("ix_behavioral_analyses_chain_id", "attack_chain_id"),
+        Index("ix_behavioral_analyses_level", "anomaly_level"),
+        Index("ix_behavioral_analyses_disposition", "analyst_disposition"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<BehavioralAnalysisDB score={self.anomaly_score} level={self.anomaly_level}>"
+
 
 
